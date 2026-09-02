@@ -1,0 +1,151 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24rpx 24rpx 56rpx;
+  background: linear-gradient(160deg, #c7e0ff 0%, #e6d9ff 48%, #ffe9c9 100%);
+}
+
+.sheet {
+  background: #ffffff;
+  border-radius: 32rpx;
+  box-shadow: 0 16rpx 56rpx rgba(60, 70, 120, 0.16);
+  padding: 40rpx 28rpx 32rpx;
+}
+
+.title {
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #333f8f;
+  letter-spacing: 4rpx;
+}
+
+.sub {
+  margin-top: 12rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #4b5563;
+}
+
+.term {
+  margin-top: 6rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #8a90a0;
+}
+
+.tabs {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 32rpx;
+  background: #f3f5f8;
+  border-radius: 18rpx;
+  padding: 8rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  border-radius: 14rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.tab-active {
+  background: linear-gradient(135deg, #3b6ef5, #7c5cf0);
+  color: #ffffff;
+  box-shadow: 0 6rpx 16rpx rgba(80, 100, 220, 0.35);
+}
+
+.rest {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #fff7e0;
+  border: 2rpx dashed #e8c35a;
+  color: #8a6410;
+  font-size: 26rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.lessons {
+  margin-top: 28rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.lesson {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border: 2rpx solid #e3e6ef;
+  border-radius: 20rpx;
+  padding: 20rpx;
+}
+
+.lesson-now {
+  border-color: #ff8a3d;
+  background: #fff4e5;
+}
+
+.period {
+  width: 150rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-label {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #33415c;
+}
+
+.p-time {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: #7a8291;
+}
+
+.chip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  border-radius: 14rpx;
+  padding: 14rpx 12rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.now-badge {
+  font-size: 20rpx;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 999rpx;
+  padding: 2rpx 12rpx;
+}
+
+.extra {
+  width: 140rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.teacher {
+  font-size: 22rpx;
+  color: #5b6472;
+}
+
+.note {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #c05621;
+}

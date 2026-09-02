@@ -4,5 +4,30 @@
     <text class="hero-title">{{title}}</text>
     <text class="hero-subtitle">{{subtitle}}</text>
   </view>
-  <view class="placeholder">{{tips}}</view>
+
+  <view class="cards">
+    <view class="card" bindtap="goKebiao" hover-class="card-hover">
+      <view class="card-head">
+        <text class="card-ico">📅</text>
+        <text class="card-name">课程表</text>
+        <text class="card-arrow">›</text>
+      </view>
+      <view class="card-body">
+        <text class="card-sub">{{kbSub}}</text>
+        <text class="card-line">{{kbLine}}</text>
+      </view>
+    </view>
+
+    <view class="card" bindtap="goZuoye" hover-class="card-hover">
+      <view class="card-head">
+        <text class="card-ico">📒</text>
+        <text class="card-name">作业本</text>
+        <text class="card-arrow">›</text>
+      </view>
+      <view class="card-body">
+        <text class="card-sub">{{hwSub}}</text>
+        <text class="card-line {{hwLine === '作业加载中…' ? 'card-line-dim' : ''}}">{{hwLine}}</text>
+      </view>
+    </view>
+  </view>
 </view>

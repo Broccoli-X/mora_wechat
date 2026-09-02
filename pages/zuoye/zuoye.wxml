@@ -1,0 +1,36 @@
+<view class="page">
+  <view class="weekbar">
+    <view class="wk-btn" data-n="-1" bindtap="shiftWeek" hover-class="wk-btn-hover">‹ 上一周</view>
+    <view class="wk-label">{{weekLabel}}<text wx:if="{{isThisWeek}}" class="now-pill">本周</text></view>
+    <view class="wk-btn" data-n="1" bindtap="shiftWeek" hover-class="wk-btn-hover">下一周 ›</view>
+  </view>
+  <view class="back" wx:if="{{!isThisWeek}}" bindtap="backToThis">↩ 回到本周</view>
+
+  <view class="tip" wx:if="{{loading}}">作业同步中…</view>
+
+  <view class="error" wx:if="{{loadError}}">
+    <text class="error-txt">作业同步失败，请检查网络后重试</text>
+    <view class="retry-btn" bindtap="retry" hover-class="wk-btn-hover">重试</view>
+  </view>
+
+  <view class="days" wx:if="{{!loadError}}">
+    <view
+      wx:for="{{days}}"
+      wx:key="date"
+      class="day {{item.isToday ? 'day-today' : ''}}"
+    >
+      <view class="day-head">
+        <text class="wd {{item.isToday ? 'wd-today' : ''}}">{{item.wd}}</text>
+        <text class="dt">{{item.dt}}</text>
+        <text wx:if="{{item.isToday}}" class="today-badge">今天</text>
+      </view>
+      <view wx:if="{{item.items.length}}" class="items">
+        <view wx:for="{{item.items}}" wx:for-item="hw" wx:key="id" class="hw">
+          <view class="chip" style="background:{{hw.color}}">{{hw.icon}}{{hw.subject}}</view>
+          <text class="txt">{{hw.text}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty">没有作业，尽情玩吧 🎈</view>
+    </view>
+  </view>
+</view>

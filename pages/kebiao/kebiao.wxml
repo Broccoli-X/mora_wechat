@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="sheet">
+    <view class="title">📅 我的课表</view>
+    <view class="sub">{{school}} · {{cls}}</view>
+    <view class="term">{{term}}</view>
+
+    <view class="tabs">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="*this"
+        class="tab {{selected === index ? 'tab-active' : ''}}"
+        data-index="{{index}}"
+        bindtap="selectDay"
+      >{{item}}</view>
+    </view>
+    <view class="rest" wx:if="{{isRest}}">今天不上课，先看看其他天的安排吧 🎉</view>
+
+    <view class="lessons">
+      <view
+        wx:for="{{rows}}"
+        wx:key="label"
+        class="lesson {{item.isNow ? 'lesson-now' : ''}}"
+      >
+        <view class="period">
+          <text class="p-label">{{item.label}}</text>
+          <text class="p-time">{{item.time}}</text>
+        </view>
+        <view class="chip" style="background:{{item.color}}">
+          <text>{{item.icon}}{{item.subject}}</text>
+          <text wx:if="{{item.isNow}}" class="now-badge">现在</text>
+        </view>
+        <view class="extra">
+          <text wx:if="{{item.teacher}}" class="teacher">👤{{item.teacher}}</text>
+          <text wx:if="{{item.note}}" class="note">{{item.note}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
