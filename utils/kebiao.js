@@ -80,4 +80,45 @@ function currentOrNextLesson(d) {
   return next >= 0 ? { index: next, state: 'next' } : null;
 }
 
-module.exports = { KEBIAO, KEBIAO_META, metaOf, todayIdxOf, periodAtNow, currentOrNextLesson };
+/* 首页课程模块:只展示一条。
+   优先当前节;无当前节(课前/课间)显示今天接下来的节;
+   今天课上完显示次日第1节;次日无课(周末)则整块隐藏。 */
+function homeLesson(now) {
+  const pos = currentOrNextLesson(now);
+  if (pos) {
+    const p = KEBIAO.periods[pos.index];
+    const cell = KEBIAO.grid[pos.index][todayIdxOf(now)];
+    const meta = metaOf(cell[0]);
+    return {
+      show: true,
+      title: '今日课程',
+      badge: pos.state === 'now' ? '现在' : '下一节',
+      isNow: pos.state === 'now',
+      label: p.label,
+      time: p.time,
+      subject: cell[0],
+      icon: meta.icon,
+      color: meta.main,
+      teacher: cell[1],
+    };
+  }
+  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const tIdx = todayIdxOf(tomorrow);
+  if (tIdx < 0) return { show: false };
+  const cell = KEBIAO.grid[0][tIdx];
+  const meta = metaOf(cell[0]);
+  return {
+    show: true,
+    title: '次日课程',
+    badge: KEBIAO.days[tIdx],
+    isNow: false,
+    label: KEBIAO.periods[0].label,
+    time: KEBIAO.periods[0].time,
+    subject: cell[0],
+    icon: meta.icon,
+    color: meta.main,
+    teacher: cell[1],
+  };
+}
+
+module.exports = { KEBIAO, KEBIAO_META, metaOf, todayIdxOf, periodAtNow, currentOrNextLesson, homeLesson };

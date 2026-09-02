@@ -1,0 +1,86 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 28rpx 28rpx 56rpx;
+  background-color: #f6f7fb;
+}
+
+.group {
+  margin-bottom: 40rpx;
+}
+
+.group-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1f2333;
+  margin-bottom: 20rpx;
+}
+
+.subject {
+  margin-bottom: 24rpx;
+}
+
+.subject-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 26rpx;
+  border-radius: 14rpx;
+  padding: 8rpx 18rpx;
+  margin-bottom: 14rpx;
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.entry {
+  background: #ffffff;
+  border-radius: 22rpx;
+  box-shadow: 0 6rpx 20rpx rgba(60, 70, 120, 0.06);
+  padding: 26rpx 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.entry-hover {
+  background: #f4f6fb;
+}
+
+.entry-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.entry-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1f2333;
+}
+
+.entry-desc {
+  font-size: 24rpx;
+  color: #8a90a3;
+}
+
+.dev-badge {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #8a6410;
+  background: #fff7e0;
+  border: 2rpx solid #eebe8f;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+}
+
+.entry-arrow {
+  font-size: 40rpx;
+  color: #c3c8d4;
+}
