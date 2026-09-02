@@ -1,0 +1,51 @@
+pages/kebiao/kebiao.wxml
+  s_a1aaee0d9fd7cd::t_602c271cb75e0a 1-39
+pages/zuoye/zuoye.json
+  s_a1aaee0d9fd7cd::t_aed568d16f75aa 1-5
+pages/index/index.wxss
+  s_a1aaee0d9fd7cd::t_02f91b16148871 7,43-111
+project.config.json
+  s_a1aaee0d9fd7cd::t_5337b3b2886016 14-30,40-42
+pages/index/index.wxml
+  s_a1aaee0d9fd7cd::t_ee1561f572ab14 7-32
+app.json
+  s_a1aaee0d9fd7cd::t_f4644151e1454e 3-5
+pages/zuoye/zuoye.wxss
+  s_a1aaee0d9fd7cd::t_053140ab7dcbf0 1-184
+docs/superpowers/specs/2026-09-02-homepage-design.md
+  s_a1aaee0d9fd7cd::t_9a298072afb94e 1-37
+pages/zuoye/zuoye.js
+  s_a1aaee0d9fd7cd::t_3df594c58de213 1-76
+README.md
+  s_a1aaee0d9fd7cd::t_df2024869b3fdc 23-25,27-29,31-35
+pages/kebiao/kebiao.js
+  s_a1aaee0d9fd7cd::t_8d3cc842dac8d5 1-53
+pages/index/index.js
+  s_a1aaee0d9fd7cd::t_1b04c5ba124904 1-3,8-68
+utils/kebiao.js
+  s_a1aaee0d9fd7cd::t_639b3d7d446564 1-83
+pages/zuoye/zuoye.wxml
+  s_a1aaee0d9fd7cd::t_c375cf81ed5ff4 1-36
+utils/homework.js
+  s_a1aaee0d9fd7cd::t_e380ff004a8b6e 1-116
+pages/kebiao/kebiao.wxss
+  s_a1aaee0d9fd7cd::t_cba16201b56b63 1-151
+pages/kebiao/kebiao.json
+  s_a1aaee0d9fd7cd::t_d52a245b66e808 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "6dc58ef20ccb059d727d74f81d5c2b247a189b67",
+  "prompts": {},
+  "sessions": {
+    "s_a1aaee0d9fd7cd": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_04fc76de-b17a-46b6-b890-9fdd8b0e128c",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
