@@ -1,6 +1,7 @@
 /* 作业数据只读同步:数据源与网页端相同的服务(/api/progress,module=homework)。
    录入/删除在网页端维护(zuoye-edit.html),小程序端只做查看。
-   payload 为短键 JSON:{d:日期, s:科目, t:内容};空 payload 是删除墓碑,直接跳过。
+   payload 为短键 JSON:{d:日期, s:科目, t:内容, g:[图片id]};空 payload 是删除墓碑,直接跳过。
+   图片本体走 GET /api/image?id=<id>(不带 token,与服务端设计一致,见 imgRefOf)。
    token 与 mora 网页端 lib/sync-config.js 同源;上线前需在小程序后台把
    API_BASE 配置为 request 合法域名。 */
 const API_BASE = 'https://www.tcued.com';
@@ -19,6 +20,9 @@ SUBJECTS.forEach(s => { META[s.name] = s; });
 
 const WEEKDAY_CN = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+/* 图片引用规则与 mora 网页端 lib/homework-core.js 同源:仅收服务端 id(dataURL 不同步) */
+const IMG_ID_RE = /^img[0-9a-z]{4,30}$/;
+const IMGS_MAX = 9;
 
 function metaOf(subject) {
   return META[subject] || { name: subject, icon: '📌', main: '#5f6b7d' };
@@ -71,6 +75,17 @@ function sortByDay(entries) {
     a.updatedAt - b.updatedAt);
 }
 
+/* 图片引用 → 可加载地址:GET /api/image 不需要 token(<img>/wx.previewImage 直连) */
+function imgUrl(ref) {
+  return API_BASE + '/api/image?id=' + encodeURIComponent(ref);
+}
+
+/* payload 图片字段 g → 合法引用数组:非数组/坏 id 丢弃,最多 IMGS_MAX 张 */
+function imgsOf(g) {
+  if (!Array.isArray(g)) return [];
+  return g.filter(x => typeof x === 'string' && IMG_ID_RE.test(x)).slice(0, IMGS_MAX);
+}
+
 /* 服务端进度条目 → 作业数组:只认 module=homework,
    跳过墓碑(空 payload)和坏 payload,解码后按日排序 */
 function decodeItems(items) {
@@ -87,6 +102,7 @@ function decodeItems(items) {
           date: o.d,
           subject: o.s,
           text: text,
+          imgs: imgsOf(o.g),
           updatedAt: it.updatedAt || 0,
         });
       }
@@ -112,5 +128,5 @@ function fetchHomework(done, fail) {
 module.exports = {
   SUBJECTS, SUBJECT_NAMES, WEEKDAY_CN,
   metaOf, toDateStr, todayStr, parseDate, weekdayCN, fmtCN, weekOf,
-  sortByDay, decodeItems, fetchHomework,
+  sortByDay, decodeItems, fetchHomework, imgUrl,
 };

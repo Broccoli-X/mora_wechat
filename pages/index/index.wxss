@@ -1,113 +1,224 @@
 .page {
   min-height: 100vh;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100rpx 48rpx 0;
+  padding: 40rpx 32rpx 56rpx;
   background-color: #f6f7fb;
 }
 
-.hero {
+.head {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 8rpx;
+  margin-bottom: 32rpx;
 }
 
-.hero-badge {
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 40rpx;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.brand-badge {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 22rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #4f7cff, #7b5bff);
   color: #ffffff;
-  font-size: 64rpx;
+  font-size: 40rpx;
   font-weight: 600;
 }
 
-.hero-title {
-  margin-top: 48rpx;
-  font-size: 44rpx;
-  font-weight: 600;
-  color: #1f2333;
-}
-
-.hero-subtitle {
-  margin-top: 16rpx;
-  font-size: 28rpx;
-  color: #8a90a3;
-}
-
-.cards {
-  width: 100%;
-  margin-top: 72rpx;
+.brand-col {
   display: flex;
   flex-direction: column;
-  gap: 28rpx;
+  gap: 6rpx;
 }
 
-.card {
-  background: #ffffff;
-  border-radius: 28rpx;
-  box-shadow: 0 10rpx 34rpx rgba(60, 70, 120, 0.1);
-  padding: 32rpx;
-}
-
-.card-hover {
-  transform: translateY(2rpx);
-  box-shadow: 0 6rpx 20rpx rgba(60, 70, 120, 0.14);
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.card-ico {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 20rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40rpx;
-  background: linear-gradient(135deg, #eef2ff, #f3edff);
-}
-
-.card-name {
+.brand-name {
   font-size: 34rpx;
   font-weight: 700;
   color: #1f2333;
 }
 
-.card-arrow {
-  margin-left: auto;
-  font-size: 40rpx;
-  color: #c3c8d4;
-}
-
-.card-body {
-  margin-top: 24rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.card-sub {
-  font-size: 24rpx;
-  font-weight: 600;
+.brand-sub {
+  font-size: 22rpx;
   color: #8a90a3;
 }
 
-.card-line {
+.date-line {
   font-size: 30rpx;
-  font-weight: 700;
+  font-weight: 800;
   color: #333f8f;
 }
 
-.card-line-dim {
+.section {
+  background: #ffffff;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 28rpx rgba(60, 70, 120, 0.07);
+  padding: 30rpx 28rpx;
+  margin-bottom: 28rpx;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1f2333;
+}
+
+.section-more {
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #4f7cff;
+}
+
+.link-hover {
+  opacity: 0.7;
+}
+
+.course {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border: 2rpx solid #eef0f5;
+  border-radius: 18rpx;
+  padding: 22rpx;
+}
+
+.course-now {
+  border-color: #ff8a3d;
+  background: #fff4e5;
+}
+
+.course-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14rpx;
+  padding: 16rpx 22rpx;
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.course-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  min-width: 0;
+}
+
+.course-line {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2333;
+}
+
+.course-teacher {
+  font-size: 23rpx;
+  color: #5b6472;
+}
+
+.course-badge {
+  flex: 0 0 auto;
+  font-size: 20rpx;
+  font-weight: 800;
+  color: #4f7cff;
+  background: #eef2ff;
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+}
+
+.badge-now {
+  color: #ffffff;
+  background: #ff8a3d;
+}
+
+.hw-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.hw {
+  display: flex;
+  gap: 14rpx;
+  align-items: flex-start;
+}
+
+.hw-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 24rpx;
+  border-radius: 14rpx;
+  padding: 8rpx 16rpx;
+  margin-top: 2rpx;
+  white-space: nowrap;
+}
+
+.hw-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+/* 有图的条目:📎 计数提示,点条目去作业本看图 */
+.hw-pics {
+  flex: 0 0 auto;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #6b7280;
+  background: #f1f3f8;
+  border-radius: 999rpx;
+  padding: 4rpx 14rpx;
+  margin-top: 2rpx;
+  white-space: nowrap;
+}
+
+.note {
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #f6f7fb;
   color: #8a90a3;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  padding: 20rpx;
+}
+
+.error-txt {
+  font-size: 26rpx;
+  color: #4b5563;
+}
+
+.retry {
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #4f7cff;
 }

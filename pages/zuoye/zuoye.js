@@ -53,6 +53,13 @@ Page({
     this.render();
   },
 
+  /* 点缩略图:微信原生大图预览,可在同条目图片间左右滑动 */
+  previewImage(e) {
+    const urls = e.currentTarget.dataset.urls || [];
+    const current = urls[Number(e.currentTarget.dataset.pi)] || urls[0];
+    if (urls.length) wx.previewImage({ current, urls });
+  },
+
   render() {
     const days = hw.weekOf(this.anchor);
     this.setData({
@@ -67,7 +74,14 @@ Page({
           isToday: day === this.today,
           items: list.map(e => {
             const m = hw.metaOf(e.subject);
-            return { id: e.id, icon: m.icon, color: m.main, subject: e.subject, text: e.text };
+            return {
+              id: e.id,
+              icon: m.icon,
+              color: m.main,
+              subject: e.subject,
+              text: e.text,
+              imgs: e.imgs.map(hw.imgUrl),
+            };
           }),
         };
       }),

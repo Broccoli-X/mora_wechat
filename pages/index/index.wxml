@@ -1,33 +1,47 @@
 <view class="page">
-  <view class="hero">
-    <view class="hero-badge">M</view>
-    <text class="hero-title">{{title}}</text>
-    <text class="hero-subtitle">{{subtitle}}</text>
-  </view>
-
-  <view class="cards">
-    <view class="card" bindtap="goKebiao" hover-class="card-hover">
-      <view class="card-head">
-        <text class="card-ico">📅</text>
-        <text class="card-name">课程表</text>
-        <text class="card-arrow">›</text>
-      </view>
-      <view class="card-body">
-        <text class="card-sub">{{kbSub}}</text>
-        <text class="card-line">{{kbLine}}</text>
+  <view class="head">
+    <view class="brand">
+      <view class="brand-badge">M</view>
+      <view class="brand-col">
+        <text class="brand-name">{{title}}</text>
+        <text class="brand-sub">{{subtitle}}</text>
       </view>
     </view>
+    <text class="date-line">{{dateLine}}</text>
+  </view>
 
-    <view class="card" bindtap="goZuoye" hover-class="card-hover">
-      <view class="card-head">
-        <text class="card-ico">📒</text>
-        <text class="card-name">作业本</text>
-        <text class="card-arrow">›</text>
+  <view class="section" wx:if="{{course.show}}">
+    <view class="section-head">
+      <text class="section-title">📅 {{course.title}}</text>
+      <text class="section-more" bindtap="goKebiao" hover-class="link-hover">整周课表 ›</text>
+    </view>
+    <view class="course {{course.isNow ? 'course-now' : ''}}">
+      <view class="course-chip" style="background:{{course.color}}">{{course.icon}}{{course.subject}}</view>
+      <view class="course-info">
+        <text class="course-line">{{course.label}} {{course.time}}</text>
+        <text wx:if="{{course.teacher}}" class="course-teacher">👤{{course.teacher}}</text>
       </view>
-      <view class="card-body">
-        <text class="card-sub">{{hwSub}}</text>
-        <text class="card-line {{hwLine === '作业加载中…' ? 'card-line-dim' : ''}}">{{hwLine}}</text>
+      <text class="course-badge {{course.isNow ? 'badge-now' : ''}}">{{course.badge}}</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">📒 今日作业</text>
+      <text class="section-more" bindtap="goZuoye" hover-class="link-hover">全部作业 ›</text>
+    </view>
+    <view class="hw-list" wx:if="{{hwState === 'ok' && hwItems.length}}">
+      <view wx:for="{{hwItems}}" wx:key="id" class="hw" bindtap="goZuoye" hover-class="link-hover">
+        <view class="hw-chip" style="background:{{item.color}}">{{item.icon}}{{item.subject}}</view>
+        <text class="hw-text">{{item.text}}</text>
+        <text wx:if="{{item.pics}}" class="hw-pics">📎{{item.pics}}</text>
       </view>
+    </view>
+    <view class="note" wx:if="{{hwState === 'ok' && !hwItems.length}}">今日暂无作业，尽情玩吧 🎈</view>
+    <view class="note" wx:if="{{hwState === 'loading'}}">作业同步中…</view>
+    <view class="error" wx:if="{{hwState === 'error'}}">
+      <text class="error-txt">作业同步失败</text>
+      <text class="retry" bindtap="retryHw" hover-class="link-hover">重试</text>
     </view>
   </view>
 </view>

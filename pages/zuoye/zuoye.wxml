@@ -27,7 +27,24 @@
       <view wx:if="{{item.items.length}}" class="items">
         <view wx:for="{{item.items}}" wx:for-item="hw" wx:key="id" class="hw">
           <view class="chip" style="background:{{hw.color}}">{{hw.icon}}{{hw.subject}}</view>
-          <text class="txt">{{hw.text}}</text>
+          <view class="hw-main">
+            <text class="txt">{{hw.text}}</text>
+            <view wx:if="{{hw.imgs.length}}" class="pics">
+              <image
+                wx:for="{{hw.imgs}}"
+                wx:for-item="pic"
+                wx:for-index="pi"
+                wx:key="*this"
+                class="pic"
+                src="{{pic}}"
+                mode="aspectFill"
+                lazy-load
+                data-urls="{{hw.imgs}}"
+                data-pi="{{pi}}"
+                bindtap="previewImage"
+              />
+            </view>
+          </view>
         </view>
       </view>
       <view wx:else class="empty">没有作业，尽情玩吧 🎈</view>
