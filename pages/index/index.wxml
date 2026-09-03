@@ -31,6 +31,25 @@
     </view>
   </view>
 
+  <!-- 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后 -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">⏰ 今日代办</text>
+    </view>
+    <view class="td-list" wx:if="{{tdState === 'ok' && tdItems.length}}">
+      <view wx:for="{{tdItems}}" wx:key="id" class="td">
+        <view class="td-time" style="background:{{item.color}}">{{item.icon}}{{item.time}}</view>
+        <text class="td-text">{{item.text}}</text>
+      </view>
+    </view>
+    <view class="note" wx:if="{{tdState === 'ok' && !tdItems.length}}">今日暂无代办，尽情玩吧 🎉</view>
+    <view class="note" wx:if="{{tdState === 'loading'}}">代办同步中…</view>
+    <view class="error" wx:if="{{tdState === 'error'}}">
+      <text class="error-txt">代办同步失败</text>
+      <text class="retry" bindtap="retryTodos" hover-class="link-hover">重试</text>
+    </view>
+  </view>
+
   <view class="section" wx:if="{{course.show}}">
     <view class="section-head">
       <text class="section-title">📅 {{course.title}}</text>

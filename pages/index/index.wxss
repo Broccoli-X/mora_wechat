@@ -223,6 +223,41 @@
   color: #4f7cff;
 }
 
+/* ── 今日代办(只读,与网页端家长维护的清单同源;色块按重复类型配色) ────────── */
+.td-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.td {
+  display: flex;
+  gap: 14rpx;
+  align-items: flex-start;
+}
+
+.td-time {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 24rpx;
+  border-radius: 14rpx;
+  padding: 8rpx 16rpx;
+  margin-top: 2rpx;
+  white-space: nowrap;
+}
+
+.td-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #1f2937;
+  word-break: break-all;
+}
+
 /* ── 积分总览(点按去「我的」看明细与规则) ────────── */
 .points {
   background: linear-gradient(135deg, #fff3bf 0%, #ffe8cc 100%);
