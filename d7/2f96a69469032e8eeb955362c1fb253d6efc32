@@ -1,0 +1,41 @@
+pages/index/index.wxml
+  s_9b1fc7df830987::t_6c985fd970c3d1 13-33
+pages/index/index.js
+  s_9b1fc7df830987::t_d47f7308e223de 3,13-18,25,31-34,76-103
+  s_9b1fc7df830987::t_24a81c4d8f3d7c 104
+app.json
+  s_9b1fc7df830987::t_0019d502f17887 11-12
+  s_9b1fc7df830987::t_d63291b6559e68 38-43
+pages/mine/mine.wxss
+  s_9b1fc7df830987::t_1d9dba5a22ca80 1-265
+utils/points.js
+  s_9b1fc7df830987::t_fa680e8c306be2 1-182
+pages/mine/mine.wxml
+  s_9b1fc7df830987::t_fc0f244779974d 18-25
+  s_9b1fc7df830987::t_bb55acf776c177 1-17,26-61
+docs/superpowers/specs/2026-09-03-mine-points-design.md
+  s_9b1fc7df830987::t_1480589ec5f6a8 1-59
+pages/index/index.wxss
+  s_9b1fc7df830987::t_08ad6a9593a0c1 225-274
+pages/mine/mine.json
+  s_9b1fc7df830987::t_34384b31a424f1 1-5
+pages/mine/mine.js
+  s_9b1fc7df830987::t_e2cfd0c60ff943 34,38-39
+  s_9b1fc7df830987::t_277092403b10bd 1-33,35-37,40-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "d72f96a69469032e8eeb955362c1fb253d6efc32",
+  "prompts": {},
+  "sessions": {
+    "s_9b1fc7df830987": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_89562934-f4d7-4cdd-a591-ee77a0aa8af0",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
