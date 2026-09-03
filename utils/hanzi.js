@@ -33,7 +33,7 @@ function groupShortName(name) {
 
 /* 本地存储键:数据集/笔画数/掌握进度/设备名(设备名与拼音模块共用同一键) */
 const DATASET_KEY = 'mora-hanzi-dataset-v1';
-const STROKES_KEY = 'mora-hanzi-strokes-v1';
+const STROKE_DATA_KEY = 'mora-hanzi-stroke-data-v1';
 const MASTER_KEY = 'mora-hanzi-mastered-v1';
 const TS_KEY = 'mora-hanzi-mastered-ts-v1';
 const DEVICE_KEY = 'mora-device';
@@ -123,21 +123,22 @@ function scopeChars(g) {
   return grp ? grp.chars.slice() : [];
 }
 
-/* ===== 笔画数:本地缓存(内容不可变,永久有效)→ 种子笔数表 → /api/hanzi-stroke 懒取。
-   服务端 hanzi_strokes 只存在线新增字的笔画(种子字的在网页端打包里),故种子笔数
-   从 mora 网页端 char-data.js 提取打包(仅笔数不存路径,笔顺动画本期不做),失败静默 ===== */
-const SEED_STROKES = /*__SEED_STROKES__*/{"日":4,"月":4,"水":4,"火":4,"土":3,"木":4,"山":3,"天":4,"地":6,"风":4,"雨":8,"口":3,"耳":6,"目":5,"手":4,"人":2,"子":3,"爸":8,"奶":5,"你":7,"我":7,"他":5,"她":6,"它":5,"开":4,"关":6,"门":3,"桥":10,"台":5,"金":8,"中":4,"小":3,"远":7,"近":7,"色":6,"听":7,"无":4,"声":7,"去":5,"来":7,"鸟":5,"马":3,"一":1,"二":2,"三":3,"四":5,"五":4,"六":4,"七":2,"八":2,"九":2,"十":2,"两":7,"白":5,"云":4,"太":4,"阳":6,"亮":9,"星":9,"花":7,"草":9,"树":9,"牛":4,"羊":6,"兔":8,"虫":6,"头":5,"妈":6,"大":3,"上":3,"下":3,"多":6,"少":4,"高":10,"兴":6,"快":7,"乐":5,"好":6,"吃":6,"看":9,"走":7,"笑":10,"飞":3,"爱":10,"是":9,"跑":12,"跳":13,"只":5,"又":2,"了":2,"不":4,"的":8,"儿":2,"几":2,"个":3,"牙":4,"心":4,"什":4,"么":3,"可":5,"回":6,"出":5,"里":7,"床":7,"车":4,"家":10,"爷":6,"饭":7,"有":6,"找":7,"坐":7,"玩":8,"哭":10,"起":10,"喝":12,"到":8,"河":8,"海":10,"雪":11,"春":9,"夏":10,"秋":9,"冬":5,"鱼":8,"狼":10,"猫":11,"狗":8,"蝴":15,"蝶":15,"蜜":14,"蜂":13,"谢":12,"睡":13,"红":6,"蓝":13,"绿":11,"美":9,"丽":7,"明":8,"尘":6,"林":8,"森":12,"厂":2,"石":5,"立":5,"正":5,"叶":5,"学":8,"校":10,"老":6,"师":6,"工":3,"医":7,"院":9,"生":5,"传":6,"达":6,"室":9,"卫":3,"年":6,"田":5,"灯":6,"公":4,"鸡":7,"禾":5,"午":4,"东":5,"西":6,"江":6,"南":9,"采":8,"莲":10,"戏":6,"竹":6,"用":5,"步":7,"为":4,"参":8,"加":5,"洞":9,"尖":6,"说":9,"就":12,"圆":10,"弯":9,"见":4,"本":5,"在":6,"左":5,"右":5};
+/* ===== 笔画数据:打包种子(mora 网页端 char-data.js 精简,仅逐笔轮廓,见 utils/hanzi-strokes.js)
+   → 在线新增字懒取 /api/hanzi-stroke(内容不可变,取到即永久缓存,只留 strokes),失败静默返回 null。
+   服务端 hanzi_strokes 只存在线新增字的笔画,种子字的笔画在打包里 ===== */
+const BUNDLED_STROKES = require('./hanzi-strokes');
 
-function strokesCountSync(c) {
+function strokeDataSync(c) {
+  if (BUNDLED_STROKES[c]) return BUNDLED_STROKES[c];
   try {
-    const m = wx.getStorageSync(STROKES_KEY);
+    const m = wx.getStorageSync(STROKE_DATA_KEY);
     if (m && typeof m === 'object' && !Array.isArray(m) && m[c]) return m[c];
-  } catch (e) { /* 存储不可用查种子表 */ }
-  return SEED_STROKES[c] || 0;
+  } catch (e) { /* 存储不可用按无数据 */ }
+  return null;
 }
 
-function fetchStrokeCount(c, done) {
-  const hit = strokesCountSync(c);
+function fetchStrokes(c, done) {
+  const hit = strokeDataSync(c);
   if (hit) { if (done) done(hit); return; }
   wx.request({
     url: API_BASE + '/api/hanzi-stroke?token=' + encodeURIComponent(TOKEN) +
@@ -145,19 +146,25 @@ function fetchStrokeCount(c, done) {
     method: 'GET',
     success(res) {
       const j = res.data;
-      const n = (j && j.ok && j.data && Array.isArray(j.data.strokes)) ? j.data.strokes.length : 0;
-      if (n) {
+      const d = (j && j.ok && j.data && Array.isArray(j.data.strokes) && j.data.strokes.length)
+        ? { strokes: j.data.strokes } : null;
+      if (d) {
         try {
-          let m = wx.getStorageSync(STROKES_KEY) || {};
+          let m = wx.getStorageSync(STROKE_DATA_KEY) || {};
           if (typeof m !== 'object' || Array.isArray(m)) m = {};
-          m[c] = n;
-          wx.setStorageSync(STROKES_KEY, m);
+          m[c] = d;
+          wx.setStorageSync(STROKE_DATA_KEY, m);
         } catch (e) { /* 存储失败本次不缓存,下次再取 */ }
       }
-      if (done) done(n);
+      if (done) done(d);
     },
-    fail() { if (done) done(0); },
+    fail() { if (done) done(null); },
   });
+}
+
+function strokesCountSync(c) {
+  const d = strokeDataSync(c);
+  return d ? d.strokes.length : 0;
 }
 
 /* ===== 掌握进度:本地存储为第一写入点,键位按当前字库过滤(防脏数据落盘) ===== */
@@ -372,7 +379,7 @@ function countMasteredIn(g, masteredMap) {
 module.exports = {
   HANZI_SEED, ALL_KEY,
   currentDataset, fetchDataset, viewIndex, hasChar, isValidScope, scopeChars,
-  strokesCountSync, fetchStrokeCount,
+  strokeDataSync, fetchStrokes, strokesCountSync,
   loadMastered, loadTs, saveStore, markMastered, syncMastered,
   mergeItems, itemsToPush, localItems, deviceName,
   charView, studyGroups, groupCardViews,

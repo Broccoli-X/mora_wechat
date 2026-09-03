@@ -4,14 +4,15 @@
       <text class="d-py" style="color:{{pyColor}}">{{item.py}}</text>
     </view>
 
-    <!-- 田字格大字 -->
+    <!-- 田字格:canvas 渲染整字 / 无笔画数据时回退楷体大字 -->
     <view class="hw-box">
       <view class="hw-line hw-v"></view>
       <view class="hw-line hw-h"></view>
-      <text class="hw-char">{{item.char}}</text>
+      <canvas wx:if="{{hasStrokes}}" type="2d" id="hw-canvas" class="hw-canvas"></canvas>
+      <text wx:else class="hw-char">{{item.char}}</text>
     </view>
 
-    <view wx:if="{{strokes}}" class="d-strokecount">「 {{item.char}} 」共 <text class="d-stroke-num">{{strokes}}</text> 笔</view>
+    <view wx:if="{{strokeCount}}" class="d-strokecount">「 {{item.char}} 」共 <text class="d-stroke-num">{{strokeCount}}</text> 笔</view>
 
     <!-- 注音三色分解:声母蓝 / 介母橙 / 韵母粉(与网页端一致) -->
     <view class="d-decomp">
@@ -28,6 +29,17 @@
         <view wx:if="{{item.fn}}" class="ph-cell">
           <text class="ph ph-fn">{{item.fn}}</text>
           <text class="ph-tag tag-fn">韵母</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 笔顺分解:第 k 格前 k 笔深色,其余浅灰 -->
+    <view wx:if="{{steps.length}}" class="d-order">
+      <view class="d-lab">笔顺分解(共 {{strokeCount}} 笔,按顺序逐笔)</view>
+      <view class="strokes">
+        <view wx:for="{{steps}}" wx:for-item="s" wx:key="*this" class="ss-cell">
+          <canvas type="2d" class="stroke-step"></canvas>
+          <text class="ss-no">第 {{s + 1}} 笔</text>
         </view>
       </view>
     </view>

@@ -22,7 +22,7 @@
   letter-spacing: 4rpx;
 }
 
-/* 田字格:米白底 + 柔红实线外框 + 虚线十字中线 */
+/* 田字格:米白底 + 柔红实线外框 + 虚线十字中线,canvas 渲染其上 */
 .hw-box {
   position: relative;
   width: 380rpx;
@@ -32,9 +32,6 @@
   background: #fffdfa;
   border: 3rpx solid #e6a0a0;
   border-radius: 12rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 }
 
@@ -57,7 +54,23 @@
   border-top: 2rpx dashed #e6a0a0;
 }
 
+.hw-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .hw-char {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 240rpx;
   font-weight: 900;
   line-height: 1;
@@ -70,7 +83,7 @@
   font-size: 26rpx;
   font-weight: 800;
   color: #999;
-  margin-top: 10rpx;
+  margin-top: 16rpx;
 }
 
 .d-stroke-num {
@@ -134,6 +147,42 @@
 .tag-md { background: #ff9500; }
 .tag-fn { background: #ff5c8d; }
 
+/* 笔顺分解图 */
+.d-order {
+  margin: 26rpx 0 4rpx;
+}
+
+.strokes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14rpx;
+}
+
+.ss-cell {
+  width: 150rpx;
+}
+
+.stroke-step {
+  display: block;
+  width: 150rpx;
+  height: 150rpx;
+  background: #ffffff;
+  border: 2rpx solid #f1f5f9;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.ss-no {
+  display: block;
+  text-align: center;
+  font-size: 20rpx;
+  font-weight: 800;
+  color: #94a3b8;
+  margin-top: 6rpx;
+}
+
 .d-word {
   text-align: center;
   font-size: 26rpx;
@@ -189,10 +238,6 @@
   border-radius: 999rpx;
   padding: 16rpx 28rpx;
   box-shadow: 0 6rpx 14rpx rgba(0, 0, 0, 0.12);
-}
-
-.d-btn-hover {
-  opacity: 0.85;
 }
 
 .d-prev {
