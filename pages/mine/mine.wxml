@@ -1,0 +1,61 @@
+<view class="page">
+  <view class="head">
+    <view class="brand">
+      <view class="brand-badge">M</view>
+      <view class="brand-col">
+        <text class="brand-name">Mora 学习卡片</text>
+        <text class="brand-sub">表现好挣星星,攒星星换奖励</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 积分卡片:点按展开/收起明细与规则 -->
+  <view class="section points" bindtap="toggleOpen" hover-class="{{ptState === 'ok' ? 'card-hover' : 'none'}}">
+    <view class="pt-head">
+      <text class="pt-title">⭐ 我的积分</text>
+      <text wx:if="{{ptState === 'ok'}}" class="pt-arrow">{{ptOpen ? '▴ 收起' : '▾ 明细与规则'}}</text>
+    </view>
+    <block wx:if="{{ptState !== 'error'}}">
+      <view class="pt-emoji {{empty ? 'pt-emoji-none' : ''}}">{{empty ? '还没有星星,完成作业就能挣星星哦!' : emoji}}</view>
+      <view class="pt-chips">
+        <text class="pt-chip c-earn">累计 {{earned}} 分</text>
+        <text class="pt-chip c-left">剩余 {{remaining}} 分</text>
+        <text class="pt-chip c-yuan">可换 {{yuan}} 元</text>
+      </view>
+    </block>
+    <view class="note" wx:if="{{ptState === 'loading'}}">积分同步中…</view>
+    <view class="error" wx:if="{{ptState === 'error'}}">
+      <text class="error-txt">积分同步失败</text>
+      <text class="retry" catchtap="retryPoints" hover-class="link-hover">重试</text>
+    </view>
+  </view>
+
+  <block wx:if="{{ptOpen}}">
+    <!-- 积分明细:最新在前,更早的折叠 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">🧾 积分明细</text>
+        <text wx:if="{{entries.length}}" class="pt-meta">共 {{entries.length}} 条 · 最新在前</text>
+      </view>
+      <view wx:for="{{shown}}" wx:key="id" class="h-row">
+        <text class="h-date">{{item.date}}</text>
+        <text class="h-txt">{{item.desc}}</text>
+        <text class="h-score {{item.score > 0 ? 'plus' : 'minus'}}">{{item.scoreText}}</text>
+      </view>
+      <view class="note" wx:if="{{!entries.length}}">还没有积分记录,从第一颗星星开始吧 ✨</view>
+      <view wx:if="{{folded > 0}}" class="fold-btn" bindtap="toggleAll" hover-class="link-hover">
+        {{allOpen ? '收起 ▴' : '展开更早的 ' + folded + ' 条 ▾'}}
+      </view>
+    </view>
+
+    <!-- 积分规则 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">📜 积分规则</text>
+      </view>
+      <view wx:for="{{rules}}" wx:key="*this" class="rule">{{item}}</view>
+    </view>
+
+    <view class="foot-tip">发放与兑换在网页端家长页操作,数据自动同步到所有设备</view>
+  </block>
+</view>

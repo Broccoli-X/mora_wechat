@@ -1,5 +1,6 @@
 const kb = require('../../utils/kebiao');
 const hw = require('../../utils/homework');
+const pt = require('../../utils/points');
 
 Page({
   data: {
@@ -9,18 +10,28 @@ Page({
     course: { show: false },
     hwState: 'loading', // loading | ok | error
     hwItems: [],
+    ptState: 'loading', // loading | ok | error
+    ptEmoji: '',
+    ptEmpty: true,
+    ptEarned: 0,
+    ptRemaining: 0,
+    ptYuan: '0',
   },
 
   onShow() {
     this.renderDate();
     this.renderCourse();
     this.loadHomework();
+    this.loadPoints();
   },
 
   onPullDownRefresh() {
     this.renderDate();
     this.renderCourse();
-    this.loadHomework(() => wx.stopPullDownRefresh());
+    let pending = 2;
+    const done = () => { if (--pending === 0) wx.stopPullDownRefresh(); };
+    this.loadHomework(done);
+    this.loadPoints(done);
   },
 
   renderDate() {
@@ -60,6 +71,35 @@ Page({
 
   retryHw() {
     this.loadHomework();
+  },
+
+  /* 积分总览:emoji 只看累计(兑换不掉),剩余积分折算零钱;明细与规则在「我的」tab */
+  loadPoints(done) {
+    this.setData({ ptState: 'loading' });
+    pt.fetchPoints(entries => {
+      const t = pt.totalsOf(entries);
+      const emoji = pt.emojiFor(t.earned);
+      this.setData({
+        ptState: 'ok',
+        ptEmoji: emoji,
+        ptEmpty: !emoji,
+        ptEarned: t.earned,
+        ptRemaining: t.remaining,
+        ptYuan: pt.yuanText(t.remaining),
+      });
+      if (done) done();
+    }, () => {
+      this.setData({ ptState: 'error' });
+      if (done) done();
+    });
+  },
+
+  retryPoints() {
+    this.loadPoints();
+  },
+
+  goMine() {
+    wx.switchTab({ url: '/pages/mine/mine' });
   },
 
   goKebiao() {

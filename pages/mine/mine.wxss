@@ -1,0 +1,265 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 40rpx 32rpx 56rpx;
+  background-color: #f6f7fb;
+}
+
+.head {
+  padding: 0 8rpx;
+  margin-bottom: 32rpx;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.brand-badge {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4f7cff, #7b5bff);
+  color: #ffffff;
+  font-size: 40rpx;
+  font-weight: 600;
+}
+
+.brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.brand-name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1f2333;
+}
+
+.brand-sub {
+  font-size: 22rpx;
+  color: #8a90a3;
+}
+
+.section {
+  background: #ffffff;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 28rpx rgba(60, 70, 120, 0.07);
+  padding: 30rpx 28rpx;
+  margin-bottom: 28rpx;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1f2333;
+}
+
+.card-hover {
+  opacity: 0.85;
+}
+
+.link-hover {
+  opacity: 0.7;
+}
+
+/* ── 积分卡片(总览) ─────────────────────────────── */
+.points {
+  background: linear-gradient(135deg, #fff3bf 0%, #ffe8cc 100%);
+  border: 2rpx solid #f59f00;
+}
+
+.pt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+}
+
+.pt-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #7a4f01;
+}
+
+.pt-arrow {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #b08d2f;
+}
+
+.pt-emoji {
+  text-align: center;
+  font-size: 44rpx;
+  line-height: 1.5;
+  letter-spacing: 4rpx;
+  word-break: break-all;
+}
+
+.pt-emoji-none {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #b08d2f;
+}
+
+.pt-chips {
+  margin-top: 18rpx;
+  display: flex;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pt-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999rpx;
+  padding: 10rpx 24rpx;
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.c-earn {
+  background: #e8590c;
+}
+
+.c-left {
+  background: #2b8a3e;
+}
+
+.c-yuan {
+  background: #1971c2;
+}
+
+.pt-meta {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #8a90a3;
+}
+
+/* ── 积分明细 ───────────────────────────────────── */
+.h-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  border: 2rpx solid #eef0f5;
+  border-radius: 16rpx;
+  padding: 18rpx 20rpx;
+  margin-bottom: 12rpx;
+}
+
+.h-date {
+  flex: 0 0 auto;
+  font-size: 23rpx;
+  font-weight: 800;
+  color: #4b5563;
+}
+
+.h-txt {
+  flex: 1;
+  min-width: 0;
+  font-size: 27rpx;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+.h-score {
+  flex: 0 0 auto;
+  min-width: 84rpx;
+  text-align: center;
+  border-radius: 12rpx;
+  font-size: 25rpx;
+  font-weight: 800;
+  padding: 6rpx 14rpx;
+  color: #ffffff;
+}
+
+.h-score.plus {
+  background: #2b8a3e;
+}
+
+.h-score.minus {
+  background: #c92a2a;
+}
+
+.fold-btn {
+  margin: 16rpx auto 0;
+  border: 2rpx solid #d4d9e2;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #5b6472;
+  text-align: center;
+}
+
+/* ── 积分规则 ───────────────────────────────────── */
+.rule {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #33415c;
+  line-height: 1.9;
+  padding-left: 30rpx;
+  position: relative;
+}
+
+.rule::before {
+  content: "·";
+  position: absolute;
+  left: 10rpx;
+  font-weight: 800;
+  color: #f59f00;
+}
+
+.foot-tip {
+  text-align: center;
+  font-size: 22rpx;
+  color: #8a90a3;
+  line-height: 1.8;
+  padding: 0 24rpx;
+}
+
+.note {
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #f6f7fb;
+  color: #8a90a3;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  padding: 20rpx;
+}
+
+.error-txt {
+  font-size: 26rpx;
+  color: #4b5563;
+}
+
+.retry {
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #4f7cff;
+}

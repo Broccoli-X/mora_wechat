@@ -222,3 +222,53 @@
   font-weight: 800;
   color: #4f7cff;
 }
+
+/* ── 积分总览(点按去「我的」看明细与规则) ────────── */
+.points {
+  background: linear-gradient(135deg, #fff3bf 0%, #ffe8cc 100%);
+  border: 2rpx solid #f59f00;
+}
+
+.pt-emoji {
+  text-align: center;
+  font-size: 44rpx;
+  line-height: 1.5;
+  letter-spacing: 4rpx;
+  word-break: break-all;
+}
+
+.pt-emoji-none {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #b08d2f;
+}
+
+.pt-chips {
+  margin-top: 18rpx;
+  display: flex;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pt-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999rpx;
+  padding: 10rpx 24rpx;
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.c-earn {
+  background: #e8590c;
+}
+
+.c-left {
+  background: #2b8a3e;
+}
+
+.c-yuan {
+  background: #1971c2;
+}

@@ -8,7 +8,8 @@
     "pages/pinyin/study",
     "pages/hanzi/hanzi",
     "pages/hanzi/study",
-    "pages/hanzi/detail"
+    "pages/hanzi/detail",
+    "pages/mine/mine"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
@@ -34,6 +35,12 @@
         "text": "分类",
         "iconPath": "assets/tabbar/grid.png",
         "selectedIconPath": "assets/tabbar/grid-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tabbar/mine.png",
+        "selectedIconPath": "assets/tabbar/mine-active.png"
       }
     ]
   },

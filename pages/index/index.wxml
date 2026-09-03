@@ -10,6 +10,27 @@
     <text class="date-line">{{dateLine}}</text>
   </view>
 
+  <!-- 积分总览:emoji 只看累计,剩余折算零钱;点按去「我的」看明细与规则(不放规则) -->
+  <view class="section points" bindtap="goMine" hover-class="link-hover">
+    <view class="section-head">
+      <text class="section-title">⭐ 我的积分</text>
+      <text class="section-more">明细与规则 ›</text>
+    </view>
+    <block wx:if="{{ptState !== 'error'}}">
+      <view class="pt-emoji {{ptEmpty ? 'pt-emoji-none' : ''}}">{{ptEmpty ? '还没有星星,完成作业就能挣星星哦!' : ptEmoji}}</view>
+      <view class="pt-chips">
+        <text class="pt-chip c-earn">累计 {{ptEarned}} 分</text>
+        <text class="pt-chip c-left">剩余 {{ptRemaining}} 分</text>
+        <text class="pt-chip c-yuan">可换 {{ptYuan}} 元</text>
+      </view>
+    </block>
+    <view class="note" wx:if="{{ptState === 'loading'}}">积分同步中…</view>
+    <view class="error" wx:if="{{ptState === 'error'}}">
+      <text class="error-txt">积分同步失败</text>
+      <text class="retry" catchtap="retryPoints" hover-class="link-hover">重试</text>
+    </view>
+  </view>
+
   <view class="section" wx:if="{{course.show}}">
     <view class="section-head">
       <text class="section-title">📅 {{course.title}}</text>
