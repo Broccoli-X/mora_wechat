@@ -1,0 +1,137 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 28rpx 28rpx 56rpx;
+  background: linear-gradient(160deg, #dff0ff 0%, #f2e7ff 46%, #ffe9d6 100%);
+}
+
+.head {
+  text-align: center;
+  padding: 8rpx 0 24rpx;
+}
+
+.head-title {
+  font-size: 42rpx;
+  font-weight: 900;
+  color: #1f2333;
+  letter-spacing: 2rpx;
+}
+
+.head-sub {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #7a8291;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1f2333;
+  margin: 20rpx 4rpx 20rpx;
+}
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22rpx;
+}
+
+.table-card {
+  position: relative;
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 30rpx rgba(60, 70, 120, 0.18);
+  padding: 44rpx 32rpx 40rpx;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.table-wide {
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 60rpx;
+  padding-bottom: 60rpx;
+}
+
+.table-half {
+  width: calc((100% - 22rpx) / 2);
+  box-sizing: border-box;
+  min-height: 240rpx;
+}
+
+.table-hover {
+  transform: scale(0.97);
+}
+
+.table-title {
+  font-size: 44rpx;
+  font-weight: 900;
+  letter-spacing: 6rpx;
+}
+
+.table-sub {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  opacity: 0.92;
+}
+
+.table-progress {
+  position: absolute;
+  right: 18rpx;
+  bottom: 14rpx;
+  font-size: 20rpx;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.26);
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+}
+
+.advanced {
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 3rpx dashed #c3c8d4;
+  border-radius: 28rpx;
+  padding: 40rpx 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.advanced-hover {
+  background: #f4f6fb;
+}
+
+.advanced-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.advanced-name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #5f6b7d;
+}
+
+.advanced-desc {
+  font-size: 24rpx;
+  color: #9aa1b0;
+}
+
+.advanced-badge {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #8a6410;
+  background: #fff7e0;
+  border: 2rpx solid #eebe8f;
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+  white-space: nowrap;
+}

@@ -1,0 +1,34 @@
+<view class="page">
+  <view class="head">
+    <view class="head-title">🥳 拼音学习卡</view>
+    <view class="head-sub">共 {{total}} 张 · 已掌握 {{masteredCount}} 张</view>
+  </view>
+
+  <view class="section-title">拼音基础学习</view>
+  <view class="board">
+    <view
+      wx:for="{{tables}}"
+      wx:key="key"
+      class="table-card {{item.layout === 'wide' ? 'table-wide' : 'table-half'}}"
+      style="background:linear-gradient(135deg,{{item.color}},{{item.color2}})"
+      hover-class="table-hover"
+      data-type="{{item.key}}"
+      bindtap="onTapTable"
+    >
+      <view class="table-title">{{item.title}}</view>
+      <view class="table-sub">{{item.count}}个 · {{item.sub}}</view>
+      <view class="table-progress">⭐ {{item.mastered}}/{{item.count}}</view>
+    </view>
+  </view>
+
+  <view class="section-title">拼音进阶练习</view>
+  <view class="board">
+    <view class="advanced" hover-class="advanced-hover" bindtap="onTapAdvanced">
+      <view class="advanced-main">
+        <text class="advanced-name">拼音识字打卡</text>
+        <text class="advanced-desc">幼升小、一年级必学的拼音汉字（300个）</text>
+      </view>
+      <view class="advanced-badge">敬请期待</view>
+    </view>
+  </view>
+</view>

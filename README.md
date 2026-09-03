@@ -20,19 +20,23 @@ Mora 学习卡片微信小程序。
 ├── app.js                  # 小程序入口
 ├── app.wxss                # 全局样式
 ├── sitemap.json            # 页面收录配置
-├── assets/tabbar/          # tabBar 图标
+├── assets/
+│   └── tabbar/             # tabBar 图标
 ├── utils/
 │   ├── kebiao.js           # 课表静态数据 + 工具（与 mora 网页端 lib/kebiao-data.js 同步维护）
-│   └── homework.js         # 作业只读同步（/api/progress, module=homework）+ 图片地址 + 日期工具
+│   ├── homework.js         # 作业只读同步（/api/progress, module=homework）+ 图片地址 + 日期工具
+│   └── pinyin.js           # 拼音卡片数据 + 工具（与 mora 网页端 lib/pinyin-data.js 同步维护）
 └── pages/
     ├── index/              # 首页 tab（今日信息：当前课程单条 + 今日作业）
     ├── category/           # 分类 tab（功能入口，未开发条目隐藏）
     ├── kebiao/             # 课程表（按天查看，当前节次高亮）
-    └── zuoye/              # 作业本（按周查看，只读，含图片缩略图与大图预览，下拉刷新）
+    ├── zuoye/              # 作业本（按周查看，只读，含图片缩略图与大图预览，下拉刷新）
+    └── pinyin/             # 拼音学习卡（pinyin 基础入口大卡 + study 卡片与掌握标记；进阶占位未开发）
 ```
 
 ## 注意事项
 
 - 作业数据来自 mora 项目的进度同步服务（`https://www.tcued.com/api/progress`），录入/删除在网页端维护，小程序端只做查看。
 - 作业图片存于同一服务：payload 内是图片 id（短键 `g`），本体经 `GET /api/image?id=<id>` 读取（不带 token，与网页端一致）；作业本页点缩略图可全屏预览。
+- 拼音学习卡数据与 mora 网页端 `lib/pinyin-data.js` 同源；卡片为纯视觉学习卡（不带发音），掌握进度存本地（键 `mora-pinyin-mastered-v1`，键位格式与网页端一致），暂未接入服务端同步。
 - 上线前需在小程序管理后台把 `https://www.tcued.com` 配置为 request 合法域名；开发阶段可在开发者工具里勾选「不校验合法域名」调试。

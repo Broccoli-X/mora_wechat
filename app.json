@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/category/category",
     "pages/kebiao/kebiao",
-    "pages/zuoye/zuoye"
+    "pages/zuoye/zuoye",
+    "pages/pinyin/pinyin",
+    "pages/pinyin/study"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

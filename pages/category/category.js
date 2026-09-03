@@ -12,7 +12,7 @@ const GROUPS = [
         items: [
           { name: '古诗卡片', desc: '必背古诗跟读与背诵', status: 'dev' },
           { name: '生字卡片', desc: '识字与笔顺练习', status: 'dev' },
-          { name: '拼音练习', desc: '声母韵母拼读', status: 'dev' },
+          { name: '拼音学习卡', desc: '声母韵母 · 整体认读 · 声调', status: 'ok', url: '/pages/pinyin/pinyin' },
         ],
       },
       {

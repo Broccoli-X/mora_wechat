@@ -1,0 +1,64 @@
+<view class="page">
+  <view class="progress-card">
+    <view class="progress-line">
+      <text class="progress-text">⭐ 已掌握 {{masteredCount}} / {{total}}</text>
+    </view>
+    <view class="bar">
+      <view class="bar-fill" style="width:{{percent}}%"></view>
+    </view>
+  </view>
+
+  <view wx:for="{{groups}}" wx:for-item="group" wx:for-index="gi" wx:key="key" class="group">
+    <view class="group-title" style="background:{{group.color}}">{{group.name}}</view>
+
+    <!-- 卡片网格:右上角星星标记掌握 -->
+    <view wx:if="{{!isSd}}" class="grid">
+      <view
+        wx:for="{{group.items}}"
+        wx:for-item="item"
+        wx:for-index="ii"
+        wx:key="key"
+        class="card {{item.mastered ? 'card-mastered' : ''}}"
+      >
+        <view class="card-top" style="background:{{item.color}}">
+          <text class="card-py">{{item.py}}</text>
+          <view
+            class="star {{item.mastered ? 'star-on' : ''}}"
+            data-gi="{{gi}}"
+            data-ii="{{ii}}"
+            catchtap="onToggleStar"
+          >{{item.mastered ? '★' : '☆'}}</view>
+        </view>
+        <view class="card-emoji">{{item.emoji}}</view>
+        <view class="card-word">{{item.word}}</view>
+        <view wx:if="{{item.note}}" class="card-note">{{item.note}}</view>
+      </view>
+    </view>
+
+    <!-- 四声调:通栏调值卡 -->
+    <view wx:else class="tone-list">
+      <view
+        wx:for="{{group.items}}"
+        wx:for-item="item"
+        wx:for-index="ii"
+        wx:key="key"
+        class="tone-row {{item.mastered ? 'tone-mastered' : ''}}"
+      >
+        <view class="tone-emoji">{{item.emoji}}</view>
+        <view class="tone-main">
+          <text class="tone-py" style="color:{{item.color}}">{{item.py}}</text>
+          <text class="tone-kou">{{item.word}} · {{item.note}}</text>
+        </view>
+        <view class="tone-example">{{item.example}}</view>
+        <view
+          class="star star-tone {{item.mastered ? 'star-on' : ''}}"
+          data-gi="{{gi}}"
+          data-ii="{{ii}}"
+          catchtap="onToggleStar"
+        >{{item.mastered ? '★' : '☆'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tip">跟着卡片大声读 · 点 ☆ 标记已掌握</view>
+</view>
