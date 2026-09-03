@@ -1,0 +1,55 @@
+pages/pinyin/study.wxss
+  s_14794773a95efa::t_b0a2bcc2745291 1-197
+pages/pinyin/study.wxml
+  s_14794773a95efa::t_7a05a0ebfec673 14,63
+  s_14794773a95efa::t_f63b6180b9a142 1-13,15-62,64
+app.json
+  s_14794773a95efa::t_eb24c31c827d50 6-8
+pages/pinyin/pinyin.wxml
+  s_14794773a95efa::t_078664c0efbfd5 1-34
+pages/pinyin/pinyin.wxss
+  s_14794773a95efa::t_c1ce2b41a2e62d 1-137
+pages/pinyin/study.json
+  s_14794773a95efa::t_a45c2c6bdc68be 1-4
+pages/category/category.js
+  s_14794773a95efa::t_1ffb7439715d27 15
+pages/pinyin/study.js
+  s_14794773a95efa::t_cf54b1b6cc6d99 20
+  s_14794773a95efa::t_0b1bd572a3fcee 1-19,21-49
+pages/pinyin/pinyin.js
+  s_14794773a95efa::t_915de17d7233fe 1-31,33,35-40
+  s_14794773a95efa::t_f54ae041fc71f1 32,34
+pages/pinyin/pinyin.json
+  s_14794773a95efa::t_6252a4c324feb2 1-4
+README.md
+  s_14794773a95efa::t_ba22ac65521e10 24,34
+  s_14794773a95efa::t_09935472e41471 41
+  s_14794773a95efa::t_da81a255d640b2 23,27-28,33
+utils/pinyin.js
+  s_14794773a95efa::t_764e578ebfcb33 1-62,67-77,79-152,154-155
+  s_14794773a95efa::t_fb4881c436341c 78
+  s_14794773a95efa::t_1c566054d41ca6 63-66
+  s_14794773a95efa::t_04b70fd1a3da38 153
+docs/superpowers/specs/2026-09-03-pinyin-cards-design.md
+  s_14794773a95efa::t_9b380576445f7e 63-68
+  s_14794773a95efa::t_fa734e842ffcd5 1-39,41-42,44,47-62
+  s_14794773a95efa::t_c11bd0befda223 40
+  s_14794773a95efa::t_f99bc9ca2909a9 43,45-46
+  s_14794773a95efa::t_fd0d92bf56fd4c 69-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "24316de88599ab485f14650d3cfd445c63a939dd",
+  "prompts": {},
+  "sessions": {
+    "s_14794773a95efa": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_8d1ea5a9-2195-4c94-b111-f4370ba8d001",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
