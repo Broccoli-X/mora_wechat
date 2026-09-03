@@ -1,0 +1,43 @@
+<view class="page">
+  <view class="progress-card">
+    <view class="progress-line">
+      <text class="progress-text">⭐ 已掌握 {{masteredCount}} / {{total}}</text>
+    </view>
+    <view class="bar">
+      <view class="bar-fill" style="width:{{percent}}%"></view>
+    </view>
+  </view>
+
+  <view wx:for="{{groups}}" wx:for-item="group" wx:for-index="gi" wx:key="key" class="group">
+    <view class="group-title" style="background:{{group.color}}">{{group.name}} · {{group.items.length}}字</view>
+
+    <!-- 字卡网格:右上角星星标记掌握,点卡片看注音分解 -->
+    <view class="grid">
+      <view
+        wx:for="{{group.items}}"
+        wx:for-item="item"
+        wx:for-index="ii"
+        wx:key="char"
+        class="card {{item.mastered ? 'card-mastered' : ''}}"
+        data-gi="{{gi}}"
+        data-ii="{{ii}}"
+        bindtap="onTapCard"
+        hover-class="card-hover"
+      >
+        <view class="card-top" style="background:linear-gradient(135deg,{{item.color}},{{item.color2}})">
+          <text class="card-py">{{item.py}}</text>
+          <view
+            class="star {{item.mastered ? 'star-on' : ''}}"
+            data-gi="{{gi}}"
+            data-ii="{{ii}}"
+            catchtap="onToggleStar"
+          >{{item.mastered ? '★' : '☆'}}</view>
+        </view>
+        <view class="card-char">{{item.char}}</view>
+        <view wx:if="{{item.word}}" class="card-meta">{{item.word}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tip">点字卡看注音分解 · 点 ☆ 标记已掌握</view>
+</view>

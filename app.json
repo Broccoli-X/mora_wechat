@@ -5,7 +5,10 @@
     "pages/kebiao/kebiao",
     "pages/zuoye/zuoye",
     "pages/pinyin/pinyin",
-    "pages/pinyin/study"
+    "pages/pinyin/study",
+    "pages/hanzi/hanzi",
+    "pages/hanzi/study",
+    "pages/hanzi/detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

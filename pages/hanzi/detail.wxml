@@ -1,0 +1,49 @@
+<view class="page">
+  <view wx:if="{{item}}" class="detail-card">
+    <view class="d-top">
+      <text class="d-py" style="color:{{pyColor}}">{{item.py}}</text>
+    </view>
+
+    <!-- 田字格大字 -->
+    <view class="hw-box">
+      <view class="hw-line hw-v"></view>
+      <view class="hw-line hw-h"></view>
+      <text class="hw-char">{{item.char}}</text>
+    </view>
+
+    <view wx:if="{{strokes}}" class="d-strokecount">「 {{item.char}} 」共 <text class="d-stroke-num">{{strokes}}</text> 笔</view>
+
+    <!-- 注音三色分解:声母蓝 / 介母橙 / 韵母粉(与网页端一致) -->
+    <view class="d-decomp">
+      <view class="d-lab">注音分解 · {{item.py}}</view>
+      <view class="phono">
+        <view wx:if="{{item.sm}}" class="ph-cell">
+          <text class="ph ph-ip">{{item.sm}}</text>
+          <text class="ph-tag tag-ip">声母</text>
+        </view>
+        <view wx:if="{{item.md}}" class="ph-cell">
+          <text class="ph ph-md">{{item.md}}</text>
+          <text class="ph-tag tag-md">介母</text>
+        </view>
+        <view wx:if="{{item.fn}}" class="ph-cell">
+          <text class="ph ph-fn">{{item.fn}}</text>
+          <text class="ph-tag tag-fn">韵母</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{item.word}}" class="d-word">多音字 · 组词「{{item.word}}」锁定读音</view>
+
+    <view
+      class="d-master {{item.mastered ? 'd-master-on' : ''}}"
+      hover-class="d-master-hover"
+      bindtap="onToggleMaster"
+    >{{item.mastered ? '✓ 已掌握' : '☆ 标为已掌握'}}</view>
+
+    <view class="d-nav">
+      <view class="d-btn d-prev" hover-class="d-btn-hover" bindtap="onPrev">⬅️ 上一个</view>
+      <view class="d-pos">{{pos}} / {{total}}</view>
+      <view class="d-btn d-next" hover-class="d-btn-hover" bindtap="onNext">下一个 ➡️</view>
+    </view>
+  </view>
+</view>

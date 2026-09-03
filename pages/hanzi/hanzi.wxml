@@ -1,0 +1,34 @@
+<view class="page">
+  <view class="head">
+    <view class="head-title">🉐 识字卡片</view>
+    <view class="head-sub">共 {{total}} 字 · 已掌握 {{masteredCount}} 字</view>
+  </view>
+
+  <view class="section-title">主题识字</view>
+  <view class="board">
+    <view
+      class="table-card table-wide"
+      style="background:linear-gradient(135deg,#FAB005,#F08C00)"
+      hover-class="table-hover"
+      bindtap="onTapAll"
+    >
+      <view class="table-title">全部汉字</view>
+      <view class="table-sub">{{total}}字 · 不分主题集中认一认</view>
+      <view class="table-progress">⭐ {{masteredCount}}/{{total}}</view>
+    </view>
+
+    <view
+      wx:for="{{groups}}"
+      wx:key="key"
+      class="table-card table-half"
+      style="background:linear-gradient(135deg,{{item.color}},{{item.color2}})"
+      hover-class="table-hover"
+      data-g="{{item.key}}"
+      bindtap="onTapGroup"
+    >
+      <view class="table-title-sm">{{item.name}}</view>
+      <view class="table-sub">{{item.count}}字</view>
+      <view class="table-progress">⭐ {{item.mastered}}/{{item.count}}</view>
+    </view>
+  </view>
+</view>

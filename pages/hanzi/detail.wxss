@@ -1,0 +1,210 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 28rpx 24rpx 56rpx;
+  background: linear-gradient(160deg, #ffe9d6 0%, #f2e7ff 46%, #dff0ff 100%);
+}
+
+.detail-card {
+  background: #ffffff;
+  border-radius: 30rpx;
+  box-shadow: 0 12rpx 32rpx rgba(60, 70, 120, 0.12);
+  padding: 32rpx 28rpx 30rpx;
+}
+
+.d-top {
+  text-align: center;
+}
+
+.d-py {
+  font-size: 68rpx;
+  font-weight: 900;
+  letter-spacing: 4rpx;
+}
+
+/* 田字格:米白底 + 柔红实线外框 + 虚线十字中线 */
+.hw-box {
+  position: relative;
+  width: 380rpx;
+  height: 380rpx;
+  margin: 20rpx auto 6rpx;
+  box-sizing: border-box;
+  background: #fffdfa;
+  border: 3rpx solid #e6a0a0;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hw-line {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hw-v {
+  left: 50%;
+  top: 12rpx;
+  bottom: 12rpx;
+  border-left: 2rpx dashed #e6a0a0;
+}
+
+.hw-h {
+  top: 50%;
+  left: 12rpx;
+  right: 12rpx;
+  border-top: 2rpx dashed #e6a0a0;
+}
+
+.hw-char {
+  font-size: 240rpx;
+  font-weight: 900;
+  line-height: 1;
+  color: #333;
+  font-family: 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+}
+
+.d-strokecount {
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.d-stroke-num {
+  color: #ff9500;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+/* 注音分解 */
+.d-decomp {
+  margin: 26rpx auto 6rpx;
+  max-width: 460rpx;
+  background: #f8fafc;
+  border: 2rpx solid #eef2f7;
+  border-radius: 20rpx;
+  padding: 20rpx 22rpx;
+}
+
+.d-lab {
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 800;
+  color: #94a3b8;
+  margin-bottom: 14rpx;
+}
+
+.phono {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 40rpx;
+  flex-wrap: wrap;
+}
+
+.ph-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ph {
+  font-size: 56rpx;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ph-ip { color: #4a90e2; }
+.ph-md { color: #ff9500; }
+.ph-fn { color: #ff5c8d; }
+
+.ph-tag {
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  font-weight: 800;
+  padding: 3rpx 16rpx;
+  border-radius: 999rpx;
+  color: #ffffff;
+}
+
+.tag-ip { background: #4a90e2; }
+.tag-md { background: #ff9500; }
+.tag-fn { background: #ff5c8d; }
+
+.d-word {
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #9a6b00;
+  background: #fff7e6;
+  border: 2rpx dashed #ffd666;
+  border-radius: 16rpx;
+  padding: 12rpx 18rpx;
+  margin-top: 20rpx;
+}
+
+/* 掌握按钮 */
+.d-master {
+  display: block;
+  width: 340rpx;
+  margin: 28rpx auto 0;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #64748b;
+  background: #ffffff;
+  border: 3rpx solid #cbd5e1;
+  border-radius: 999rpx;
+  padding: 16rpx 0;
+  box-sizing: border-box;
+}
+
+.d-master-hover {
+  opacity: 0.85;
+}
+
+.d-master-on {
+  color: #ffffff;
+  background: linear-gradient(135deg, #51cf66, #37b24d);
+  border-color: #37b24d;
+  box-shadow: 0 6rpx 16rpx rgba(55, 178, 77, 0.3);
+}
+
+/* 上一个/下一个 */
+.d-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30rpx;
+  gap: 12rpx;
+}
+
+.d-btn {
+  font-size: 27rpx;
+  font-weight: 800;
+  color: #ffffff;
+  border-radius: 999rpx;
+  padding: 16rpx 28rpx;
+  box-shadow: 0 6rpx 14rpx rgba(0, 0, 0, 0.12);
+}
+
+.d-btn-hover {
+  opacity: 0.85;
+}
+
+.d-prev {
+  background: #4dabf7;
+}
+
+.d-next {
+  background: #ff9500;
+}
+
+.d-pos {
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #94a3b8;
+}

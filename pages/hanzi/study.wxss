@@ -1,0 +1,138 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24rpx 24rpx 56rpx;
+  background: linear-gradient(160deg, #ffe9d6 0%, #f2e7ff 46%, #dff0ff 100%);
+}
+
+.progress-card {
+  background: #ffffff;
+  border-radius: 22rpx;
+  box-shadow: 0 8rpx 24rpx rgba(60, 70, 120, 0.08);
+  padding: 22rpx 26rpx;
+}
+
+.progress-text {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #9a6b00;
+}
+
+.bar {
+  margin-top: 14rpx;
+  height: 14rpx;
+  border-radius: 999rpx;
+  background: #f1f2f7;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #ffd900, #ffb800);
+  transition: width 0.2s ease;
+}
+
+.group {
+  margin-top: 30rpx;
+}
+
+.group-title {
+  display: inline-flex;
+  color: #ffffff;
+  font-size: 26rpx;
+  font-weight: 800;
+  border-radius: 999rpx;
+  padding: 8rpx 26rpx;
+  margin-bottom: 18rpx;
+  box-shadow: 0 6rpx 14rpx rgba(0, 0, 0, 0.12);
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18rpx;
+}
+
+.card {
+  position: relative;
+  width: calc((100% - 36rpx) / 3);
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 3rpx solid transparent;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(60, 70, 120, 0.1);
+  overflow: hidden;
+  padding-bottom: 14rpx;
+}
+
+.card-hover {
+  transform: scale(0.97);
+}
+
+.card-mastered {
+  border-color: #ffd900;
+  box-shadow: 0 8rpx 26rpx rgba(255, 217, 0, 0.45);
+}
+
+.card-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 6rpx;
+}
+
+.card-py {
+  color: #ffffff;
+  font-size: 36rpx;
+  font-weight: 900;
+  letter-spacing: 2rpx;
+  text-shadow: 2rpx 2rpx 0 rgba(0, 0, 0, 0.12);
+}
+
+.star {
+  position: absolute;
+  top: 4rpx;
+  right: 6rpx;
+  width: 48rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  font-size: 34rpx;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.star-on {
+  color: #ffd900;
+  text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.25);
+}
+
+.card-char {
+  text-align: center;
+  font-size: 88rpx;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #333f4e;
+  padding: 10rpx 6rpx 2rpx;
+  font-family: 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+}
+
+.card-meta {
+  text-align: center;
+  font-size: 21rpx;
+  font-weight: 700;
+  color: #9aa1b0;
+  padding: 0 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tip {
+  margin-top: 36rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #9aa1b0;
+}
