@@ -38,5 +38,6 @@ Mora 学习卡片微信小程序。
 
 - 作业数据来自 mora 项目的进度同步服务（`https://www.tcued.com/api/progress`），录入/删除在网页端维护，小程序端只做查看。
 - 作业图片存于同一服务：payload 内是图片 id（短键 `g`），本体经 `GET /api/image?id=<id>` 读取（不带 token，与网页端一致）；作业本页点缩略图可全屏预览。
-- 拼音学习卡数据与 mora 网页端 `lib/pinyin-data.js` 同源；卡片为纯视觉学习卡（不带发音），掌握进度存本地（键 `mora-pinyin-mastered-v1`，键位格式与网页端一致），暂未接入服务端同步。
+- 拼音学习卡数据与 mora 网页端 `lib/pinyin-data.js` 同源；卡片为纯视觉学习卡（不带发音）。
+- 拼音掌握进度多端共享：与 mora 网页端（`pinyin-flashcards.html`/`report.html`）走同一服务（`/api/progress`，module=`pinyin`），协议同 `lib/progress-sync.js`——本地存储为第一写入点，进页面拉取合并、点标记异步上报，同键位 `updatedAt` 新者胜；离线时纯本地，联网后自动补传。键位/存储键与网页端一致。
 - 上线前需在小程序管理后台把 `https://www.tcued.com` 配置为 request 合法域名；开发阶段可在开发者工具里勾选「不校验合法域名」调试。

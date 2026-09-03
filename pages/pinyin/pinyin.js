@@ -9,6 +9,8 @@ Page({
 
   onShow() {
     this.renderTables();
+    /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
+    py.syncMastered(() => this.renderTables());
   },
 
   /* 每次进入重读掌握进度(从学习页返回也能刷新) */

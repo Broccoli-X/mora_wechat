@@ -19,6 +19,8 @@ Page({
     }
     wx.setNavigationBarTitle({ title: py.TABLES[type].title });
     this.render(type);
+    /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
+    py.syncMastered(() => this.render(type));
   },
 
   render(type) {
@@ -40,10 +42,8 @@ Page({
     const { gi, ii } = e.currentTarget.dataset;
     const item = this.data.groups[gi] && this.data.groups[gi].items[ii];
     if (!item) return;
-    const masteredMap = py.loadMastered();
-    const done = !masteredMap[item.key];
-    if (done) masteredMap[item.key] = true; else delete masteredMap[item.key];
-    py.saveMastered(masteredMap);
+    /* 本地先落盘,再异步上报服务端(多端共享) */
+    py.markMastered(item.key, !item.mastered);
     this.render(this.data.type);
   },
 });

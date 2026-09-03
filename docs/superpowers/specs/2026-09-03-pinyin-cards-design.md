@@ -45,9 +45,14 @@
 - 初版本地打包过 50 个发音 mp3（素材同网页端 CDN 库），确认**不需要发音功能**后整体移除：删除 `assets/audio/` 与播放逻辑，卡片为纯视觉学习卡，无任何音频依赖与域名配置。
 - 备查：网页端所用的 jsDelivr CDN 现已 301 跳转 raw.githubusercontent.com（大陆不可达），后续若恢复发音功能建议继续走本地打包或自托管。
 
-## 掌握进度
+## 掌握进度（多端同步）
 
-- 本地存储 `wx.setStorageSync('mora-pinyin-mastered-v1')`，键位 `分类:拼音` 与网页端一致，为将来接入 /api/progress 多端同步（网页端 module=pinyin）预留。
+- 本地存储为第一写入点：`mora-pinyin-mastered-v1`（键位数组）+ `mora-pinyin-mastered-ts-v1`（时间戳），键位 `分类:拼音` 与网页端一致。
+- 与 mora 网页端（`pinyin-flashcards.html`/`report.html`）多端共享：协议同 `lib/progress-sync.js`，服务 `https://www.tcued.com/api/progress`（module=`pinyin`，token 鉴权）。
+  - 进页面 `GET /api/progress` 拉全量 → 过滤本模块与合法键位 → 与本地按 `updatedAt` 新者胜合并（相等取本地）→ 落盘；本地比远端新（或远端没有）的条目补传。
+  - 点 ☆ 标记/取消：先写本地，再 `POST` 单条 `{module,itemKey,mastered,updatedAt,device}`（fire-and-forget，失败静默，靠下次同步补传）。
+  - 设备名 `平台-随机尾`（存储键 `mora-device`，首次生成后固定），与网页端 `deviceName()` 同语义。
+- 请求失败全程静默降级为纯本地模式，不阻塞页面。
 
 ## 入口
 
@@ -58,7 +63,6 @@
 
 - 字母表（26 个字母）：网页端无此数据，无字母命名读音素材，暂缺。
 - 随机复习闪卡模式（网页端已有，可后续移植）。
-- 掌握进度服务端同步（复用 /api/progress module=pinyin）。
 - 拼音进阶：识字打卡（300 字）、拼音识汉字。
 
 ## 验证
@@ -67,4 +71,5 @@
 - 数据校验：分组数量（23/6/9/5/4/16/4）、学习表数量（23/24/16/4，共 67）、键位唯一、掌握标记本地存取与计数全部通过；与 mora 网页端 `lib/pinyin-data.js` **逐条比对一致**（67 条）。
 - WXML 标签配平、WXSS 花括号配平检查通过。
 - 移除发音后复检：utils 与页面无 audio 残留引用，`assets/` 下仅剩 tabbar。
+- 同步逻辑：mock wx.request/存储跑通 9 项——旧格式存储兼容、标记/取消上报字段、合并新者胜（含相等取本地）、补传挑选、拉取合并全流程（其他模块/非法键位过滤）、本地新条目补传、请求失败静默降级、计数一致性。
 - 微信开发者工具 CLI 因服务端口未开启未能自动化编译；在开发者工具中打开项目即可预览。
