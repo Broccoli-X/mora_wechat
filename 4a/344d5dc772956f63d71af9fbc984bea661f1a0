@@ -1,0 +1,67 @@
+utils/hanzi.js
+  s_0b482ecb352e05::t_8f83f69ee4564e 308,318
+  s_0b482ecb352e05::t_aa928328a4db06 7
+  s_0b482ecb352e05::t_0e7561103dbca9 126-130,134-136
+  s_0b482ecb352e05::t_5f8e24b319e4aa 336
+  s_0b482ecb352e05::t_f6d046d9ca2d97 1-6,8-125,131-133,137-307,309-317,319-335,337-380
+pages/hanzi/detail.wxss
+  s_0b482ecb352e05::t_cd5fccb1f89658 1-210
+pages/hanzi/detail.wxml
+  s_0b482ecb352e05::t_f6c771a1ddb277 1-49
+pages/hanzi/hanzi.json
+  s_0b482ecb352e05::t_cef9e52eecf9a6 1-4
+pages/hanzi/detail.js
+  s_0b482ecb352e05::t_19c78c041a45d1 1-31,33-65
+  s_0b482ecb352e05::t_c4e0e359957cc6 32
+pages/hanzi/detail.json
+  s_0b482ecb352e05::t_3a743f5c8614bb 1-4
+pages/hanzi/study.wxml
+  s_0b482ecb352e05::t_b3894b546f2f35 1-36,38-43
+  s_0b482ecb352e05::t_486eba3d0ad9af 37
+app.json
+  s_0b482ecb352e05::t_3f059ae5113e19 8-10
+  s_9b1fc7df830987::t_b5b77bfc8a97fb 11
+pages/hanzi/hanzi.wxml
+  s_0b482ecb352e05::t_b92a5089497666 1-34
+pages/hanzi/hanzi.js
+  s_0b482ecb352e05::t_3b6f126cf7e6e7 1-36
+docs/superpowers/specs/2026-09-03-hanzi-cards-design.md
+  s_0b482ecb352e05::t_dab6fc0e2ae627 1-14,16-53
+  s_0b482ecb352e05::t_d9f4154c0c7ec5 15
+  s_0b482ecb352e05::t_3aa76038f26312 54-57
+pages/hanzi/study.wxss
+  s_0b482ecb352e05::t_37f7515638bd00 1-138
+pages/hanzi/study.json
+  s_0b482ecb352e05::t_d3e56f92a6cd13 1-4
+pages/category/category.js
+  s_0b482ecb352e05::t_53b1d62af3d4e3 14
+pages/hanzi/study.js
+  s_0b482ecb352e05::t_ad97bf89bd9c15 32
+  s_0b482ecb352e05::t_cda7dd9fc3051d 1-31,33-69
+pages/hanzi/hanzi.wxss
+  s_0b482ecb352e05::t_d9993edcda2454 1-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "4a344d5dc772956f63d71af9fbc984bea661f1a0",
+  "prompts": {},
+  "sessions": {
+    "s_0b482ecb352e05": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_b398dbe7-a954-4530-98c9-5e974eb697a3",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    },
+    "s_9b1fc7df830987": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_89562934-f4d7-4cdd-a591-ee77a0aa8af0",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
