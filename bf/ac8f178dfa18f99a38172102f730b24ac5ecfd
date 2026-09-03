@@ -1,0 +1,31 @@
+utils/todo.js
+  s_50cf9bc496c7aa::t_bdd788baa11439 1-137
+docs/superpowers/specs/2026-09-03-index-todo-design.md
+  s_50cf9bc496c7aa::t_10191d6530e47e 1-29
+pages/index/index.wxml
+  s_50cf9bc496c7aa::t_33758506c7f15e 34-52
+pages/index/index.js
+  s_50cf9bc496c7aa::t_d76b3723de53af 27,35,37
+  s_50cf9bc496c7aa::t_2e2a42492c5154 4
+  s_50cf9bc496c7aa::t_25c4bf1ad4741b 54-78
+  s_50cf9bc496c7aa::t_5ee9c05304cdc1 12-13
+  s_50cf9bc496c7aa::t_78df5e9a2348fe 79
+pages/index/index.wxss
+  s_50cf9bc496c7aa::t_ef08326e3135cf 226-260
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "bfac8f178dfa18f99a38172102f730b24ac5ecfd",
+  "prompts": {},
+  "sessions": {
+    "s_50cf9bc496c7aa": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_d58ba4e7-7798-4664-a086-ac2188a58779",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
