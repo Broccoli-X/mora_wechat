@@ -18,8 +18,12 @@
     </view>
     <block wx:if="{{ptState !== 'error'}}">
       <view class="pt-emoji {{ptEmpty ? 'pt-emoji-none' : ''}}">{{ptEmpty ? '还没有星星,完成作业就能挣星星哦!' : ptEmoji}}</view>
+      <view class="pt-total">
+        <text class="pt-total-label">总积分</text>
+        <text class="pt-total-num">{{ptEarned}}</text>
+        <text class="pt-total-unit">分</text>
+      </view>
       <view class="pt-chips">
-        <text class="pt-chip c-earn">累计 {{ptEarned}} 分</text>
         <text class="pt-chip c-left">剩余 {{ptRemaining}} 分</text>
         <text class="pt-chip c-yuan">可换 {{ptYuan}} 元</text>
       </view>

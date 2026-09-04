@@ -114,6 +114,34 @@
   color: #b08d2f;
 }
 
+/* 总积分主展示:大数字,积分卡片的核心信息 */
+.pt-total {
+  margin-top: 14rpx;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.pt-total-label {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #9a7b2d;
+}
+
+.pt-total-num {
+  font-size: 60rpx;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #e8590c;
+}
+
+.pt-total-unit {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #9a7b2d;
+}
+
 .pt-chips {
   margin-top: 18rpx;
   display: flex;
