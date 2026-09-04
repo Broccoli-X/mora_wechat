@@ -1,0 +1,25 @@
+pages/mine/mine.wxml
+  s_7fa4537c16b3f2::t_11fbc78fd1490f 20-24
+pages/index/index.wxml
+  s_7fa4537c16b3f2::t_7eec538cb8c134 21-25
+pages/index/index.wxss
+  s_7fa4537c16b3f2::t_12d2f4b8a694e6 281-308
+pages/mine/mine.wxss
+  s_7fa4537c16b3f2::t_153422d1a31559 117-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "04529bd29f39fbd063966928c583bc9dcb5df10c",
+  "prompts": {},
+  "sessions": {
+    "s_7fa4537c16b3f2": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_0fde4e63-db21-4786-9868-6483a73a70a6",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
