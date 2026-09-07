@@ -1,0 +1,20 @@
+pages/zuoye/zuoye.js
+  s_ac06e3c3f080c7::t_20ea67d2075075 89-104
+  s_ac06e3c3f080c7::t_c7f634f3425bce 65,68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "117d4ab43506546be69b3dcb97b3d416eb2426c1",
+  "prompts": {},
+  "sessions": {
+    "s_ac06e3c3f080c7": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_8ec8e62e-e818-41f3-9de7-d4f35a9dda8b",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
