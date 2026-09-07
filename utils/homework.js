@@ -7,8 +7,11 @@
 const API_BASE = 'https://www.tcued.com';
 const TOKEN = '2ed49dbd4eddd9acdda3ae224bd2c23c';
 
-/* 科目与配色跟课表同色系:main 深色做色块(白字高对比) */
+/* 科目与配色跟课表同色系:main 深色做色块(白字高对比)。
+   「整体要求」不是科目,是当天作业的总体安排(几点前完成、要不要自查等),
+   排第一位:同一天里它显示在各科作业上面;录入仍在网页端 zuoye-edit 维护 */
 const SUBJECTS = [
+  { name: '整体要求', icon: '🎯', main: '#6d3fc0' },
   { name: '语文', icon: '📖', main: '#c9392b' },
   { name: '数学', icon: '🔢', main: '#1d5fbf' },
   { name: '英语', icon: '🔤', main: '#177a3e' },
