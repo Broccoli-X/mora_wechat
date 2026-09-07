@@ -1,0 +1,19 @@
+utils/homework.js
+  s_be985d48c4ab50::t_419881044050ec 10-12,14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "2ba7131c0140bbae4d2d700cb6e08bf7cdf6e8e6",
+  "prompts": {},
+  "sessions": {
+    "s_be985d48c4ab50": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_24f7b357-3bb6-438d-bd50-bc6dadb61037",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
