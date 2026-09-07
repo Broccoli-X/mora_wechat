@@ -62,9 +62,10 @@ Page({
 
   render() {
     const days = hw.weekOf(this.anchor);
+    const isThisWeek = days.indexOf(this.today) >= 0;
     this.setData({
       weekLabel: hw.fmtCN(days[0]) + ' ~ ' + hw.fmtCN(days[6]),
-      isThisWeek: days.indexOf(this.today) >= 0,
+      isThisWeek: isThisWeek,
       days: days.map(day => {
         const list = this.entries.filter(e => e.date === day);
         return {
@@ -85,6 +86,22 @@ Page({
           }),
         };
       }),
+    }, () => {
+      /* 本周视图保证今天的作业在第一屏:进页/下拉刷新/回到本周都对齐到今天 */
+      if (isThisWeek) this.scrollToToday();
+    });
+  },
+
+  /* 把「今天」卡片滚到页面顶部(留一点空隙);缩略图有固定占位,测量一次即准 */
+  scrollToToday() {
+    const q = wx.createSelectorQuery();
+    q.select('.day-today').boundingClientRect();
+    q.selectViewport().scrollOffset();
+    q.exec(res => {
+      const rect = res && res[0];
+      const vp = res && res[1];
+      if (!rect || !vp) return;
+      wx.pageScrollTo({ scrollTop: Math.max(0, vp.scrollTop + rect.top - 12), duration: 0 });
     });
   },
 });
