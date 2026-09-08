@@ -1,7 +1,9 @@
-/* 作业数据只读同步:数据源与网页端相同的服务(/api/progress,module=homework)。
-   录入/删除在网页端维护(zuoye-edit.html),小程序端只做查看。
-   payload 为短键 JSON:{d:日期, s:科目, t:内容, g:[图片id]};空 payload 是删除墓碑,直接跳过。
-   图片本体走 GET /api/image?id=<id>(不带 token,与服务端设计一致,见 imgRefOf)。
+/* 作业数据同步:数据源与网页端相同的服务(/api/progress,module=homework)。
+   录入/删除在网页端维护(zuoye-edit.html),小程序端只做查看与勾选完成。
+   payload 为短键 JSON:{d:日期, s:科目, t:内容, g:[图片id], c:已完成 1};
+   与网页端 lib/homework-core.js 同源:未完成不产生 c 键,空 payload 是删除墓碑,直接跳过。
+   勾选完成走单条上报(toggleDone,与网页端 zuoye.html 同协议):payload 必须带全 g——
+   服务端会清理不再被引用的图片。图片本体走 GET /api/image?id=<id>(不带 token)。
    鉴权走 utils/auth.js 家长登录会话(与网页端 lib/auth.js 同协议);上线前需在小程序后台把
    API_BASE 配置为 request 合法域名。 */
 const API_BASE = 'https://www.tcued.com';
@@ -89,6 +91,16 @@ function imgsOf(g) {
   return g.filter(x => typeof x === 'string' && IMG_ID_RE.test(x)).slice(0, IMGS_MAX);
 }
 
+/* 条目 → 同步载荷短键 JSON(与网页端 lib/homework-core.js encodeEntry 同源):
+   未完成不产生 c 键,与老版本 payload 字节级一致;图片只带服务端 id(dataURL 不同步) */
+function encodeEntry(e) {
+  const o = { d: e.date, s: e.subject, t: e.text };
+  if (e.done) o.c = 1;
+  const ids = (e.imgs || []).filter(x => typeof x === 'string' && IMG_ID_RE.test(x));
+  if (ids.length) o.g = ids;
+  return JSON.stringify(o);
+}
+
 /* 服务端进度条目 → 作业数组:只认 module=homework,
    跳过墓碑(空 payload)和坏 payload,解码后按日排序 */
 function decodeItems(items) {
@@ -105,6 +117,7 @@ function decodeItems(items) {
           date: o.d,
           subject: o.s,
           text: text,
+          done: o.c ? 1 : 0,
           imgs: imgsOf(o.g),
           updatedAt: it.updatedAt || 0,
         });
@@ -130,8 +143,40 @@ function fetchHomework(done, fail) {
   });
 }
 
+/* 标记/取消完成(与网页端 zuoye.html toggleDone 同协议):翻转传入条目的 done 并顶新
+   时间戳,再单条上报。完成状态算一次修改,服务端同键新者胜;上报失败回调 onFail
+   由页面回滚提示。payload 必须带全 g 图片引用——服务端会清理不再被引用的图片。
+   未登录返回 null(条目不动、不回调);成功返回翻转后的 done(0|1) */
+function toggleDone(entry, onFail) {
+  const token = auth.getToken();
+  if (!token) return null;
+  entry.done = entry.done ? 0 : 1;
+  entry.updatedAt = Date.now();
+  wx.request({
+    url: API_BASE + '/api/progress',
+    method: 'POST',
+    header: { 'Content-Type': 'application/json' },
+    data: {
+      token: token,
+      items: [{
+        module: 'homework',
+        itemKey: entry.id,
+        mastered: 0,
+        updatedAt: entry.updatedAt,
+        device: auth.deviceTag(),
+        payload: encodeEntry(entry),
+      }],
+    },
+    success(res) {
+      if (res.statusCode === 401) auth.on401();
+    },
+    fail() { if (onFail) onFail(); },
+  });
+  return entry.done;
+}
+
 module.exports = {
   SUBJECTS, SUBJECT_NAMES, WEEKDAY_CN,
   metaOf, toDateStr, todayStr, parseDate, weekdayCN, fmtCN, weekOf,
-  sortByDay, decodeItems, fetchHomework, imgUrl,
+  sortByDay, decodeItems, encodeEntry, fetchHomework, toggleDone, imgUrl,
 };

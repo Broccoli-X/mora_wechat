@@ -17,6 +17,7 @@
     <view
       wx:for="{{days}}"
       wx:key="date"
+      wx:for-index="di"
       class="day {{item.isToday ? 'day-today' : ''}}"
     >
       <view class="day-head">
@@ -25,7 +26,15 @@
         <text wx:if="{{item.isToday}}" class="today-badge">今天</text>
       </view>
       <view wx:if="{{item.items.length}}" class="items">
-        <view wx:for="{{item.items}}" wx:for-item="hw" wx:key="id" class="hw">
+        <view wx:for="{{item.items}}" wx:for-item="hw" wx:for-index="ii" wx:key="id" class="hw">
+          <view
+            class="done-btn {{hw.done ? 'ok' : ''}}"
+            hover-class="done-btn-hover"
+            hover-stay-time="80"
+            data-di="{{di}}"
+            data-ii="{{ii}}"
+            bindtap="toggleHw"
+          >{{hw.done ? '✓' : ''}}</view>
           <view class="chip" style="background:{{hw.color}}">{{hw.icon}}{{hw.subject}}</view>
           <view class="hw-main">
             <text class="txt">{{hw.text}}</text>

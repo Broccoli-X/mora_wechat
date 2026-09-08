@@ -155,6 +155,35 @@
   align-items: flex-start;
 }
 
+/* 完成标记:点圆钮打勾即标识完成,正文不划删除线保持高对比(与网页端 zuoye.html 同款);
+   体量略小于科目 chip,与 chip 顶端对齐,不抢视觉 */
+.done-btn {
+  flex: 0 0 auto;
+  width: 46rpx;
+  height: 46rpx;
+  box-sizing: border-box;
+  margin-top: 3rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3rpx solid #98a1b3;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #ffffff;
+  font-size: 26rpx;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.done-btn.ok {
+  border-color: #177a3e;
+  background: #177a3e;
+}
+
+.done-btn-hover {
+  transform: scale(0.92);
+}
+
 .hw-main {
   flex: 1 1 auto;
   min-width: 0;

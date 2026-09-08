@@ -194,6 +194,24 @@
   white-space: nowrap;
 }
 
+/* 已完成:绿底白勾小圆标(与作业本页/网页端同色系),只读展示,勾选在作业本页 */
+.hw-done {
+  flex: 0 0 auto;
+  width: 36rpx;
+  height: 36rpx;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #177a3e;
+  color: #ffffff;
+  font-size: 22rpx;
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 4rpx;
+}
+
 .note {
   padding: 20rpx;
   border-radius: 16rpx;

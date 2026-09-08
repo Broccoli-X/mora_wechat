@@ -79,6 +79,7 @@
         <view class="hw-chip" style="background:{{item.color}}">{{item.icon}}{{item.subject}}</view>
         <text class="hw-text">{{item.text}}</text>
         <text wx:if="{{item.pics}}" class="hw-pics">📎{{item.pics}}</text>
+        <text wx:if="{{item.done}}" class="hw-done">✓</text>
       </view>
     </view>
     <view class="note" wx:if="{{hwState === 'ok' && !hwItems.length}}">今日暂无作业，尽情玩吧 🎈</view>

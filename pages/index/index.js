@@ -93,6 +93,7 @@ Page({
           color: m.main,
           subject: e.subject,
           text: e.text,
+          done: !!e.done,
           pics: e.imgs.length,
         };
       });

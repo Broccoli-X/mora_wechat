@@ -63,6 +63,28 @@ Page({
     if (urls.length) wx.previewImage({ current, urls });
   },
 
+  /* 勾选/取消完成:先乐观更新本地条目与视图,上报失败回滚并提示(下次刷新以服务端为准);
+     定向 setData 只改该条,不整页重渲染(避免把滚动位置拉回今天) */
+  toggleHw(e) {
+    const di = Number(e.currentTarget.dataset.di);
+    const ii = Number(e.currentTarget.dataset.ii);
+    const day = this.data.days[di];
+    const item = day && day.items ? day.items[ii] : null;
+    if (!item) return;
+    const entry = this.entries.find(x => x.id === item.id);
+    if (!entry) return;
+    const prevDone = entry.done;
+    const prevUpdatedAt = entry.updatedAt;
+    const done = hw.toggleDone(entry, () => {
+      entry.done = prevDone;
+      entry.updatedAt = prevUpdatedAt;
+      this.setData({ ['days[' + di + '].items[' + ii + '].done']: !!prevDone });
+      wx.showToast({ title: '没同步上，检查下网络', icon: 'none' });
+    });
+    if (done === null) return;
+    this.setData({ ['days[' + di + '].items[' + ii + '].done']: !!done });
+  },
+
   render() {
     const days = hw.weekOf(this.anchor);
     const isThisWeek = days.indexOf(this.today) >= 0;
@@ -84,6 +106,7 @@ Page({
               color: m.main,
               subject: e.subject,
               text: e.text,
+              done: !!e.done,
               imgs: e.imgs.map(hw.imgUrl),
             };
           }),
