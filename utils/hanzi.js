@@ -38,10 +38,12 @@ const MASTER_KEY = 'mora-hanzi-mastered-v1';
 const TS_KEY = 'mora-hanzi-mastered-ts-v1';
 const DEVICE_KEY = 'mora-device';
 
-/* 进度同步服务:与 utils/pinyin.js、网页端 lib/sync-config.js 同源同 token。
-   module=chars、itemKey=汉字,与网页端识字页(character-recognition.html)一致 */
+/* 进度同步服务:与 utils/pinyin.js、网页端 lib/sync-config.js 同源。
+   module=chars、itemKey=汉字,与网页端识字页(character-recognition.html)一致。
+   鉴权走 utils/auth.js 家长登录会话:未登录时上报静默跳过(本地已落盘,
+   登录后 syncMastered 会按时间戳补传),401 交 auth.on401 弹回登录门。 */
 const API_BASE = 'https://www.tcued.com';
-const TOKEN = '2ed49dbd4eddd9acdda3ae224bd2c23c';
+const auth = require('./auth');
 const MODULE = 'chars';
 
 /* 学习页「全部汉字」范围键(导航与分享参数里用,不会与在线组键冲突) */
@@ -69,10 +71,12 @@ function currentDataset() {
 
 /* 拉 /api/hanzi:updatedAt 比本地新才替换并落盘。done(有更新传新 data,无更新/失败传 null) */
 function fetchDataset(done) {
+  if (!auth.getToken()) { if (done) done(null); return; } /* 未登录:用本地/种子 */
   wx.request({
-    url: API_BASE + '/api/hanzi?token=' + encodeURIComponent(TOKEN),
+    url: API_BASE + '/api/hanzi?token=' + encodeURIComponent(auth.getToken()),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const j = res.data;
       if (!(j && j.ok && j.data && Array.isArray(j.data.chars))) { if (done) done(null); return; }
       const ua = j.updatedAt || 0;
@@ -140,11 +144,13 @@ function strokeDataSync(c) {
 function fetchStrokes(c, done) {
   const hit = strokeDataSync(c);
   if (hit) { if (done) done(hit); return; }
+  if (!auth.getToken()) { if (done) done(null); return; } /* 未登录:回退楷体大字 */
   wx.request({
-    url: API_BASE + '/api/hanzi-stroke?token=' + encodeURIComponent(TOKEN) +
+    url: API_BASE + '/api/hanzi-stroke?token=' + encodeURIComponent(auth.getToken()) +
          '&c=' + encodeURIComponent(c),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const j = res.data;
       const d = (j && j.ok && j.data && Array.isArray(j.data.strokes) && j.data.strokes.length)
         ? { strokes: j.data.strokes } : null;
@@ -215,14 +221,16 @@ function deviceName() {
   return d;
 }
 
-/* 上报条目(离线/失败静默:本地存储始终是第一写入点) */
+/* 上报条目(离线/未登录/失败静默:本地存储始终是第一写入点) */
 function pushItems(items) {
+  const token = auth.getToken();
+  if (!token) return; /* 未登录:下次进入页面 syncMastered 会按时间戳补传 */
   wx.request({
     url: API_BASE + '/api/progress',
     method: 'POST',
     header: { 'Content-Type': 'application/json' },
     data: {
-      token: TOKEN,
+      token: token,
       items: items.map(it => ({
         module: MODULE,
         itemKey: it.itemKey,
@@ -230,6 +238,9 @@ function pushItems(items) {
         updatedAt: it.updatedAt,
         device: deviceName(),
       })),
+    },
+    success(res) {
+      if (res.statusCode === 401) auth.on401();
     },
     fail() { /* 静默:下次进入页面 syncMastered 会按时间戳补传 */ },
   });
@@ -280,9 +291,10 @@ function itemsToPush(localItems_, remoteItems) {
 function syncMastered(done, fail) {
   const valid = validKeys();
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(TOKEN),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       const remote = items.filter(it => it && it.module === MODULE && valid.has(it.itemKey));

@@ -62,4 +62,16 @@
 
     <view class="foot-tip">发放与兑换在网页端家长页操作,数据自动同步到所有设备</view>
   </block>
+
+  <!-- 家庭账号:登录态与退出(鉴权与网页端家长登录同源) -->
+  <view class="section account">
+    <view class="section-head">
+      <text class="section-title">🔐 家庭账号</text>
+    </view>
+    <view class="acc-row">
+      <text class="acc-label">当前家庭</text>
+      <text class="acc-val">{{family || '默认家庭'}}</text>
+    </view>
+    <view class="logout" bindtap="logout" hover-class="link-hover">退出登录</view>
+  </view>
 </view>

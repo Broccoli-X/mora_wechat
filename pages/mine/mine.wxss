@@ -291,3 +291,43 @@
   font-weight: 800;
   color: #4f7cff;
 }
+
+/* ── 家庭账号 ───────────────────────────────────── */
+.acc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  border: 2rpx solid #eef0f5;
+  border-radius: 16rpx;
+  padding: 18rpx 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.acc-label {
+  flex: 0 0 auto;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.acc-val {
+  min-width: 0;
+  max-width: 60%;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #1f2937;
+  text-align: right;
+  word-break: break-all;
+}
+
+.logout {
+  border: 2rpx solid #ffc9c9;
+  background: #fff5f5;
+  border-radius: 999rpx;
+  padding: 16rpx;
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 800;
+  color: #c92a2a;
+}

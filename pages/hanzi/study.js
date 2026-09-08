@@ -1,4 +1,5 @@
 const hz = require('../../utils/hanzi');
+const auth = require('../../utils/auth');
 
 Page({
   data: {
@@ -19,6 +20,8 @@ Page({
     const name = g === hz.ALL_KEY ? '全部汉字' : this.groupName(g);
     wx.setNavigationBarTitle({ title: name || '识字卡片' });
     this.render(g);
+    /* 家长登录门:未登录跳登录页(本地缓存照常先渲染),登录后回来再同步 */
+    if (!auth.ensure()) return;
     /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
     hz.syncMastered(() => this.render(g));
   },

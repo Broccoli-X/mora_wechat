@@ -2,10 +2,10 @@
    录入/删除在网页端维护(zuoye-edit.html),小程序端只做查看。
    payload 为短键 JSON:{d:日期, s:科目, t:内容, g:[图片id]};空 payload 是删除墓碑,直接跳过。
    图片本体走 GET /api/image?id=<id>(不带 token,与服务端设计一致,见 imgRefOf)。
-   token 与 mora 网页端 lib/sync-config.js 同源;上线前需在小程序后台把
+   鉴权走 utils/auth.js 家长登录会话(与网页端 lib/auth.js 同协议);上线前需在小程序后台把
    API_BASE 配置为 request 合法域名。 */
 const API_BASE = 'https://www.tcued.com';
-const TOKEN = '2ed49dbd4eddd9acdda3ae224bd2c23c';
+const auth = require('./auth');
 
 /* 科目与配色跟课表同色系:main 深色做色块(白字高对比)。
    「整体要求」不是科目,是当天作业的总体安排(几点前完成、要不要自查等),
@@ -114,12 +114,14 @@ function decodeItems(items) {
   return sortByDay(entries);
 }
 
-/* 拉取全部作业(服务端按 module 过滤需自行做),成功 done(entries),失败 fail(err) */
+/* 拉取全部作业(服务端按 module 过滤需自行做),成功 done(entries),失败 fail(err);
+   401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchHomework(done, fail) {
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(TOKEN),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       done(decodeItems(items));

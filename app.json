@@ -9,7 +9,8 @@
     "pages/hanzi/hanzi",
     "pages/hanzi/study",
     "pages/hanzi/detail",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/login/login"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

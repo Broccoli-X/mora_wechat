@@ -2,9 +2,10 @@
    条目在网页端家长页(todo-edit.html)维护,小程序端首页只看当天清单,无完成状态。
    payload 为短键 JSON:{t:内容, m:时间, r:重复, d:日期(仅单次), w:每周几(0=周日)};
    空 payload 是删除墓碑,直接跳过。校验与「某天有哪些代办」的挑选口径
-   和网页端 lib/todo-core.js 一致:每天恒真/单次比日期/每周几看星期几勾选。 */
+   和网页端 lib/todo-core.js 一致:每天恒真/单次比日期/每周几看星期几勾选。
+   鉴权走 utils/auth.js 家长登录会话(与网页端 lib/auth.js 同协议)。 */
 const API_BASE = 'https://www.tcued.com';
-const TOKEN = '2ed49dbd4eddd9acdda3ae224bd2c23c';
+const auth = require('./auth');
 
 /* 重复类型与配色(与网页端一致:main 深色做色块白字) */
 const REPEATS = [
@@ -115,12 +116,14 @@ function todosOn(entries, dateStr) {
     .sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : a.updatedAt - b.updatedAt));
 }
 
-/* 拉取全部进度,客户端过滤出代办(module=todo):成功 done(entries),失败 fail(err) */
+/* 拉取全部进度,客户端过滤出代办(module=todo):成功 done(entries),失败 fail(err);
+   401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchTodos(done, fail) {
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(TOKEN),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       done(decodeItems(items));

@@ -1,4 +1,5 @@
 const hw = require('../../utils/homework');
+const auth = require('../../utils/auth');
 
 Page({
   data: {
@@ -16,6 +17,8 @@ Page({
   onLoad() {
     this.today = hw.todayStr();
     this.anchor = this.today;
+    /* 家长登录门:未登录跳登录页,登录后 reLaunch 回来 onLoad 重跑 */
+    if (!auth.ensure()) return;
     this.fetch();
   },
 

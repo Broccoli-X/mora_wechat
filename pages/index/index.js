@@ -2,6 +2,7 @@ const kb = require('../../utils/kebiao');
 const hw = require('../../utils/homework');
 const pt = require('../../utils/points');
 const td = require('../../utils/todo');
+const auth = require('../../utils/auth');
 
 Page({
   data: {
@@ -24,12 +25,15 @@ Page({
   onShow() {
     this.renderDate();
     this.renderCourse();
+    /* 家长登录门:未登录跳登录页,登录后回来再取数(课表/日期本地照常渲染) */
+    if (!auth.ensure()) return;
     this.loadTodos();
     this.loadHomework();
     this.loadPoints();
   },
 
   onPullDownRefresh() {
+    if (!auth.ensure()) { wx.stopPullDownRefresh(); return; }
     this.renderDate();
     this.renderCourse();
     let pending = 3;

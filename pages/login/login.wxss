@@ -1,0 +1,79 @@
+/* 登录门整页:白底居中卡片,高对比实色按钮(孩子和家长都看得清) */
+.gate {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  background: #ffffff;
+}
+
+.card {
+  width: 100%;
+  max-width: 640rpx;
+  text-align: center;
+}
+
+.title {
+  font-size: 46rpx;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.desc {
+  font-size: 28rpx;
+  color: #444444;
+  margin: 18rpx 0 36rpx;
+}
+
+/* 原生 input 文本区高度固定,纵向 padding 撑不开会裁字:显式给高,只留横向 padding */
+.ipt {
+  width: 100%;
+  height: 92rpx;
+  box-sizing: border-box;
+  padding: 0 24rpx;
+  font-size: 32rpx;
+  text-align: center;
+  color: #111111;
+  background: #ffffff;
+  border: 4rpx solid #333333;
+  border-radius: 18rpx;
+  margin-bottom: 20rpx;
+}
+
+.btn {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 14rpx;
+  padding: 24rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+  color: #ffffff;
+  background: #4f7cff;
+  border-radius: 18rpx;
+}
+
+.btn-busy {
+  background: #8aa9d8;
+}
+
+.btn-hover {
+  opacity: 0.85;
+}
+
+.err {
+  min-height: 1.4em;
+  margin-top: 22rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #c0392b;
+}
+
+.note {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #666666;
+}

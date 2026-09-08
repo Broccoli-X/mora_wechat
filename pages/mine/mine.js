@@ -1,4 +1,5 @@
 const pt = require('../../utils/points');
+const auth = require('../../utils/auth');
 
 /* 明细默认条数,更早的折叠(与网页端 points-edit 一致) */
 const SHOW_N = 10;
@@ -17,9 +18,13 @@ Page({
     folded: 0,
     allOpen: false,
     rules: pt.RULES,
+    family: '',         // 已登录的家庭ID(登录时服务端下发)
   },
 
   onShow() {
+    /* 家长登录门:未登录跳登录页,登录后回来再取数 */
+    if (!auth.ensure()) return;
+    this.setData({ family: auth.getFamily() });
     this.loadPoints();
   },
 
@@ -78,5 +83,20 @@ Page({
 
   retryPoints() {
     this.loadPoints();
+  },
+
+  /* 退出登录:清本机会话(服务端会话尽力而为删掉),跳登录页重新进 */
+  logout() {
+    wx.showModal({
+      title: '退出登录',
+      content: '退出后要重新输入家长密码才能看到同步数据,确定退出吗?',
+      confirmText: '退出',
+      confirmColor: '#c92a2a',
+      success: res => {
+        if (!res.confirm) return;
+        auth.logout();
+        auth.gate();
+      },
+    });
   },
 });

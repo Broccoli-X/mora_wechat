@@ -87,9 +87,11 @@ const DEVICE_KEY = 'mora-device';
 
 /* 进度同步服务:与 utils/homework.js、mora 网页端 lib/sync-config.js 同源。
    协议与网页端 lib/progress-sync.js 一致:GET 拉全量按 module 过滤合并,
-   POST 逐条上报 {module,itemKey,mastered,updatedAt,device},服务端同键新者胜。 */
+   POST 逐条上报 {module,itemKey,mastered,updatedAt,device},服务端同键新者胜。
+   鉴权走 utils/auth.js 家长登录会话:未登录时上报静默跳过(本地已落盘,
+   登录后 syncMastered 会按时间戳补传),401 交 auth.on401 弹回登录门。 */
 const API_BASE = 'https://www.tcued.com';
-const TOKEN = '2ed49dbd4eddd9acdda3ae224bd2c23c';
+const auth = require('./auth');
 const MODULE = 'pinyin';
 
 function itemKey(it) {
@@ -147,14 +149,16 @@ function deviceName() {
   return d;
 }
 
-/* 上报条目(离线/失败静默:本地存储始终是第一写入点) */
+/* 上报条目(离线/未登录/失败静默:本地存储始终是第一写入点) */
 function pushItems(items) {
+  const token = auth.getToken();
+  if (!token) return; /* 未登录:下次进入页面 syncMastered 会按时间戳补传 */
   wx.request({
     url: API_BASE + '/api/progress',
     method: 'POST',
     header: { 'Content-Type': 'application/json' },
     data: {
-      token: TOKEN,
+      token: token,
       items: items.map(it => ({
         module: MODULE,
         itemKey: it.itemKey,
@@ -162,6 +166,9 @@ function pushItems(items) {
         updatedAt: it.updatedAt,
         device: deviceName(),
       })),
+    },
+    success(res) {
+      if (res.statusCode === 401) auth.on401();
     },
     fail() { /* 静默:下次进入页面 syncMastered 会按时间戳补传 */ },
   });
@@ -210,9 +217,10 @@ function itemsToPush(localItems_, remoteItems) {
    合并后把「本地更新过的条目」补传,保证本机改动不丢。 */
 function syncMastered(done, fail) {
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(TOKEN),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       const remote = items.filter(it => it && it.module === MODULE && VALID_KEYS.has(it.itemKey));

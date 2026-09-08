@@ -1,4 +1,5 @@
 const hz = require('../../utils/hanzi');
+const auth = require('../../utils/auth');
 
 Page({
   data: {
@@ -9,6 +10,8 @@ Page({
 
   onShow() {
     this.render();
+    /* 家长登录门:未登录跳登录页(本地缓存照常先渲染),登录后回来再同步 */
+    if (!auth.ensure()) return;
     /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
     hz.syncMastered(() => this.render());
     /* 字库有更新(网页端维护了新字/新组)则重渲染,失败静默用本地 */

@@ -1,4 +1,5 @@
 const py = require('../../utils/pinyin');
+const auth = require('../../utils/auth');
 
 Page({
   data: {
@@ -19,6 +20,8 @@ Page({
     }
     wx.setNavigationBarTitle({ title: py.TABLES[type].title });
     this.render(type);
+    /* 家长登录门:未登录跳登录页(本地缓存照常先渲染),登录后回来再同步 */
+    if (!auth.ensure()) return;
     /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
     py.syncMastered(() => this.render(type));
   },

@@ -2,9 +2,9 @@
    发放/兑换在网页端家长页(points-edit.html)维护(带家长算术门),小程序端只做查看。
    payload 为短键 JSON:{d:日期, r:理由, s:分数, j:科目, n:备注};空 payload 是删除墓碑,直接跳过。
    统计口径与网页端 lib/points-core.js 一致:累计 = 发放合计(兑换不动,emoji 只看它),
-   剩余 = 累计 - 已兑换;10 积分 = 1 元。token 与 utils/homework.js 同源。 */
+   剩余 = 累计 - 已兑换;10 积分 = 1 元。鉴权走 utils/auth.js 家长登录会话。 */
 const API_BASE = 'https://www.tcued.com';
-const TOKEN = '2ed49dbd4eddd9acdda3ae224bd2c23c';
+const auth = require('./auth');
 
 /* 星级进位:1 星 = 1 分,每 10 个进一级 */
 const LEVELS = [
@@ -159,12 +159,14 @@ function fmtScore(e) {
   return (e.score > 0 ? '+' : '') + e.score;
 }
 
-/* 拉取全部进度,客户端过滤出积分(module=points):成功 done(entries),失败 fail(err) */
+/* 拉取全部进度,客户端过滤出积分(module=points):成功 done(entries),失败 fail(err);
+   401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchPoints(done, fail) {
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(TOKEN),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
     method: 'GET',
     success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       done(decodeItems(items));

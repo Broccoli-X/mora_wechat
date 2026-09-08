@@ -1,0 +1,16 @@
+<view class="gate">
+  <view class="card">
+    <view class="title">🔒 家长登录</view>
+    <view class="desc">本站仅限家庭成员使用,请输入家长密码</view>
+    <input class="ipt" placeholder="家庭ID(自家留空即可)" value="{{family}}"
+           bindinput="onFamily" />
+    <input class="ipt" password placeholder="家长密码" value="{{password}}"
+           bindinput="onPw" bindconfirm="submit" confirm-type="done" />
+    <!-- 用 view 而非 button:躲开微信 button 默认宽 184px/边框等 UA 样式,这里也用不到开放能力 -->
+    <view class="btn {{busy ? 'btn-busy' : ''}}" hover-class="btn-hover" bindtap="submit">
+      {{busy ? '登录中…' : '登 录'}}
+    </view>
+    <view class="err">{{error}}</view>
+    <view class="note">本设备登录一次即可,之后自动保持登录</view>
+  </view>
+</view>
