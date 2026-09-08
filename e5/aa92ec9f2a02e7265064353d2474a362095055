@@ -1,0 +1,33 @@
+README.md
+  s_44a3f8e3140d16::t_6fa5a50a7c9a90 28
+  s_44a3f8e3140d16::t_0bf47e47c9bcc5 34
+  s_44a3f8e3140d16::t_81df776e11e981 42
+pages/zuoye/zuoye.wxss
+  s_44a3f8e3140d16::t_72c955c67a48ec 158-159,162-163,165,169,173
+  s_44a3f8e3140d16::t_3fe415c2112f95 160-161,164,166-168,170-172,174-186
+pages/zuoye/zuoye.wxml
+  s_44a3f8e3140d16::t_64f009a4fd4a55 20,29-37
+pages/index/index.wxml
+  s_44a3f8e3140d16::t_74cc0fcdc24cfa 82
+pages/index/index.wxss
+  s_44a3f8e3140d16::t_724e527a667ece 197-214
+tests/homework.test.js
+  s_44a3f8e3140d16::t_33529b8430b440 1-59,65-156
+  s_44a3f8e3140d16::t_91d62c89cac295 60-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "e5aa92ec9f2a02e7265064353d2474a362095055",
+  "prompts": {},
+  "sessions": {
+    "s_44a3f8e3140d16": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_14cb180b-3908-484e-9bb9-3d5dd0bd4786",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
