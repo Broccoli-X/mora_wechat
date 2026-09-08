@@ -1,0 +1,93 @@
+sitemap.json
+  s_b17471ef8d7222::t_9052e05b7ba203 5-7
+  s_b17471ef8d7222::t_ca34bc7c374d03 4
+pages/mine/mine.wxml
+  s_b17471ef8d7222::t_3b7b86a4813645 65-76
+utils/points.js
+  s_b17471ef8d7222::t_7645386d1ff58f 162-163,166,169
+  s_b17471ef8d7222::t_cbe1c0a8883c65 5,7
+utils/todo.js
+  s_b17471ef8d7222::t_26c29b1e0cc42d 119-120,123,126
+  s_b17471ef8d7222::t_e4bb6adf711369 5-6,8
+pages/hanzi/detail.js
+  s_b17471ef8d7222::t_1881342e6c9f9a 3
+  s_b17471ef8d7222::t_28300b4ccad593 27-28
+pages/hanzi/hanzi.js
+  s_b17471ef8d7222::t_ec0e18b422e0b5 13-14
+  s_b17471ef8d7222::t_0d1626a662426c 2
+utils/hanzi.js
+  s_b17471ef8d7222::t_a495e7d46dd342 149,153
+  s_b17471ef8d7222::t_02594027e0c314 224,226-227,233,242-243
+  s_b17471ef8d7222::t_e2a26fc9e48afe 76,79
+  s_b17471ef8d7222::t_f7713b87691ac1 41-44,46
+  s_b17471ef8d7222::t_5752f582dab969 74
+  s_b17471ef8d7222::t_ab78726e61da3f 294,297
+  s_b17471ef8d7222::t_588a2c0b292841 147
+  s_b17471ef8d7222::t_24dce415ba3742 244
+utils/pinyin.js
+  s_b17471ef8d7222::t_d812ffb909b7d3 90-92,94
+  s_b17471ef8d7222::t_30d37a6e9f01cd 152,154-155,161,170-171
+  s_b17471ef8d7222::t_820769ff379a3f 220,223
+  s_b17471ef8d7222::t_db220bcdd30007 172
+pages/index/index.js
+  s_b17471ef8d7222::t_f75c3936c0ff06 5
+  s_b17471ef8d7222::t_da00087639ea85 28-29,36
+app.json
+  s_b17471ef8d7222::t_09df6b26644bdf 12-13
+pages/zuoye/zuoye.js
+  s_b17471ef8d7222::t_f7d9babe97ce20 20-21
+  s_b17471ef8d7222::t_9cfb05ea1b6134 2
+pages/login/login.js
+  s_b17471ef8d7222::t_71847962ab575d 1-37
+utils/auth.js
+  s_b17471ef8d7222::t_668efc0256e11e 1-151
+pages/pinyin/study.js
+  s_b17471ef8d7222::t_d1e16b4cfc396d 2
+  s_b17471ef8d7222::t_5ab6de81c40877 23-24
+pages/login/login.json
+  s_b17471ef8d7222::t_017aff09e26167 1-3
+pages/mine/mine.js
+  s_b17471ef8d7222::t_9d6f7c7db9eb04 87-101
+  s_b17471ef8d7222::t_5214e9d3122043 2,21,25-27
+pages/hanzi/study.js
+  s_b17471ef8d7222::t_7d23b2c1f1ae4d 2
+  s_b17471ef8d7222::t_53768b2a6d6f62 23-24
+README.md
+  s_b17471ef8d7222::t_df443153a4fbb6 26,35-36
+  s_b17471ef8d7222::t_0fbd0748882135 41
+pages/login/login.wxml
+  s_b17471ef8d7222::t_a0557b3a666aaf 9-10,12
+  s_b17471ef8d7222::t_ff20442b4be3c5 1-8,11,13-16
+pages/pinyin/pinyin.js
+  s_b17471ef8d7222::t_8c9d33e6bd48e1 2
+  s_b17471ef8d7222::t_d3ec0b3546acbe 13-14
+pages/login/login.wxss
+  s_b17471ef8d7222::t_050c9c7c5e94ee 30,33,35,47-49,53
+  s_b17471ef8d7222::t_8c8e38af9225ce 1-29,31-32,34,36-46,50-52,54-79
+pages/mine/mine.wxss
+  s_b17471ef8d7222::t_7ccb9bb4f96f10 294-333
+utils/homework.js
+  s_b17471ef8d7222::t_6604c1d8209219 5,8
+  s_b17471ef8d7222::t_93c837ff6048bd 117-118,121,124
+tests/auth.test.js
+  s_b17471ef8d7222::t_15639b9561127f 22
+  s_b17471ef8d7222::t_cba62e292fece6 1-6,9-19,21,23-29,31-32,34-71,73-86,88-140
+  s_b17471ef8d7222::t_87f9f22bd50c67 33
+  s_b17471ef8d7222::t_ed91ba4fd7f84e 7-8,20,30,72,87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "e86d623fb95be1be03a251414d66766deab54884",
+  "prompts": {},
+  "sessions": {
+    "s_b17471ef8d7222": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_585516ec-e78f-4bb0-90ef-ced57fc6088a",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
