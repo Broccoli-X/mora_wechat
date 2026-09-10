@@ -1,0 +1,23 @@
+utils/points.js
+  s_7fa4537c16b3f2::t_9e49b0471beb2b 46
+  s_7fa4537c16b3f2::t_f835e985f4baef 38
+  s_7fa4537c16b3f2::t_0cb461a406caab 27
+tests/points.test.js
+  s_7fa4537c16b3f2::t_97ab8265fd1c0d 1-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "1d120f0519871412bca9f341e0014f557655256f",
+  "prompts": {},
+  "sessions": {
+    "s_7fa4537c16b3f2": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_0fde4e63-db21-4786-9868-6483a73a70a6",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
