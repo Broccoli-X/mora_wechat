@@ -1,0 +1,64 @@
+pages/kebiao/kebiao.js
+  s_7fa4537c16b3f2::t_549a08b23e8d29 2,16,20-28
+pages/hanzi/hanzi.wxml
+  s_7fa4537c16b3f2::t_99a07871e272ad 2-8
+  s_7fa4537c16b3f2::t_146e3a8f2ba305 41
+pages/mine/mine.wxml
+  s_7fa4537c16b3f2::t_ab7809dfab3fd9 12-13
+  s_7fa4537c16b3f2::t_716ac3ca304b0f 67
+pages/index/index.js
+  s_7fa4537c16b3f2::t_74691bc397075c 23-26,33-35,41-52,54-71,81,83
+pages/hanzi/study.js
+  s_7fa4537c16b3f2::t_163b1d6f403dae 22-34
+pages/zuoye/zuoye.js
+  s_7fa4537c16b3f2::t_8c4dd5825af3e5 11,21-25
+pages/pinyin/pinyin.js
+  s_7fa4537c16b3f2::t_4dc9215a988121 9,13-20
+pages/mine/mine.js
+  s_7fa4537c16b3f2::t_1f917796aa40b1 22,29-30,34-49
+app.wxss
+  s_7fa4537c16b3f2::t_88ef0260bf3c98 7-27
+tests/auth.test.js
+  s_7fa4537c16b3f2::t_893fb4bca13f35 140-209
+pages/pinyin/study.js
+  s_7fa4537c16b3f2::t_d1727bf2902d2e 22-34
+pages/index/index.wxml
+  s_7fa4537c16b3f2::t_7d16ba845a7f2b 13-14
+  s_7fa4537c16b3f2::t_86c5da2dd2a6d0 72-73
+  s_7fa4537c16b3f2::t_5f63aec1624e4e 38-39
+pages/hanzi/hanzi.js
+  s_7fa4537c16b3f2::t_23975b414bd787 9,13-22
+pages/category/category.js
+  s_7fa4537c16b3f2::t_cb822e74dfdb3a 3-6,17-18,44-45,53,55,60-63,71-81
+pages/pinyin/pinyin.wxml
+  s_7fa4537c16b3f2::t_edcc852672e74c 2-8
+  s_7fa4537c16b3f2::t_8b6b7683703a7c 41
+utils/auth.js
+  s_7fa4537c16b3f2::t_a17ddbf73aa5c0 151-203,207
+  s_7fa4537c16b3f2::t_04637527f2a31b 83
+  s_7fa4537c16b3f2::t_b744395e0f31c6 11
+  s_7fa4537c16b3f2::t_4189fff05e78b6 28
+pages/kebiao/kebiao.wxml
+  s_7fa4537c16b3f2::t_12683aa3129f35 2-8
+pages/hanzi/detail.js
+  s_7fa4537c16b3f2::t_9683869cfd0ae4 26-38
+pages/zuoye/zuoye.wxml
+  s_7fa4537c16b3f2::t_c0698ccc07d7f0 2-8
+  s_7fa4537c16b3f2::t_0e6dbf811de7aa 69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "03696dda1e74e45950f453a60a4c67c0eb227c60",
+  "prompts": {},
+  "sessions": {
+    "s_7fa4537c16b3f2": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_0fde4e63-db21-4786-9868-6483a73a70a6",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
