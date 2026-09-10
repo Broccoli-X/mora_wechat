@@ -24,6 +24,7 @@ const REASONS = [
   { key: 'exam_g', label: '学科检测-良好', score: 3 },
   { key: 'exam_p', label: '学科检测-及格', score: 1 },
   { key: 'out', label: '户外运动2小时以上', score: 2 },
+  { key: 'up', label: '不赖床', score: 1 },
   { key: 'cus', label: '自定义奖励', custom: true },
 ];
 /* 消耗理由:奖励兑换;自定义扣分必须手填理由 */
@@ -34,7 +35,7 @@ const CONSUMES = [
 const CUSTOM_MAX = 5;      // 自定义奖励上限
 const CONSUME_MAX = 999;   // 单次兑换上限
 const NOTE_MAX = 30;       // 备注长度上限
-const SUBJECTS = ['语文', '数学', '英语', '其他'];
+const SUBJECTS = ['语文', '数学', '英语', '钢琴', '其他'];
 
 /* 积分规则(与网页端首页同文案) */
 const RULES = [
@@ -42,6 +43,7 @@ const RULES = [
   '积极主动完成一门学科作业 +3 分,完成一门学科作业 +1 分',
   '学科检测:优秀 +5 分,良好 +3 分,及格 +1 分',
   '坚持户外运动 2 小时以上 +2 分',
+  '不赖床 +1 分',
   '其他自定义奖励不超过 5 分',
   '10 积分 = 1 元,可以用来买自己喜欢的东西',
 ];
