@@ -27,6 +27,7 @@ const GROUPS = [
       {
         name: '英语', color: '#177a3e', icon: '🔤',
         items: [
+          { name: '字母卡片', desc: '26 个字母 · 禅模式滑动随机认', status: 'ok', url: '/pages/letters/letters', perm: 'phonics' },
           { name: '自然拼读', desc: 'Phonics 字母组合卡片', status: 'dev' },
           { name: '单词卡片', desc: '常用词看图认读', status: 'dev' },
         ],

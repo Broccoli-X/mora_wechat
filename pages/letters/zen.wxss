@@ -1,0 +1,275 @@
+/* 样式对齐网页版「🔀 随机抽卡」:同一渐变底 + 居中白卡(顶部点缀色条 + 大字母 + 两行音标)。
+   ✕ 在左上角(右上角是小程序胶囊,不能放)。
+   换卡动画:方向感知——往左滑旧卡飞出左侧、新卡自右滑入;往右滑镜像。
+   in/out 各备奇偶两个类名,换卡时交替触发,强制动画重放。 */
+.zen {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #a1c4fd 0%, #fbc2eb 45%, #ffecd2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 34rpx;
+  overflow: hidden;
+}
+
+/* ✕ 固定左上,远离右上胶囊按钮 */
+.zen-close {
+  position: fixed;
+  left: 28rpx;
+  width: 68rpx;
+  height: 68rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #5f27cd;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 8rpx 24rpx rgba(95, 39, 205, 0.2);
+  z-index: 9;
+}
+
+/* 掌握进度胶囊(网页版 quiz-counter 同款) */
+.zen-chip {
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #5f27cd;
+  box-shadow: 0 8rpx 28rpx rgba(95, 39, 205, 0.15);
+}
+
+/* 舞台:入卡在文档流里撑起高度,出卡绝对定位叠在其下 */
+.zen-stage {
+  position: relative;
+  width: 82%;
+}
+
+.zen-card {
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 64rpx;
+  border: 6rpx solid transparent;
+  padding: 90rpx 30rpx 56rpx;
+  box-shadow: 0 20rpx 56rpx rgba(95, 39, 205, 0.16);
+  overflow: hidden;
+  text-align: center;
+}
+
+.zen-card.in {
+  position: relative;
+  z-index: 2;
+}
+
+.zen-card.out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.zen-card.learned {
+  border-color: #ffd900;
+  box-shadow: 0 20rpx 60rpx rgba(255, 217, 0, 0.5);
+}
+
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16rpx;
+}
+
+.star {
+  position: absolute;
+  top: 30rpx;
+  right: 34rpx;
+  font-size: 56rpx;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+
+.star-on {
+  filter: drop-shadow(0 4rpx 8rpx rgba(255, 217, 0, 0.6));
+}
+
+.letters {
+  font-size: 240rpx;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 6rpx;
+}
+
+.letters .lc {
+  color: #3a3a55;
+  opacity: 0.7;
+}
+
+/* 字母名行(网页端 .name-row,仅文本不发音) */
+.name-row,
+.sound-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  margin-top: 28rpx;
+  padding: 20rpx 30rpx;
+  border-radius: 26rpx;
+}
+
+.name-row {
+  background: #f4f3ff;
+}
+
+.sound-row {
+  background: #fff0f3;
+  margin-top: 16rpx;
+}
+
+.lbl {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #9a9ab0;
+  letter-spacing: 1rpx;
+}
+
+.name-row .ipa {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #5f27cd;
+}
+
+.sound-row .ipa {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #ee5a6f;
+}
+
+.word {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #3a3a55;
+}
+
+/* ── 换卡动画:方向感知 ──
+   dir 'l' = 往左滑:旧卡 out-l(飞向左侧),新卡 in-l(自右侧入);dir 'r' = 往右滑,镜像。
+   关键:同名动画重复声明不会重放(CSS 规范),所以奇偶类名必须绑不同的 animation-name
+   ——每方向备 a/b 两份画面完全相同的 keyframes,换卡交替换名强制重放。 */
+.in-l-0 {
+  animation: zenInRa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-l-1 {
+  animation: zenInRb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-0 {
+  animation: zenInLa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-1 {
+  animation: zenInLb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.out-l-0 {
+  animation: zenOutLa 0.3s ease-in both;
+}
+
+.out-l-1 {
+  animation: zenOutLb 0.3s ease-in both;
+}
+
+.out-r-0 {
+  animation: zenOutRa 0.3s ease-in both;
+}
+
+.out-r-1 {
+  animation: zenOutRb 0.3s ease-in both;
+}
+
+@keyframes zenInRa {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes zenInRb {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes zenInLa {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes zenInLb {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes zenOutLa {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes zenOutLb {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes zenOutRa {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+@keyframes zenOutRb {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+.zen-hint {
+  font-size: 25rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: rgba(95, 39, 205, 0.55);
+  padding-bottom: env(safe-area-inset-bottom);
+}

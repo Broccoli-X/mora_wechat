@@ -1,0 +1,215 @@
+/* 样式对齐网页端 phonics-cards.html:蓝粉橙渐变底 + 白卡顶部点缀色条 + ⭐掌握金边。
+   尺寸按 2rpx ≈ 1px 换算。 */
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 32rpx 28rpx 60rpx;
+  background: linear-gradient(135deg, #a1c4fd 0%, #fbc2eb 45%, #ffecd2 100%);
+}
+
+.blocked {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.blocked-icon {
+  font-size: 88rpx;
+}
+
+.blocked-txt {
+  margin-top: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #5f27cd;
+}
+
+.blocked-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b6b8d;
+}
+
+.head {
+  text-align: center;
+  padding-bottom: 30rpx;
+}
+
+.head-title {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #5f27cd;
+  text-shadow: 0 6rpx 0 rgba(255, 255, 255, 0.6);
+  letter-spacing: 2rpx;
+}
+
+.head-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b6b8d;
+}
+
+.progress {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 22rpx;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #5f27cd;
+  box-shadow: 0 8rpx 28rpx rgba(95, 39, 205, 0.15);
+}
+
+.p-hover {
+  transform: scale(0.97);
+}
+
+.progress.on {
+  background: linear-gradient(135deg, #5f27cd, #ee5a6f);
+  color: #ffffff;
+  box-shadow: 0 8rpx 28rpx rgba(95, 39, 205, 0.35);
+}
+
+.p-num {
+  color: #ee5a6f;
+  font-size: 31rpx;
+  font-weight: 800;
+}
+
+.p-num-on {
+  color: #ffd900;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+}
+
+/* 空态(只看已掌握且还没有) */
+.learned-empty {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 48rpx;
+  padding: 88rpx 36rpx;
+  box-shadow: 0 16rpx 44rpx rgba(95, 39, 205, 0.12);
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #6b6b8d;
+}
+
+.card {
+  position: relative;
+  width: calc((100% - 24rpx) / 2);
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 48rpx;
+  border: 6rpx solid transparent;
+  padding: 44rpx 24rpx 32rpx;
+  box-shadow: 0 16rpx 44rpx rgba(95, 39, 205, 0.12);
+  overflow: hidden;
+  text-align: center;
+}
+
+.card-hover {
+  transform: scale(0.97);
+}
+
+.card.learned {
+  border-color: #ffd900;
+  box-shadow: 0 16rpx 52rpx rgba(255, 217, 0, 0.45);
+}
+
+/* 顶部点缀色条(网页端 .card::before) */
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16rpx;
+}
+
+.star {
+  position: absolute;
+  top: 24rpx;
+  right: 24rpx;
+  font-size: 40rpx;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+
+.star-on {
+  filter: drop-shadow(0 4rpx 8rpx rgba(255, 217, 0, 0.6));
+}
+
+.letters {
+  font-size: 132rpx;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 4rpx;
+}
+
+.letters .lc {
+  color: #3a3a55;
+  opacity: 0.7;
+}
+
+/* 字母名行(网页端 .name-row,仅文本不发音) */
+.name-row,
+.sound-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14rpx;
+  margin-top: 20rpx;
+  padding: 16rpx 24rpx;
+  border-radius: 26rpx;
+}
+
+.name-row {
+  background: #f4f3ff;
+}
+
+.sound-row {
+  background: #fff0f3;
+  margin-top: 14rpx;
+}
+
+.lbl {
+  font-size: 21rpx;
+  font-weight: 700;
+  color: #9a9ab0;
+  letter-spacing: 1rpx;
+}
+
+.name-row .ipa {
+  font-size: 35rpx;
+  font-weight: 800;
+  color: #5f27cd;
+}
+
+.sound-row .ipa {
+  font-size: 35rpx;
+  font-weight: 800;
+  color: #ee5a6f;
+}
+
+.word {
+  font-size: 25rpx;
+  font-weight: 700;
+  color: #3a3a55;
+}
+
+.tip {
+  margin-top: 40rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #7a7a9a;
+}

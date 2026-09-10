@@ -6,6 +6,8 @@
     "pages/zuoye/zuoye",
     "pages/pinyin/pinyin",
     "pages/pinyin/study",
+    "pages/letters/letters",
+    "pages/letters/zen",
     "pages/hanzi/hanzi",
     "pages/hanzi/study",
     "pages/hanzi/detail",

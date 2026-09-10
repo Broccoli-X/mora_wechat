@@ -1,0 +1,50 @@
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通字母卡片</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="head">
+      <view class="head-title">🔤 英语字母卡片</view>
+      <view class="head-sub">26 个字母 · 字母名 + 自然拼读音标 · 纯认读不带发音</view>
+      <!-- 已掌握胶囊:点击只看已掌握的字母,再点恢复全部(与网页端一致) -->
+      <view class="progress {{learnedOnly ? 'on' : ''}}" bindtap="onToggleLearnedOnly" hover-class="p-hover">
+        <text>已掌握 </text><text class="p-num {{learnedOnly ? 'p-num-on' : ''}}">{{masteredCount}}</text><text> / {{total}} ⭐</text>
+      </view>
+    </view>
+
+    <view class="grid">
+      <view wx:if="{{!items.length}}" class="learned-empty">🌟 还没有已掌握的字母~ 点卡片右上角 ⭐ 标记已掌握吧!</view>
+
+      <view
+        wx:for="{{items}}"
+        wx:key="l"
+        class="card {{item.mastered ? 'learned' : ''}}"
+        data-i="{{item.i}}"
+        bindtap="onTapCard"
+        hover-class="card-hover"
+      >
+        <view class="accent" style="background:{{item.color}}"></view>
+        <view
+          class="star {{item.mastered ? 'star-on' : ''}}"
+          data-l="{{item.l}}"
+          catchtap="onToggleStar"
+        >{{item.mastered ? '⭐' : '☆'}}</view>
+        <view class="letters" style="color:{{item.color}}">{{item.l}}<text class="lc">{{item.low}}</text></view>
+        <view class="name-row">
+          <text class="lbl">字母名</text>
+          <text class="ipa">{{item.nameIPA}}</text>
+        </view>
+        <view class="sound-row">
+          <text class="lbl">字母音</text>
+          <text class="ipa">{{item.sIPA}}</text>
+          <text class="word">{{item.emoji}} {{item.word}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tip">点 ⭐ 标记已掌握 · 点卡片进禅模式,左右滑动随机认字母</view>
+  </block>
+</view>

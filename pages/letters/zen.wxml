@@ -1,0 +1,49 @@
+<!-- zen 专注模式:网页版「🔀 随机抽卡」同款卡面,左右滑动随机换卡。
+     ✕ 固定在左上角——右上角是小程序胶囊按钮,放右侧会被遮住点不到。
+     换卡动画:滑动方向感知,旧卡滑出 + 新卡从反侧滑入(zen.wxss in-*/out-*)。 -->
+<view
+  class="zen"
+  style="padding-top:{{statusBarH}}px"
+  bindtouchstart="onTouchStart"
+  bindtouchend="onTouchEnd"
+>
+  <view class="zen-close" style="top:{{statusBarH + 6}}px" bindtap="onClose">✕</view>
+
+  <view class="zen-chip">已掌握 {{masteredCount}} / 26 ⭐</view>
+
+  <view class="zen-stage">
+    <!-- 旧卡:仅换卡动画期间存在,淡出后不可见,星标不绑事件 -->
+    <view wx:if="{{prev}}" class="zen-card out out-{{prevDir}}-{{seq % 2}}">
+      <view class="accent" style="background:{{prev.color}}"></view>
+      <view class="star {{prev.mastered ? 'star-on' : ''}}">{{prev.mastered ? '⭐' : '☆'}}</view>
+      <view class="letters" style="color:{{prev.color}}">{{prev.l}}<text class="lc">{{prev.low}}</text></view>
+      <view class="name-row">
+        <text class="lbl">字母名</text>
+        <text class="ipa">{{prev.nameIPA}}</text>
+      </view>
+      <view class="sound-row">
+        <text class="lbl">字母音</text>
+        <text class="ipa">{{prev.sIPA}}</text>
+        <text class="word">{{prev.emoji}} {{prev.word}}</text>
+      </view>
+    </view>
+
+    <!-- 新卡:盖在旧卡上层,承担内容与交互 -->
+    <view wx:if="{{item}}" class="zen-card in in-{{dir}}-{{seq % 2}} {{item.mastered ? 'learned' : ''}}">
+      <view class="accent" style="background:{{item.color}}"></view>
+      <view class="star {{item.mastered ? 'star-on' : ''}}" catchtap="onToggleStar">{{item.mastered ? '⭐' : '☆'}}</view>
+      <view class="letters" style="color:{{item.color}}">{{item.l}}<text class="lc">{{item.low}}</text></view>
+      <view class="name-row">
+        <text class="lbl">字母名</text>
+        <text class="ipa">{{item.nameIPA}}</text>
+      </view>
+      <view class="sound-row">
+        <text class="lbl">字母音</text>
+        <text class="ipa">{{item.sIPA}}</text>
+        <text class="word">{{item.emoji}} {{item.word}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="zen-hint">← 左右滑动 随机换一张 · 点 ⭐ 标记已掌握 →</view>
+</view>
