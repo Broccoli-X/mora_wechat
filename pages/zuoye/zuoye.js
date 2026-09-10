@@ -8,6 +8,7 @@ Page({
     days: [],
     loading: true,
     loadError: false,
+    blocked: false, // 本家庭未开通「作业」:整页不呈现内容
   },
 
   today: '',
@@ -17,9 +18,11 @@ Page({
   onLoad() {
     this.today = hw.todayStr();
     this.anchor = this.today;
-    /* 家长登录门:未登录跳登录页,登录后 reLaunch 回来 onLoad 重跑 */
-    if (!auth.ensure()) return;
-    this.fetch();
+    /* 家长登录门 + 功能权限:未开通整页不呈现;未登录跳登录页,登录后 reLaunch 回来 onLoad 重跑 */
+    auth.ensurePerm('homework', allowed => {
+      if (!allowed) { this.setData({ blocked: true }); return; }
+      this.fetch();
+    });
   },
 
   onPullDownRefresh() {

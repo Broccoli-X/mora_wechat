@@ -9,6 +9,8 @@
     </view>
   </view>
 
+  <!-- 积分:未开通「积分」功能的家庭整块不呈现 -->
+  <block wx:if="{{ptAllowed}}">
   <!-- 积分卡片:点按展开/收起明细与规则 -->
   <view class="section points" bindtap="toggleOpen" hover-class="{{ptState === 'ok' ? 'card-hover' : 'none'}}">
     <view class="pt-head">
@@ -61,6 +63,7 @@
     </view>
 
     <view class="foot-tip">发放与兑换在网页端家长页操作,数据自动同步到所有设备</view>
+  </block>
   </block>
 
   <!-- 家庭账号:登录态与退出(鉴权与网页端家长登录同源) -->

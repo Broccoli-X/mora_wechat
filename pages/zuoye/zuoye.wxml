@@ -1,4 +1,11 @@
 <view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通作业本功能</view>
+    <view class="blocked-sub">请联系管理员开通后再来看作业哦</view>
+  </view>
+
+  <block wx:else>
   <view class="weekbar">
     <view class="wk-btn" data-n="-1" bindtap="shiftWeek" hover-class="wk-btn-hover">‹ 上一周</view>
     <view class="wk-label">{{weekLabel}}<text wx:if="{{isThisWeek}}" class="now-pill">本周</text></view>
@@ -59,4 +66,5 @@
       <view wx:else class="empty">没有作业，尽情玩吧 🎈</view>
     </view>
   </view>
+  </block>
 </view>

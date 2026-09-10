@@ -1,4 +1,11 @@
 <view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通拼音功能</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
   <view class="head">
     <view class="head-title">🥳 拼音学习卡</view>
     <view class="head-sub">共 {{total}} 张 · 已掌握 {{masteredCount}} 张</view>
@@ -31,4 +38,5 @@
       <view class="advanced-badge">敬请期待</view>
     </view>
   </view>
+  </block>
 </view>

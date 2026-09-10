@@ -137,4 +137,74 @@ test('logout:清本地并尽力通知服务端删会话', () => {
   assert.strictEqual(auth.getToken(), '');
 });
 
+/* ── 功能权限 ── */
+test('登录响应带 perms:入库后 hasPerm 生效,管理员 * 全开', () => {
+  responders.push(() => [200, { ok: true, token: TOKEN_A, family: 'famA', owner: false, perms: ['*'] }]);
+  auth.login('pw', '', null, null);
+  assert.strictEqual(auth.hasPerm('kebiao'), true);
+  assert.strictEqual(auth.hasPerm('points'), true);
+});
+
+test('hasPerm:普通家庭按清单判定,未列出 = false', () => {
+  store.set('mora-auth-perms', JSON.stringify(['points', 'homework']));
+  assert.strictEqual(auth.hasPerm('points'), true);
+  assert.strictEqual(auth.hasPerm('homework'), true);
+  assert.strictEqual(auth.hasPerm('kebiao'), false);
+  assert.strictEqual(auth.hasPerm('todo'), false);
+});
+
+test('refreshPerms:拉最新权限入库覆盖缓存', () => {
+  store.set('mora-auth-token', TOKEN_A);
+  store.set('mora-auth-perms', JSON.stringify(['points']));
+  responders.push(opts => {
+    assert.ok(opts.url.indexOf('/api/perms?token=' + TOKEN_A) >= 0);
+    return [200, { ok: true, family: 'famA', perms: ['kebiao'] }];
+  });
+  let ok = false;
+  auth.refreshPerms(r => { ok = r; });
+  assert.ok(ok);
+  assert.strictEqual(auth.hasPerm('kebiao'), true);
+  assert.strictEqual(auth.hasPerm('points'), false);
+});
+
+test('refreshPerms:401 清 token 弹登录门', () => {
+  store.set('mora-auth-token', TOKEN_A);
+  store.set('mora-auth-family', 'famA');
+  responders.push(() => [401, { ok: false, error: 'unauthorized' }]);
+  let ok = true;
+  auth.refreshPerms(r => { ok = r; });
+  assert.strictEqual(ok, false);
+  assert.strictEqual(auth.getToken(), '');
+  assert.strictEqual(launches.length, 1);
+});
+
+test('ensurePerm:未登录不回调只弹门;登录后回调 allowed', () => {
+  let called = false;
+  auth.ensurePerm('kebiao', () => { called = true; });
+  assert.strictEqual(called, false);
+  assert.strictEqual(launches.length, 1);
+  auth.gateShown();
+
+  store.set('mora-auth-token', TOKEN_A);
+  responders.push(() => [200, { ok: true, perms: ['kebiao'] }]);
+  let allowed = null;
+  auth.ensurePerm('kebiao', a => { allowed = a; });
+  assert.strictEqual(allowed, true);
+
+  responders.push(() => [200, { ok: true, perms: ['points'] }]);
+  allowed = null;
+  auth.ensurePerm('kebiao', a => { allowed = a; });
+  assert.strictEqual(allowed, false);
+});
+
+test('换家庭登录:旧权限清单一并清掉,新 perms 来自登录响应', () => {
+  store.set('mora-auth-token', TOKEN_A);
+  store.set('mora-auth-family', 'famA');
+  store.set('mora-auth-perms', JSON.stringify(['points']));
+  responders.push(() => [200, { ok: true, token: TOKEN_B, family: 'famB', owner: false, perms: ['kebiao'] }]);
+  auth.login('pw', 'famB', null, null);
+  assert.strictEqual(auth.hasPerm('points'), false, '上一家的 points 权限不串家');
+  assert.strictEqual(auth.hasPerm('kebiao'), true);
+});
+
 console.log('\n全部通过:' + passed + ' 个用例');

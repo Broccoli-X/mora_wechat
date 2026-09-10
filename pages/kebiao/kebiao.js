@@ -1,4 +1,5 @@
 const kb = require('../../utils/kebiao');
+const auth = require('../../utils/auth');
 
 /* 页签用短名:星期一 → 周一 */
 const TABS = kb.KEBIAO.days.map(d => d.replace('星期', '周'));
@@ -12,15 +13,20 @@ Page({
     selected: 0,
     isRest: false,
     rows: [],
+    blocked: false, // 本家庭未开通「课表」:整页不呈现内容
   },
 
   onLoad() {
-    const todayIdx = kb.todayIdxOf(new Date());
-    this.setData({
-      isRest: todayIdx < 0,
-      selected: todayIdx >= 0 ? todayIdx : 0,
+    /* 家长登录门 + 功能权限:未开通整页不呈现,登录/权限就绪后才初始化 */
+    auth.ensurePerm('kebiao', allowed => {
+      if (!allowed) { this.setData({ blocked: true }); return; }
+      const todayIdx = kb.todayIdxOf(new Date());
+      this.setData({
+        isRest: todayIdx < 0,
+        selected: todayIdx >= 0 ? todayIdx : 0,
+      });
+      this.renderRows(this.data.selected);
     });
-    this.renderRows(this.data.selected);
   },
 
   selectDay(e) {

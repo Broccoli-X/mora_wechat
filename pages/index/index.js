@@ -20,27 +20,55 @@ Page({
     ptEarned: 0,
     ptRemaining: 0,
     ptYuan: '0',
+    ptAllowed: false,    // 功能权限:未开通的区块整个不呈现
+    tdAllowed: false,
+    courseAllowed: false,
+    hwAllowed: false,
   },
 
   onShow() {
     this.renderDate();
-    this.renderCourse();
     /* 家长登录门:未登录跳登录页,登录后回来再取数(课表/日期本地照常渲染) */
     if (!auth.ensure()) return;
-    this.loadTodos();
-    this.loadHomework();
-    this.loadPoints();
+    /* 功能权限:先按本地缓存摆区块,再拉最新纠正(没变化不重取数据) */
+    this.applyPerms();
+    auth.refreshPerms(ok => { if (ok) this.applyPermsIfChanged(); });
   },
 
   onPullDownRefresh() {
     if (!auth.ensure()) { wx.stopPullDownRefresh(); return; }
     this.renderDate();
+    auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
+  },
+
+  /* 按当前家庭的权限摆区块:未开通的整个不呈现,也不发起取数 */
+  applyPerms(done) {
+    const flags = {
+      ptAllowed: auth.hasPerm('points'),
+      tdAllowed: auth.hasPerm('todo'),
+      courseAllowed: auth.hasPerm('kebiao'),
+      hwAllowed: auth.hasPerm('homework'),
+    };
+    this.setData(flags);
     this.renderCourse();
-    let pending = 3;
-    const done = () => { if (--pending === 0) wx.stopPullDownRefresh(); };
-    this.loadTodos(done);
-    this.loadHomework(done);
-    this.loadPoints(done);
+    const jobs = [];
+    if (flags.tdAllowed) jobs.push(d => this.loadTodos(d));
+    if (flags.hwAllowed) jobs.push(d => this.loadHomework(d));
+    if (flags.ptAllowed) jobs.push(d => this.loadPoints(d));
+    let pending = jobs.length;
+    const one = () => { pending -= 1; if (pending === 0 && done) done(); };
+    if (!pending) { if (done) done(); return; }
+    jobs.forEach(job => job(one));
+  },
+
+  /* 权限没变化就不重取数据(缓存 + 刷新两次 apply 只取一次) */
+  applyPermsIfChanged() {
+    const d = this.data;
+    if (d.ptAllowed === auth.hasPerm('points') &&
+        d.tdAllowed === auth.hasPerm('todo') &&
+        d.courseAllowed === auth.hasPerm('kebiao') &&
+        d.hwAllowed === auth.hasPerm('homework')) return;
+    this.applyPerms();
   },
 
   renderDate() {
@@ -50,9 +78,9 @@ Page({
     });
   },
 
-  /* 课程模块:单条展示,判定逻辑在 utils(当前节 → 下一节 → 次日 → 隐藏) */
+  /* 课程模块:单条展示,判定逻辑在 utils(当前节 → 下一节 → 次日 → 隐藏);没权限整个隐藏 */
   renderCourse() {
-    this.setData({ course: kb.homeLesson(new Date()) });
+    this.setData({ course: this.data.courseAllowed ? kb.homeLesson(new Date()) : { show: false } });
   },
 
   /* 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后 */

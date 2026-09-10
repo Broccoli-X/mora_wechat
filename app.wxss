@@ -4,3 +4,24 @@ page {
   color: #1f2333;
   font-size: 28rpx;
 }
+
+/* 功能未开通占位:权限收口时整页/整块不呈现内容,只给这一块提示 */
+.blocked {
+  padding: 140rpx 40rpx;
+  text-align: center;
+}
+.blocked-icon {
+  font-size: 88rpx;
+}
+.blocked-txt {
+  margin-top: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #4b5563;
+}
+.blocked-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #9aa1b0;
+}
+

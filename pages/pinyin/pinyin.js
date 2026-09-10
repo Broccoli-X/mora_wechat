@@ -6,14 +6,18 @@ Page({
     total: py.countAll(),
     masteredCount: 0,
     tables: [],
+    blocked: false, // 本家庭未开通「拼音」:整页不呈现内容
   },
 
   onShow() {
-    this.renderTables();
-    /* 家长登录门:未登录跳登录页(本地缓存照常先渲染),登录后回来再同步 */
-    if (!auth.ensure()) return;
-    /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
-    py.syncMastered(() => this.renderTables());
+    /* 家长登录门 + 功能权限:未开通整页不呈现 */
+    auth.ensurePerm('pinyin', allowed => {
+      if (!allowed) { this.setData({ blocked: true }); return; }
+      this.setData({ blocked: false });
+      this.renderTables();
+      /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
+      py.syncMastered(() => this.renderTables());
+    });
   },
 
   /* 每次进入重读掌握进度(从学习页返回也能刷新) */

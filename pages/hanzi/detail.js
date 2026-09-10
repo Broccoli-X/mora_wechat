@@ -23,11 +23,19 @@ Page({
     }
     this.g = g;
     this.chars = hz.scopeChars(g);
-    this.render(c);
-    /* 家长登录门:未登录跳登录页(本地缓存照常先渲染),登录后回来再同步 */
-    if (!auth.ensure()) return;
-    /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
-    hz.syncMastered(map => this.mergeMastered(map));
+    /* 家长登录门 + 功能权限:未开通提示后退出(深链误入也挡住) */
+    auth.ensurePerm('chars', allowed => {
+      if (!allowed) { this.blockedBack(); return; }
+      this.render(c);
+      /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
+      hz.syncMastered(map => this.mergeMastered(map));
+    });
+  },
+
+  /* 未开通本功能:提示后退回 */
+  blockedBack() {
+    wx.showToast({ title: '本家庭未开通此功能', icon: 'none' });
+    setTimeout(() => wx.navigateBack({ fail: () => wx.reLaunch({ url: '/pages/index/index' }) }), 600);
   },
 
   /* 同步合并后只刷新掌握星标,不打断画布 */

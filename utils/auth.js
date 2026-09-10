@@ -8,6 +8,7 @@
 const API_BASE = 'https://www.tcued.com';
 const TOKEN_KEY = 'mora-auth-token';
 const FAMILY_KEY = 'mora-auth-family';
+const PERMS_KEY = 'mora-auth-perms';
 const DEVICE_KEY = 'mora-device';
 
 function getToken() {
@@ -24,6 +25,7 @@ function clearAll() {
   try {
     wx.removeStorageSync(TOKEN_KEY);
     wx.removeStorageSync(FAMILY_KEY);
+    wx.removeStorageSync(PERMS_KEY);
   } catch (e) { /* 存储不可用忽略 */ }
 }
 
@@ -78,6 +80,7 @@ function login(password, family, done, fail) {
       try {
         wx.setStorageSync(TOKEN_KEY, j.token);
         wx.setStorageSync(FAMILY_KEY, newFamily);
+        setPerms(j.perms || []);
       } catch (e) { /* 存储不可用:本次能用,重开需重登 */ }
       if (done) done(j.token);
     },
@@ -145,7 +148,61 @@ function on401() {
   gate();
 }
 
+/* ── 功能权限:与网页端 auth.js 同协议(/api/perms,管理员家庭为 ['*'])。
+   权限清单存本地缓存,拉取失败沿用缓存(离线不打扰);换家庭登录时
+   purgeLocalFamilyData 清掉旧清单,登录响应/刷新写入新家庭的 ── */
+
+function getPerms() {
+  try { return JSON.parse(wx.getStorageSync(PERMS_KEY) || '[]') || []; }
+  catch (e) { return []; }
+}
+
+function setPerms(perms) {
+  try { wx.setStorageSync(PERMS_KEY, JSON.stringify(perms || [])); }
+  catch (e) { /* 存储不可用忽略 */ }
+}
+
+/* 功能是否对当前家庭开放;未登录/没缓存 = 未开放(登录门/整页拦截接管) */
+function hasPerm(feature) {
+  const perms = getPerms();
+  return perms.indexOf('*') >= 0 || perms.indexOf(feature) >= 0;
+}
+
+/* 拉最新权限(每次进功能页刷新,与网页端同策略)。
+   done(ok):ok=false 表示没刷成(离线/未登录/会话失效),hasPerm 仍读缓存;
+   401 视为会话失效,清 token 弹登录门 */
+function refreshPerms(done) {
+  const tok = getToken();
+  if (!tok) { if (done) done(false); return; }
+  wx.request({
+    url: API_BASE + '/api/perms?token=' + encodeURIComponent(tok),
+    method: 'GET',
+    success(res) {
+      if (res.statusCode === 401) { on401(); if (done) done(false); return; }
+      const j = res.data;
+      if (res.statusCode === 200 && j && j.ok && Array.isArray(j.perms)) {
+        setPerms(j.perms);
+        if (done) done(true);
+        return;
+      }
+      if (done) done(false);
+    },
+    fail() { if (done) done(false); },
+  });
+}
+
+/* 功能页进入:登录门 + 权限刷新。done(allowed) 在登录且权限就绪后必达
+   (未登录/会话失效弹登录门时不回调);allowed=false = 本功能未对该家庭开放 */
+function ensurePerm(feature, done) {
+  if (!ensure()) return;
+  refreshPerms(() => {
+    if (!getToken()) return; // 刷新途中会话失效,已弹登录门
+    done(hasPerm(feature));
+  });
+}
+
 module.exports = {
   getToken, getFamily, deviceTag,
   login, logout, ensure, gate, gateShown, on401,
+  hasPerm, refreshPerms, ensurePerm,
 };

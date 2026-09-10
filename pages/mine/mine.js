@@ -19,17 +19,34 @@ Page({
     allOpen: false,
     rules: pt.RULES,
     family: '',         // 已登录的家庭ID(登录时服务端下发)
+    ptAllowed: false,   // 功能权限:未开通「积分」整块不呈现
   },
 
   onShow() {
     /* 家长登录门:未登录跳登录页,登录后回来再取数 */
     if (!auth.ensure()) return;
     this.setData({ family: auth.getFamily() });
-    this.loadPoints();
+    this.applyPerms();
+    auth.refreshPerms(ok => { if (ok) this.applyPermsIfChanged(); });
   },
 
   onPullDownRefresh() {
-    this.loadPoints(() => wx.stopPullDownRefresh());
+    if (!auth.ensure()) { wx.stopPullDownRefresh(); return; }
+    auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
+  },
+
+  /* 积分功能权限:未开通「积分」的家庭不呈现卡片/明细/规则 */
+  applyPerms(done) {
+    const ptAllowed = auth.hasPerm('points');
+    this.setData({ ptAllowed });
+    if (!ptAllowed) { if (done) done(); return; }
+    this.loadPoints(done);
+  },
+
+  /* 权限没变化就不重取数据 */
+  applyPermsIfChanged() {
+    if (this.data.ptAllowed === auth.hasPerm('points')) return;
+    this.applyPerms();
   },
 
   loadPoints(done) {

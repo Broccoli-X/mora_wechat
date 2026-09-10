@@ -10,8 +10,8 @@
     <text class="date-line">{{dateLine}}</text>
   </view>
 
-  <!-- 积分总览:emoji 只看累计,剩余折算零钱;点按去「我的」看明细与规则(不放规则) -->
-  <view class="section points" bindtap="goMine" hover-class="link-hover">
+  <!-- 积分总览:emoji 只看累计,剩余折算零钱;点按去「我的」看明细与规则;未开通不呈现 -->
+  <view class="section points" wx:if="{{ptAllowed}}" bindtap="goMine" hover-class="link-hover">
     <view class="section-head">
       <text class="section-title">⭐ 我的积分</text>
       <text class="section-more">明细与规则 ›</text>
@@ -35,8 +35,8 @@
     </view>
   </view>
 
-  <!-- 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后 -->
-  <view class="section">
+  <!-- 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后;未开通不呈现 -->
+  <view class="section" wx:if="{{tdAllowed}}">
     <view class="section-head">
       <text class="section-title">⏰ 今日代办</text>
     </view>
@@ -69,7 +69,8 @@
     </view>
   </view>
 
-  <view class="section">
+  <!-- 今日作业:未开通不呈现 -->
+  <view class="section" wx:if="{{hwAllowed}}">
     <view class="section-head">
       <text class="section-title">📒 今日作业</text>
       <text class="section-more" bindtap="goZuoye" hover-class="link-hover">全部作业 ›</text>
