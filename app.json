@@ -12,6 +12,8 @@
     "pages/hanzi/hanzi",
     "pages/hanzi/study",
     "pages/hanzi/detail",
+    "pages/poems/poems",
+    "pages/poems/zen",
     "pages/mine/mine",
     "pages/login/login"
   ],

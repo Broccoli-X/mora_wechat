@@ -1,0 +1,283 @@
+/* 样式对齐网页端 poems.html:粉黄蓝绿渐变底 + 白卡(彩色描边 + 顶部渐变点缀条 + ⭐掌握)。
+   移动端网格单列(网页端 @media max-width:480px 同款)。尺寸按 2rpx ≈ 1px 换算。 */
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 32rpx 28rpx 60rpx;
+  background: linear-gradient(135deg, #fff1f2 0%, #fff7e6 30%, #e6f7ff 65%, #f6ffed 100%);
+}
+
+.blocked {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.blocked-icon {
+  font-size: 88rpx;
+}
+
+.blocked-txt {
+  margin-top: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #e64980;
+}
+
+.blocked-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b6b8d;
+}
+
+.head {
+  text-align: center;
+  padding-bottom: 24rpx;
+}
+
+.head-title {
+  font-size: 46rpx;
+  font-weight: 900;
+  color: #e64980;
+  text-shadow: 0 6rpx 0 rgba(255, 255, 255, 0.6);
+  letter-spacing: 2rpx;
+}
+
+.head-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8b8b9a;
+}
+
+/* 工具栏:隐藏拼音 + 已掌握胶囊(网页端 toolbar 按钮同款渐变) */
+.ctrl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  padding-bottom: 30rpx;
+}
+
+.pill {
+  background: linear-gradient(135deg, #9775fa, #7048e8);
+  color: #ffffff;
+  border-radius: 999rpx;
+  padding: 16rpx 34rpx;
+  font-size: 26rpx;
+  font-weight: 800;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.12);
+}
+
+.pill-hover {
+  transform: scale(0.96);
+}
+
+.pill.master {
+  background: linear-gradient(135deg, #fab005, #e67700);
+}
+
+.pill.master.on {
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.12), 0 0 0 8rpx rgba(250, 176, 5, 0.35);
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+/* 分类节头(一年级上/下册、拓展):彩色胶囊 + 数量(网页端 .sec-head) */
+.sec {
+  margin-bottom: 10rpx;
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 16rpx 4rpx 20rpx;
+}
+
+.sec-chip {
+  font-size: 32rpx;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 4rpx;
+  padding: 14rpx 40rpx;
+  border-radius: 999rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.14);
+}
+
+.sec-cnt {
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+/* 空态(只看已掌握且还没有) */
+.learned-empty {
+  box-sizing: border-box;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 44rpx;
+  padding: 88rpx 36rpx;
+  box-shadow: 0 16rpx 44rpx rgba(0, 0, 0, 0.08);
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* 卡片:白底彩色描边,已掌握金色光环(网页端 .poem.mastered) */
+.card {
+  position: relative;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 44rpx;
+  border: 6rpx solid transparent;
+  padding: 36rpx 24rpx 40rpx;
+  box-shadow: 0 8rpx 52rpx rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+}
+
+.card-hover {
+  transform: scale(0.98);
+}
+
+.card.learned {
+  box-shadow: 0 8rpx 52rpx rgba(0, 0, 0, 0.1), 0 0 0 8rpx rgba(250, 176, 5, 0.28);
+}
+
+/* 顶部渐变点缀条(网页端 .stripe) */
+.stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20rpx;
+}
+
+/* 已掌握星标:白底圆形,点亮换金底白星(网页端 .poem .star) */
+.star {
+  position: absolute;
+  top: 40rpx;
+  right: 28rpx;
+  z-index: 3;
+  width: 76rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #cbd5e1;
+  font-size: 44rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.18);
+}
+
+.star-on {
+  background: linear-gradient(135deg, #fab005, #f08c00);
+  color: #ffffff;
+}
+
+/* 标题:楷体逐字注音(拼音在上、字在下),网页端 .p-title rt 同款灰 */
+.p-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 14rpx 16rpx 2rpx;
+}
+
+/* 朝代·诗人胶囊:白字渐变底(网页端 .p-meta) */
+.p-meta {
+  display: inline-flex;
+  align-items: flex-end;
+  margin-top: 8rpx;
+  padding: 8rpx 28rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.12);
+}
+
+.p-dyn {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* 注音块:拼音在上(小/灰),字在下(楷体) */
+.tok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 2rpx;
+}
+
+.tok .py {
+  font-size: 18rpx;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 1rpx;
+  color: #94a3b8;
+}
+
+.tok .ch {
+  font-family: "STKaiti", "Kaiti SC", "KaiTi", serif;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.p-title .tok .ch {
+  font-size: 46rpx;
+  letter-spacing: 4rpx;
+  color: #333333;
+}
+
+.p-meta .tok .ch {
+  font-size: 24rpx;
+  color: #ffffff;
+}
+
+.p-meta .tok .py {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* 正文逐句:字距行距对齐网页端 .line */
+.p-body {
+  padding: 20rpx 18rpx 8rpx;
+}
+
+.line {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.p-body .tok .ch {
+  font-size: 42rpx;
+  letter-spacing: 2rpx;
+  color: #222222;
+}
+
+.p-body .tok .py {
+  font-size: 17rpx;
+  color: #7c8db5;
+}
+
+.tok .ch.punc {
+  font-family: inherit;
+  color: #cbd2dc;
+}
+
+/* 隐藏拼音自测:只隐文字保留占位(网页端 body.no-py) */
+.no-py .tok .py {
+  color: transparent;
+}
+
+.tip {
+  margin-top: 40rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #9a9aa8;
+}

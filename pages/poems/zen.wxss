@@ -1,0 +1,333 @@
+/* 样式对齐网页端 poems.html「单首弹框 / 随机复习闪卡」:粉黄蓝绿渐变底 + 居中白卡
+   (彩色描边 + 顶部渐变点缀条 + 楷体逐字注音)。✕ 在左上角(右上角是小程序胶囊,不能放)。
+   换卡动画:方向感知——往左滑旧卡飞出左侧、新卡自右滑入;往右滑镜像。
+   in/out 各备奇偶两个类名,换卡时交替触发,强制动画重放。 */
+.zen {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #fff1f2 0%, #fff7e6 30%, #e6f7ff 65%, #f6ffed 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30rpx;
+  overflow: hidden;
+}
+
+/* ✕ 固定左上,远离右上胶囊按钮 */
+.zen-close {
+  position: fixed;
+  left: 28rpx;
+  width: 68rpx;
+  height: 68rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #e64980;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 8rpx 24rpx rgba(230, 73, 128, 0.2);
+  z-index: 9;
+}
+
+/* 掌握进度胶囊 */
+.zen-chip {
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #e64980;
+  box-shadow: 0 8rpx 28rpx rgba(230, 73, 128, 0.15);
+}
+
+/* 舞台:入卡在文档流里撑起高度,出卡绝对定位叠在其下 */
+.zen-stage {
+  position: relative;
+  width: 88%;
+}
+
+.zen-card {
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 44rpx;
+  border: 6rpx solid transparent;
+  padding: 70rpx 26rpx 44rpx;
+  box-shadow: 0 20rpx 56rpx rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  text-align: center;
+}
+
+.zen-card.in {
+  position: relative;
+  z-index: 2;
+}
+
+.zen-card.out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.zen-card.learned {
+  box-shadow: 0 20rpx 60rpx rgba(250, 176, 5, 0.45), 0 0 0 8rpx rgba(250, 176, 5, 0.28);
+}
+
+/* 顶部渐变点缀条(网页端 .stripe) */
+.stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20rpx;
+}
+
+/* 已掌握星标:白底圆形,点亮换金底白星 */
+.star {
+  position: absolute;
+  top: 40rpx;
+  right: 28rpx;
+  z-index: 2;
+  width: 80rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #cbd5e1;
+  font-size: 46rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.18);
+}
+
+.star-on {
+  background: linear-gradient(135deg, #fab005, #f08c00);
+  color: #ffffff;
+}
+
+/* 标题:楷体逐字注音 */
+.p-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 8rpx 8rpx 0;
+}
+
+/* 朝代·诗人胶囊 */
+.p-meta {
+  display: inline-flex;
+  align-items: flex-end;
+  margin-top: 14rpx;
+  padding: 8rpx 30rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.12);
+}
+
+.p-dyn {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* 注音块:拼音在上(小/灰),字在下(楷体) */
+.tok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 3rpx;
+}
+
+.tok .py {
+  font-size: 18rpx;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 1rpx;
+  color: #94a3b8;
+}
+
+.tok .ch {
+  font-family: "STKaiti", "Kaiti SC", "KaiTi", serif;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.p-title .tok .ch {
+  font-size: 60rpx;
+  letter-spacing: 6rpx;
+  color: #333333;
+}
+
+.p-meta .tok .ch {
+  font-size: 26rpx;
+  color: #ffffff;
+}
+
+.p-meta .tok .py {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* 正文逐句 */
+.p-body {
+  padding: 20rpx 8rpx 4rpx;
+}
+
+.line {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.p-body .tok .ch {
+  font-size: 44rpx;
+  letter-spacing: 2rpx;
+  color: #222222;
+}
+
+.p-body .tok .py {
+  font-size: 17rpx;
+  color: #7c8db5;
+}
+
+.tok .ch.punc {
+  font-family: inherit;
+  color: #cbd2dc;
+}
+
+/* 遮拼音自测:只隐文字保留占位(网页端 no-py) */
+.no-py .tok .py {
+  color: transparent;
+}
+
+/* 遮拼音按钮(网页端闪卡「🙈 遮住拼音」同款紫渐变) */
+.zen-py {
+  background: linear-gradient(135deg, #9775fa, #7048e8);
+  color: #ffffff;
+  border-radius: 999rpx;
+  padding: 16rpx 40rpx;
+  font-size: 27rpx;
+  font-weight: 800;
+  box-shadow: 0 8rpx 24rpx rgba(112, 72, 232, 0.3);
+}
+
+.py-hover {
+  transform: scale(0.96);
+}
+
+/* ── 换卡动画:方向感知 ──
+   dir 'l' = 往左滑:旧卡 out-l(飞向左侧),新卡 in-l(自右侧入);dir 'r' = 往右滑,镜像。
+   关键:同名动画重复声明不会重放(CSS 规范),所以奇偶类名必须绑不同的 animation-name
+   ——每方向备 a/b 两份画面完全相同的 keyframes,换卡交替换名强制重放。 */
+.in-l-0 {
+  animation: poemInRa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-l-1 {
+  animation: poemInRb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-0 {
+  animation: poemInLa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-1 {
+  animation: poemInLb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.out-l-0 {
+  animation: poemOutLa 0.3s ease-in both;
+}
+
+.out-l-1 {
+  animation: poemOutLb 0.3s ease-in both;
+}
+
+.out-r-0 {
+  animation: poemOutRa 0.3s ease-in both;
+}
+
+.out-r-1 {
+  animation: poemOutRb 0.3s ease-in both;
+}
+
+@keyframes poemInRa {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes poemInRb {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes poemInLa {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes poemInLb {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes poemOutLa {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes poemOutLb {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes poemOutRa {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+@keyframes poemOutRb {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+.zen-hint {
+  font-size: 25rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: rgba(230, 73, 128, 0.55);
+  padding-bottom: env(safe-area-inset-bottom);
+}

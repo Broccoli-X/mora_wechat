@@ -1,0 +1,74 @@
+<!-- zen 专注模式:网页端「单首古诗弹框 / 随机复习闪卡」同款卡面,左右滑动随机换一首。
+     ✕ 固定在左上角——右上角是小程序胶囊按钮,放右侧会被遮住点不到。
+     换卡动画:滑动方向感知,旧卡滑出 + 新卡从反侧滑入(zen.wxss in-*/out-*)。
+     「遮住拼音」自测:只隐拼音文字保留占位(网页端闪卡按钮同款)。 -->
+<view
+  class="zen {{pyHidden ? 'no-py' : ''}}"
+  style="padding-top:{{statusBarH}}px"
+  bindtouchstart="onTouchStart"
+  bindtouchend="onTouchEnd"
+>
+  <view class="zen-close" style="top:{{statusBarH + 6}}px" bindtap="onClose">✕</view>
+
+  <view class="zen-chip">已掌握 {{masteredCount}} / {{total}} ⭐</view>
+
+  <view class="zen-stage">
+    <!-- 旧卡:仅换卡动画期间存在,淡出后不可见,星标不绑事件 -->
+    <view wx:if="{{prev}}" class="zen-card out out-{{prevDir}}-{{seq % 2}}" style="border-color:{{prev.c1}}">
+      <view class="stripe" style="background:linear-gradient(135deg,{{prev.c1}},{{prev.c2}})"></view>
+      <view class="star {{prev.mastered ? 'star-on' : ''}}">{{prev.mastered ? '⭐' : '☆'}}</view>
+      <view class="p-title">
+        <view class="tok" wx:for="{{prev.titleTokens}}" wx:for-item="tk" wx:key="ix">
+          <text class="py">{{tk.py}}</text>
+          <text class="ch">{{tk.ch}}</text>
+        </view>
+      </view>
+      <view class="p-meta" style="background:linear-gradient(135deg,{{prev.c1}},{{prev.c2}})">
+        <text class="p-dyn">{{prev.d}} · </text>
+        <view class="tok" wx:for="{{prev.poetTokens}}" wx:for-item="tk" wx:key="ix">
+          <text class="py">{{tk.py}}</text>
+          <text class="ch">{{tk.ch}}</text>
+        </view>
+      </view>
+      <view class="p-body">
+        <view class="line" wx:for="{{prev.lines}}" wx:for-item="ln" wx:key="ix">
+          <view class="tok" wx:for="{{ln.tokens}}" wx:for-item="tk" wx:key="ix">
+            <text class="py">{{tk.py}}</text>
+            <text class="ch {{tk.punc ? 'punc' : ''}}">{{tk.ch}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 新卡:盖在旧卡上层,承担内容与交互 -->
+    <view wx:if="{{item}}" class="zen-card in in-{{dir}}-{{seq % 2}} {{item.mastered ? 'learned' : ''}}" style="border-color:{{item.c1}}">
+      <view class="stripe" style="background:linear-gradient(135deg,{{item.c1}},{{item.c2}})"></view>
+      <view class="star {{item.mastered ? 'star-on' : ''}}" catchtap="onToggleStar">{{item.mastered ? '⭐' : '☆'}}</view>
+      <view class="p-title">
+        <view class="tok" wx:for="{{item.titleTokens}}" wx:for-item="tk" wx:key="ix">
+          <text class="py">{{tk.py}}</text>
+          <text class="ch">{{tk.ch}}</text>
+        </view>
+      </view>
+      <view class="p-meta" style="background:linear-gradient(135deg,{{item.c1}},{{item.c2}})">
+        <text class="p-dyn">{{item.d}} · </text>
+        <view class="tok" wx:for="{{item.poetTokens}}" wx:for-item="tk" wx:key="ix">
+          <text class="py">{{tk.py}}</text>
+          <text class="ch">{{tk.ch}}</text>
+        </view>
+      </view>
+      <view class="p-body">
+        <view class="line" wx:for="{{item.lines}}" wx:for-item="ln" wx:key="ix">
+          <view class="tok" wx:for="{{ln.tokens}}" wx:for-item="tk" wx:key="ix">
+            <text class="py">{{tk.py}}</text>
+            <text class="ch {{tk.punc ? 'punc' : ''}}">{{tk.ch}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="zen-py" bindtap="onTogglePy" hover-class="py-hover">{{pyHidden ? '👀 显示拼音' : '🙈 遮住拼音'}}</view>
+
+  <view class="zen-hint">← 左右滑动 随机换一首 · 点 ⭐ 标记已掌握 →</view>
+</view>

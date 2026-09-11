@@ -13,7 +13,7 @@ const GROUPS = [
       {
         name: '语文', color: '#c9392b', icon: '📖',
         items: [
-          { name: '古诗卡片', desc: '必背古诗跟读与背诵', status: 'dev' },
+          { name: '古诗卡片', desc: '必背古诗 · 注音背诵 · 多端同步', status: 'ok', url: '/pages/poems/poems', perm: 'poems' },
           { name: '识字卡片', desc: '主题识字 · 笔顺动画 · 多端同步', status: 'ok', url: '/pages/hanzi/hanzi', perm: 'chars' },
           { name: '拼音学习卡', desc: '声母韵母 · 整体认读 · 声调', status: 'ok', url: '/pages/pinyin/pinyin', perm: 'pinyin' },
         ],

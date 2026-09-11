@@ -1,0 +1,86 @@
+<!-- 古诗列表:网页端 poems.html 同款(按分类分节:一年级上/下册、拓展,节头胶囊 + N 首)。
+     小程序无 ruby,注音为「拼音在上、字在下」的自绘列;pyHidden 只隐拼音文字保留占位。 -->
+<view class="page {{pyHidden ? 'no-py' : ''}}">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通古诗卡片</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="head">
+      <view class="head-title">📖 学古诗 · 注音背诵 🌸</view>
+      <view class="head-sub">逐字注音 · 随机复习背诵 · 遮住拼音自测</view>
+    </view>
+
+    <view class="ctrl">
+      <!-- 隐藏拼音自测开关(网页端工具栏同款) -->
+      <view class="pill" bindtap="onTogglePy" hover-class="pill-hover">{{pyHidden ? '👀 显示拼音' : '🙈 隐藏拼音'}}</view>
+      <!-- 已掌握胶囊:点击只看已掌握的古诗,再点恢复全部(与网页端一致) -->
+      <view class="pill master {{learnedOnly ? 'on' : ''}}" bindtap="onToggleLearnedOnly" hover-class="pill-hover">
+        <text wx:if="{{!learnedOnly}}">⭐ 已掌握 {{masteredCount}} / {{total}} ▾</text>
+        <text wx:else>🔄 显示全部 ({{masteredCount}}/{{total}})</text>
+      </view>
+    </view>
+
+    <!-- 分类分节:节头胶囊 + 数量,节内卡片(与网页端 renderPoems 一致) -->
+    <view wx:if="{{!sections.length}}" class="learned-empty">🌟 还没有已掌握的古诗~ 点卡片右上角 ☆ 标记已掌握吧!</view>
+
+    <view wx:for="{{sections}}" wx:for-item="sec" wx:key="key" class="sec">
+      <view class="sec-head">
+        <view class="sec-chip" style="background:{{sec.color}}">{{sec.key}}</view>
+        <view class="sec-cnt">{{sec.items.length}} 首</view>
+      </view>
+
+      <view class="grid">
+        <view
+          wx:for="{{sec.items}}"
+          wx:key="key"
+          class="card {{item.mastered ? 'learned' : ''}}"
+          style="border-color:{{item.c1}}"
+          data-i="{{item.i}}"
+          bindtap="onTapCard"
+          hover-class="card-hover"
+        >
+          <!-- 已掌握星标(网页端 .poem .star,catchtap 防冒泡进 zen) -->
+          <view
+            class="star {{item.mastered ? 'star-on' : ''}}"
+            data-key="{{item.key}}"
+            catchtap="onToggleStar"
+          >{{item.mastered ? '⭐' : '☆'}}</view>
+          <!-- 顶部渐变点缀条:已掌握换金色(网页端 .poem.mastered .stripe) -->
+          <view
+            class="stripe"
+            style="background:{{item.mastered ? 'linear-gradient(135deg,#FAB005,#F08C00)' : 'linear-gradient(135deg,' + item.c1 + ',' + item.c2 + ')'}}"
+          ></view>
+
+          <view class="p-title">
+            <view class="tok" wx:for="{{item.titleTokens}}" wx:for-item="tk" wx:key="ix">
+              <text class="py">{{tk.py}}</text>
+              <text class="ch">{{tk.ch}}</text>
+            </view>
+          </view>
+
+          <view class="p-meta" style="background:linear-gradient(135deg,{{item.c1}},{{item.c2}})">
+            <text class="p-dyn">{{item.d}} · </text>
+            <view class="tok" wx:for="{{item.poetTokens}}" wx:for-item="tk" wx:key="ix">
+              <text class="py">{{tk.py}}</text>
+              <text class="ch">{{tk.ch}}</text>
+            </view>
+          </view>
+
+          <view class="p-body">
+            <view class="line" wx:for="{{item.lines}}" wx:for-item="ln" wx:key="ix">
+              <view class="tok" wx:for="{{ln.tokens}}" wx:for-item="tk" wx:key="ix">
+                <text class="py">{{tk.py}}</text>
+                <text class="ch {{tk.punc ? 'punc' : ''}}">{{tk.ch}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="tip">点 ⭐ 标记已掌握 · 点卡片进禅模式,左右滑动随机背古诗</view>
+  </block>
+</view>
