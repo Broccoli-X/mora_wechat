@@ -1,0 +1,88 @@
+pages/recognition/recognition.wxss
+  s_e0bb805fffaadc::t_e271ca4be88b0d 1-227
+README.md
+  s_e0bb805fffaadc::t_b53a845dc23290 50
+  s_e0bb805fffaadc::t_8b176d25bde7d4 49,51-52
+  s_e0bb805fffaadc::t_dd8fddebc4fc21 37
+  s_e0bb805fffaadc::t_a810cd9d74c118 29
+pages/recognition/batch.json
+  s_e0bb805fffaadc::t_94ab2ab2d26b41 1-5
+pages/recognition/recognition.wxml
+  s_e0bb805fffaadc::t_f188b0714915cd 1-58
+pages/recognition/zen.wxss
+  s_e0bb805fffaadc::t_b07353480ee900 114,127,130,132-147
+  s_e0bb805fffaadc::t_bfe6e2829bd294 1-113,115-126,128-129,131,148-313
+pages/recognition/batch.js
+  s_e0bb805fffaadc::t_a7a2d7a09b224b 1-87
+pages/recognition/batch.wxml
+  s_e0bb805fffaadc::t_5a18022745df2f 51
+  s_e0bb805fffaadc::t_1695fb0b14f717 56,59
+  s_e0bb805fffaadc::t_1b919399120e70 1-50,52-55,57-58,60-73
+pages/recognition/zen.js
+  s_e0bb805fffaadc::t_149e4a8c7577af 1-129
+pages/recognition/zen.wxml
+  s_e0bb805fffaadc::t_6be332078f585a 1-14,16-17,19-64
+  s_e0bb805fffaadc::t_10d7b666d9a7ec 15,18
+tests/recognition-pages.test.js
+  s_e0bb805fffaadc::t_f21baa3957db7d 1-190,216,218-305
+  s_e0bb805fffaadc::t_d00d36a598cbc1 217
+  s_e0bb805fffaadc::t_455023dcbcefb2 191-215
+docs/superpowers/specs/2026-09-11-recognition-study-design.md
+  s_e0bb805fffaadc::t_a85d8786999488 44-48
+  s_e0bb805fffaadc::t_5efddf93b053fb 92,94
+  s_e0bb805fffaadc::t_74f1ad2def4da8 95
+  s_e0bb805fffaadc::t_47c94b2d8692a0 27,29-42
+  s_e0bb805fffaadc::t_904ce0aacdf45d 1-26,28,43,49-52,54-90,93
+  s_e0bb805fffaadc::t_27ea0349fe43ba 91
+  s_e0bb805fffaadc::t_987c6dd1298547 53
+tests/recognition.test.js
+  s_e0bb805fffaadc::t_3e1331adc01b55 345
+  s_e0bb805fffaadc::t_12f7805774960d 279,291-317
+  s_e0bb805fffaadc::t_01abf226294827 1-97,99-102,107,109-110,112,154-177,179-180,182,185-186,188-278,280-290,318-329,339-344,346-380,382-432
+  s_e0bb805fffaadc::t_fcabdf3215e24d 98,103-106,108
+  s_e0bb805fffaadc::t_0b796cce3120f4 330-338
+  s_e0bb805fffaadc::t_6d28e1bc0bc3ff 178,181,183-184,187
+  s_e0bb805fffaadc::t_3828327afb1c84 381
+  s_e0bb805fffaadc::t_1623e1280e9fc3 111,113-153
+pages/category/category.js
+  s_e0bb805fffaadc::t_3f75b896690aec 50-53
+  s_e0bb805fffaadc::t_2d22872bda2da1 54-55
+pages/recognition/recognition.js
+  s_e0bb805fffaadc::t_b8624b419139b4 1-65
+utils/recognition.js
+  s_e0bb805fffaadc::t_79ee2c8b29a414 331
+  s_e0bb805fffaadc::t_193dfeca59a996 6-8
+  s_e0bb805fffaadc::t_6eabae7b072ed8 153,158-161
+  s_e0bb805fffaadc::t_bd0d273fa8f1eb 259-261,263,267,271
+  s_e0bb805fffaadc::t_cbd18ad509edf7 20-23
+  s_e0bb805fffaadc::t_16726ce6c47876 330,334
+  s_e0bb805fffaadc::t_0e73582c3c491c 166-174,178,183-184
+  s_e0bb805fffaadc::t_b2b3b5e0c1bc6a 230-231
+  s_e0bb805fffaadc::t_fcdfd4d9a9e8e9 63-67,70-74,88-90,92,94,98-101,103
+  s_e0bb805fffaadc::t_3c8169e67f3dcd 1-5,9-19,24-62,68-69,75-87,91,93,95-97,102,104-152,154-157,162-165,175-177,179-182,185-229,232-258,262,264-266,268-270,272-329,332-333,335-337
+pages/recognition/zen.json
+  s_e0bb805fffaadc::t_53f22ec22732a0 1-5
+app.json
+  s_e0bb805fffaadc::t_62bb4af0831577 17-19
+pages/recognition/batch.wxss
+  s_e0bb805fffaadc::t_6cde52050cf20b 176,191,194-195,197-211
+  s_e0bb805fffaadc::t_0a012b9969df10 1-175,177-190,192-193,196,212-271
+pages/recognition/recognition.json
+  s_e0bb805fffaadc::t_848ec98587079b 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "2eb8652102edbfa249d557728f4d645766e39b05",
+  "prompts": {},
+  "sessions": {
+    "s_e0bb805fffaadc": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_6d0352de-5a81-4e5c-9a39-202feb30eab0",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
