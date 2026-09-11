@@ -1,0 +1,313 @@
+/* 禅模式样式：与字母卡 zen 同款(同一渐变底 + 居中白卡 + 顶部点缀色条),
+   内容换成家长录入的识记条目(识汉字大字 / 认单词大字 / 识图图片)。
+   ✕ 在左上角(右上角是小程序胶囊,不能放)。
+   换卡动画:方向感知——往左滑旧卡飞出左侧、新卡自右滑入;往右滑镜像。
+   in/out 各备奇偶两个类名,换卡时交替触发,强制动画重放。 */
+.zen {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #a1c4fd 0%, #fbc2eb 45%, #ffecd2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30rpx;
+  overflow: hidden;
+}
+
+/* ✕ 固定左上,远离右上胶囊按钮 */
+.zen-close {
+  position: fixed;
+  left: 28rpx;
+  width: 68rpx;
+  height: 68rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #4a3fa8;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 8rpx 24rpx rgba(74, 63, 168, 0.2);
+  z-index: 9;
+}
+
+/* 顶部胶囊:批次名 + 当前序号 */
+.zen-chip {
+  max-width: 78%;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #4a3fa8;
+  box-shadow: 0 8rpx 28rpx rgba(74, 63, 168, 0.15);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zen-state {
+  text-align: center;
+  background: #ffffff;
+  border-radius: 40rpx;
+  padding: 60rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #4b5563;
+  box-shadow: 0 16rpx 44rpx rgba(74, 63, 168, 0.15);
+}
+
+.zen-retry {
+  display: inline-block;
+  margin-top: 24rpx;
+  padding: 12rpx 40rpx;
+  background: #4a3fa8;
+  color: #ffffff;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.zen-hover {
+  opacity: 0.85;
+}
+
+/* 舞台:入卡在文档流里撑起高度,出卡绝对定位叠在其下 */
+.zen-stage {
+  position: relative;
+  width: 84%;
+}
+
+.zen-card {
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 56rpx;
+  padding: 100rpx 40rpx 56rpx;
+  box-shadow: 0 20rpx 56rpx rgba(74, 63, 168, 0.16);
+  overflow: hidden;
+  text-align: center;
+}
+
+.zen-card.in {
+  position: relative;
+  z-index: 2;
+}
+
+.zen-card.out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16rpx;
+}
+
+/* 主面:识汉字楷体大字 / 认单词(单词或整句,按长度分档)/ 识图图片与 emoji 兜底 */
+.zen-face {
+  display: block;
+  line-height: 1.15;
+}
+
+.zen-hanzi {
+  font-size: 240rpx;
+  font-weight: 900;
+  letter-spacing: 6rpx;
+  font-family: 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+}
+
+/* 认单词:整句也要排得下——最多 4 行,字号按长度缩小(fs 由 utils 按 face 长度给档) */
+.zen-word {
+  font-weight: 800;
+  line-height: 1.3;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.zen-word-lg {
+  font-size: 96rpx;
+}
+
+.zen-word-md {
+  font-size: 66rpx;
+}
+
+.zen-word-sm {
+  font-size: 48rpx;
+}
+
+.zen-emoji {
+  display: block;
+  font-size: 220rpx;
+  line-height: 1.2;
+}
+
+.zen-img {
+  display: block;
+  width: 100%;
+  height: 520rpx;
+  border-radius: 32rpx;
+  background: #f4f5fa;
+}
+
+/* 答案行 / 附注行 */
+.zen-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  margin-top: 34rpx;
+  padding: 20rpx 30rpx;
+  border-radius: 26rpx;
+  background: #f4f3ff;
+}
+
+.zen-row.ext {
+  margin-top: 16rpx;
+  background: #fff0f3;
+}
+
+.zen-lbl {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #9a9ab0;
+  letter-spacing: 1rpx;
+}
+
+.zen-val {
+  font-size: 46rpx;
+  font-weight: 800;
+}
+
+.zen-ext {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #3a3a55;
+}
+
+/* ── 换卡动画:方向感知 ──
+   dir 'l' = 往左滑(下一张):旧卡 out-l(飞向左侧),新卡 in-l(自右侧入);dir 'r' = 镜像。
+   关键:同名动画重复声明不会重放(CSS 规范),所以奇偶类名必须绑不同的 animation-name
+   ——每方向备 a/b 两份画面完全相同的 keyframes,换卡交替换名强制重放。 */
+.in-l-0 {
+  animation: rcInRa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-l-1 {
+  animation: rcInRb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-0 {
+  animation: rcInLa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-1 {
+  animation: rcInLb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.out-l-0 {
+  animation: rcOutLa 0.3s ease-in both;
+}
+
+.out-l-1 {
+  animation: rcOutLb 0.3s ease-in both;
+}
+
+.out-r-0 {
+  animation: rcOutRa 0.3s ease-in both;
+}
+
+.out-r-1 {
+  animation: rcOutRb 0.3s ease-in both;
+}
+
+@keyframes rcInRa {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes rcInRb {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes rcInLa {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes rcInLb {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes rcOutLa {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes rcOutLb {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes rcOutRa {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+@keyframes rcOutRb {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+.zen-hint {
+  font-size: 25rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: rgba(74, 63, 168, 0.55);
+  padding-bottom: env(safe-area-inset-bottom);
+}

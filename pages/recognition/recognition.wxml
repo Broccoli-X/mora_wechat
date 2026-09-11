@@ -1,0 +1,58 @@
+<!-- 识记学习:内容来自网页端「识记练习录入」(家长按次录入,按学科分类)。
+     列表只给概要(批次名/日期/条数/备注),点批次进详情才取整批内容——
+     与网页端两步接口取用同款,开页不发起 N 个请求。 -->
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通识记练习</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="head">
+      <view class="head-title">🧠 识记学习</view>
+      <view class="head-sub">家长按批次录入 · 认汉字 / 认单词 / 识图</view>
+      <view class="progress" wx:if="{{total}}">共 {{total}} 批 · {{itemCount}} 条</view>
+    </view>
+
+    <view class="state" wx:if="{{loading && !sections.length}}">识记内容同步中…</view>
+
+    <view class="state error" wx:elif="{{loadError}}">
+      <text class="error-txt">识记内容同步失败</text>
+      <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+    </view>
+
+    <view class="empty" wx:elif="{{empty}}">
+      <view class="empty-icon">📭</view>
+      <view class="empty-txt">还没有录入内容</view>
+      <view class="empty-sub">请家长在网页端「识记练习录入」按批次添加，这里就会自动出现啦</view>
+    </view>
+
+    <!-- 学科分节:节头为学科色块(与网页端录入页 KINDS 同色),节内为批次卡 -->
+    <view wx:for="{{sections}}" wx:for-item="sec" wx:key="key" class="sec">
+      <view class="sec-head">
+        <view class="sec-chip" style="background:{{sec.main}}">{{sec.icon}} {{sec.name}}</view>
+        <view class="sec-cnt">{{sec.subject}} · {{sec.batches.length}} 批</view>
+      </view>
+
+      <view
+        wx:for="{{sec.batches}}"
+        wx:key="id"
+        class="b-card"
+        data-id="{{item.id}}"
+        bindtap="onTapBatch"
+        hover-class="b-hover"
+      >
+        <view class="b-accent" style="background:{{sec.main}}"></view>
+        <view class="b-main">
+          <view class="b-title">{{item.title}}</view>
+          <view class="b-meta">{{item.dayCN}} · {{item.count}} 条</view>
+          <view class="b-note" wx:if="{{item.note}}">📝 {{item.note}}</view>
+        </view>
+        <text class="b-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="tip" wx:if="{{!empty && sections.length}}">点批次进卡片认读 · 点卡片进禅模式，左右滑动换卡</view>
+  </block>
+</view>

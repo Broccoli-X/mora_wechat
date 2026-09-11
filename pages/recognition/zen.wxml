@@ -1,0 +1,64 @@
+<!-- 禅模式:批次内容一张一张认(与字母卡 zen 同款动效,内容是家长录入的批次条目)。
+     ✕ 固定左上角——右上角是小程序胶囊按钮,放右侧会被遮住点不到。
+     卡面内容三科同构(主面 + 答案行 + 附注行),故用 template 复用:
+     旧卡(换卡动画期间滑出)与当前卡共用一套 markup,只换数据。 -->
+<template name="rcCard">
+  <view class="accent" style="background:{{color}}"></view>
+
+  <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·认单词:大字主面 -->
+  <block wx:if="{{imgUrl}}">
+    <image wx:if="{{!failed}}" class="zen-img" src="{{imgUrl}}" mode="aspectFit"
+           data-i="{{i}}" binderror="onImgError" />
+    <text wx:else class="zen-emoji">{{face || '🖼️'}}</text>
+  </block>
+  <text wx:elif="{{kind === 'image'}}" class="zen-emoji">{{face || '🖼️'}}</text>
+  <text wx:else class="zen-face {{kind === 'hanzi' ? 'zen-hanzi' : 'zen-word zen-word-' + fs}}"
+        style="color:{{color}}">{{face}}</text>
+
+  <view class="zen-row" wx:if="{{answer}}">
+    <text class="zen-lbl">{{labelA}}</text>
+    <text class="zen-val" style="color:{{color}}">{{answer}}</text>
+  </view>
+  <view class="zen-row ext" wx:if="{{extra}}">
+    <text class="zen-lbl">{{labelB}}</text>
+    <text class="zen-ext">{{extra}}</text>
+  </view>
+</template>
+
+<view
+  class="zen"
+  style="padding-top:{{statusBarH}}px"
+  bindtouchstart="onTouchStart"
+  bindtouchend="onTouchEnd"
+>
+  <view class="zen-close" style="top:{{statusBarH + 6}}px" bindtap="onClose">✕</view>
+
+  <view class="zen-chip" wx:if="{{title}}">{{title}} · {{cur + 1}} / {{total}}</view>
+
+  <view class="zen-state" wx:if="{{blocked}}">🔒 本家庭未开通此功能</view>
+  <view class="zen-state" wx:elif="{{loading}}">内容加载中…</view>
+  <view class="zen-state" wx:elif="{{loadError}}">
+    <text>这批内容没取到</text>
+    <text class="zen-retry" bindtap="retry" hover-class="zen-hover">重试</text>
+  </view>
+  <view class="zen-state" wx:elif="{{gone}}">
+    <text>😕 这个批次已经不在了</text>
+    <text class="zen-retry" bindtap="onClose" hover-class="zen-hover">返回</text>
+  </view>
+
+  <block wx:elif="{{item}}">
+    <view class="zen-stage">
+      <!-- 旧卡:仅换卡动画期间存在,淡出后不可见,不承担交互 -->
+      <view wx:if="{{prev}}" class="zen-card out out-{{dir}}-{{seq % 2}}">
+        <template is="rcCard" data="{{...prev}}" />
+      </view>
+
+      <!-- 新卡:盖在旧卡上层,承担内容与交互 -->
+      <view class="zen-card in in-{{dir}}-{{seq % 2}}">
+        <template is="rcCard" data="{{...item}}" />
+      </view>
+    </view>
+
+    <view class="zen-hint">{{total > 1 ? '← 左滑下一张 · 右滑上一张 →' : '这一批只有一张'}}</view>
+  </block>
+</view>

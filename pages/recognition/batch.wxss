@@ -1,0 +1,271 @@
+/* 批次卡片网格:三科同一套卡面(白卡 + 顶部学科色条 + 主面 + 答案行/附注行),
+   尺寸与字母卡/识字卡同族。列数随学科:识汉字 3 列(大字),认单词·识图 2 列。 */
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 28rpx 24rpx 60rpx;
+  background: linear-gradient(160deg, #c7e0ff 0%, #e6d9ff 48%, #ffe9c9 100%);
+}
+
+.blocked {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.blocked-icon {
+  font-size: 88rpx;
+}
+
+.blocked-txt {
+  margin-top: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #4b5563;
+}
+
+.blocked-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+.state {
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #6b6b8d;
+  padding: 70rpx 24rpx;
+}
+
+.error {
+  background: #ffffff;
+  border-radius: 40rpx;
+  box-shadow: 0 16rpx 44rpx rgba(60, 70, 120, 0.12);
+  padding: 60rpx 32rpx;
+}
+
+.error-txt {
+  display: block;
+  font-weight: 700;
+  color: #d64545;
+}
+
+.error-sub {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #9aa1b0;
+}
+
+.retry {
+  display: inline-block;
+  margin-top: 24rpx;
+  padding: 12rpx 40rpx;
+  background: #4a3fa8;
+  color: #ffffff;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.link-hover {
+  opacity: 0.85;
+}
+
+/* 批次头 */
+.head-card {
+  background: #ffffff;
+  border-radius: 40rpx;
+  padding: 32rpx 28rpx;
+  box-shadow: 0 16rpx 44rpx rgba(60, 70, 120, 0.14);
+}
+
+.h-title {
+  font-size: 38rpx;
+  font-weight: 900;
+  color: #2f3542;
+}
+
+.h-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14rpx;
+  margin-top: 18rpx;
+}
+
+.h-chip {
+  border-radius: 999rpx;
+  padding: 8rpx 22rpx;
+  font-size: 23rpx;
+  font-weight: 700;
+  color: #4b5563;
+  background: #f1f3f9;
+}
+
+.h-chip.kind {
+  color: #ffffff;
+}
+
+.h-note {
+  margin-top: 18rpx;
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #7c8398;
+  line-height: 1.6;
+}
+
+.go {
+  margin-top: 24rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #6c5ce7, #4a3fa8);
+  color: #ffffff;
+  border-radius: 999rpx;
+  padding: 26rpx 20rpx;
+  font-size: 30rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+  box-shadow: 0 14rpx 34rpx rgba(74, 63, 168, 0.32);
+}
+
+.go-hover {
+  transform: scale(0.98);
+}
+
+/* 卡片网格 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 26rpx;
+}
+
+.card {
+  position: relative;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 40rpx;
+  padding: 40rpx 18rpx 24rpx;
+  box-shadow: 0 14rpx 36rpx rgba(60, 70, 120, 0.13);
+  overflow: hidden;
+  text-align: center;
+}
+
+.grid-hanzi .card {
+  width: calc((100% - 40rpx) / 3);
+}
+
+.grid-words .card,
+.grid-image .card {
+  width: calc((100% - 20rpx) / 2);
+}
+
+.card-hover {
+  transform: scale(0.97);
+}
+
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 14rpx;
+}
+
+/* 主面:识汉字楷体大字 / 认单词圆体(单词或整句,按长度分档)/ 识图图片与 emoji 兜底 */
+.c-face {
+  display: block;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c-hanzi {
+  font-size: 96rpx;
+  font-weight: 900;
+  font-family: 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+}
+
+/* 认单词:整句也要排得下——最多 3 行,字号按长度缩小(fs 由 utils 按 face 长度给档) */
+.c-word {
+  font-weight: 800;
+  line-height: 1.3;
+  word-break: break-word;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.c-word-lg {
+  font-size: 62rpx;
+}
+
+.c-word-md {
+  font-size: 44rpx;
+}
+
+.c-word-sm {
+  font-size: 32rpx;
+}
+
+.c-emoji {
+  display: block;
+  font-size: 96rpx;
+  line-height: 1.2;
+}
+
+.c-img {
+  display: block;
+  width: 100%;
+  height: 220rpx;
+  border-radius: 26rpx;
+  background: #f4f5fa;
+}
+
+/* 答案行 / 附注行 */
+.c-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  margin-top: 18rpx;
+}
+
+.c-row.ext {
+  margin-top: 10rpx;
+}
+
+.c-lbl {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #b3b9c9;
+  letter-spacing: 1rpx;
+}
+
+.c-val {
+  font-size: 30rpx;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c-ext {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #7c8398;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tip {
+  margin-top: 34rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #7c8398;
+}

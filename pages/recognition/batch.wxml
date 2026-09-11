@@ -1,0 +1,73 @@
+<!-- 批次内容:网页端按 id 取整批的第二步接口。所有条目按「卡片模式」铺成网格,
+     三科同一套卡面结构(主面 + 答案行 + 附注行),点任一张进禅模式。 -->
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通识记练习</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="state" wx:if="{{loading}}">内容加载中…</view>
+
+    <view class="state error" wx:elif="{{loadError}}">
+      <text class="error-txt">这批内容没取到</text>
+      <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+    </view>
+
+    <view class="state error" wx:elif="{{gone}}">
+      <text class="error-txt">😕 这个批次已经不在了</text>
+      <text class="error-sub">可能被家长删掉了，回列表看看别的批次吧</text>
+      <text class="retry" bindtap="onBack" hover-class="link-hover">返回列表</text>
+    </view>
+
+    <block wx:elif="{{batch}}">
+      <view class="head-card">
+        <view class="h-title">{{batch.title}}</view>
+        <view class="h-chips">
+          <text class="h-chip kind" style="background:{{batch.main}}">{{batch.kindIcon}} {{batch.kindName}}</text>
+          <text class="h-chip">{{batch.dayCN}}</text>
+          <text class="h-chip">共 {{batch.count}} 条</text>
+        </view>
+        <view class="h-note" wx:if="{{batch.note}}">📝 {{batch.note}}</view>
+      </view>
+
+      <view class="go" bindtap="onStart" hover-class="go-hover">🔀 开始认读（{{batch.count}} 张）</view>
+
+      <!-- 列数随学科:识汉字 3 列大字卡 / 认单词·识图 2 列 -->
+      <view class="grid grid-{{batch.kind}}">
+        <view
+          wx:for="{{batch.items}}"
+          wx:key="i"
+          class="card"
+          data-i="{{item.i}}"
+          bindtap="onTapCard"
+          hover-class="card-hover"
+        >
+          <view class="accent" style="background:{{item.color}}"></view>
+
+          <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·认单词:大字主面 -->
+          <block wx:if="{{item.imgUrl}}">
+            <image wx:if="{{!item.failed}}" class="c-img" src="{{item.imgUrl}}" mode="aspectFit"
+                   lazy-load binderror="onImgError" data-i="{{item.i}}" />
+            <text wx:else class="c-emoji">{{item.face || '🖼️'}}</text>
+          </block>
+          <text wx:elif="{{item.kind === 'image'}}" class="c-emoji">{{item.face || '🖼️'}}</text>
+          <text wx:else class="c-face {{item.kind === 'hanzi' ? 'c-hanzi' : 'c-word c-word-' + item.fs}}"
+                style="color:{{item.color}}">{{item.face}}</text>
+
+          <view class="c-row" wx:if="{{item.answer}}">
+            <text class="c-lbl">{{item.labelA}}</text>
+            <text class="c-val" style="color:{{item.color}}">{{item.answer}}</text>
+          </view>
+          <view class="c-row ext" wx:if="{{item.extra}}">
+            <text class="c-lbl">{{item.labelB}}</text>
+            <text class="c-ext">{{item.extra}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="tip">点卡片进禅模式 · 左右滑动换卡</view>
+    </block>
+  </block>
+</view>

@@ -26,6 +26,7 @@ Mora 学习卡片微信小程序。
 │   ├── auth.js             # 家长登录会话（/api/login 换 token、401 登录门，与 mora 网页端 lib/auth.js 同协议）
 │   ├── kebiao.js           # 课表静态数据 + 工具（与 mora 网页端 lib/kebiao-data.js 同步维护）
 │   ├── homework.js         # 作业同步（/api/progress, module=homework，可勾选完成）+ 图片地址 + 日期工具
+│   ├── recognition.js      # 识记学习（网页端录入的批次内容，两步接口取用 + 本机缓存）
 │   └── pinyin.js           # 拼音卡片数据 + 工具（与 mora 网页端 lib/pinyin-data.js 同步维护）
 └── pages/
     ├── index/              # 首页 tab（今日信息：当前课程单条 + 今日作业）
@@ -33,6 +34,7 @@ Mora 学习卡片微信小程序。
     ├── kebiao/             # 课程表（按天查看，当前节次高亮）
     ├── zuoye/              # 作业本（按周查看，可勾选完成，含图片缩略图与大图预览，下拉刷新）
     ├── pinyin/             # 拼音学习卡（pinyin 基础入口大卡 + study 卡片与掌握标记；进阶占位未开发）
+    ├── recognition/        # 识记学习（列表按学科分节 → 批次卡片网格 → zen 禅模式滑动认读）
     └── login/              # 家长登录页（未登录/会话失效时整页接管，登录后回到来源页）
 ```
 
@@ -44,3 +46,7 @@ Mora 学习卡片微信小程序。
 - 拼音学习卡数据与 mora 网页端 `lib/pinyin-data.js` 同源；卡片为纯视觉学习卡（不带发音）。
 - 拼音掌握进度多端共享：与 mora 网页端（`pinyin-flashcards.html`/`report.html`）走同一服务（`/api/progress`，module=`pinyin`），协议同 `lib/progress-sync.js`——本地存储为第一写入点，进页面拉取合并、点标记异步上报，同键位 `updatedAt` 新者胜；离线时纯本地，联网后自动补传。键位/存储键与网页端一致。
 - 上线前需在小程序管理后台把 `https://www.tcued.com` 配置为 request 合法域名；开发阶段可在开发者工具里勾选「不校验合法域名」调试。
+- 识记学习（分类页「综合 → 识记」）读的是 mora 网页端「识记练习录入」（`recognition-edit.html`）里家长按次录入的批次内容，两步接口取用（与网页端 `server/README.md`「六」同协议）：先 `GET /api/recognition/batches` 拿批次列表（**只有概要**：名称/日期/条数/备注），再 `GET /api/recognition/batch?id=<批次id>` 按批次取整批条目；批次与整批内容都进本机缓存，离线可看已拉过的内容。识图的图片是条目里的 `img` id，本体经 `GET /api/image?id=<img>` 读取（不带 token）。
+- 识记条目形状随网页端（识汉字＝单字+拼音；认单词＝**单词或整句**，大小写照原样，如 `Good morning, Miss Li.`；识图＝图片或 emoji+名称）。小程序端**只做渲染保护（长度截断）不复刻服务端字面校验**：网页端规则一变（2026-09-11「认单词支持整句」）复刻版就会静默吃掉条目（曾 11 条只显示 6 条），内容以服务端为真源。
+- 识记学习不带 ⭐ 掌握标记：网页端口径「本站不出题、不记成绩」，进度同步服务端白名单（`MODULES`）也不含 `recognition`，故小程序端只做认读浏览，禅模式只显示当前序号。功能权限键为 `recognition`（与网页端 `FEATURES` 同名），未开通家庭入口不呈现、深链整页拦截。
+- 禅模式换卡为**批次内顺序上一张/下一张**（首尾循环），动效与字母卡禅模式同款（方向感知出/入 + 奇偶异名强制重放 + 轻震动）；字母卡是随机抽认，两者语义不同、动效一致。

@@ -47,6 +47,12 @@ const GROUPS = [
           { name: '作业本', desc: '按周查看作业安排', status: 'ok', url: '/pages/zuoye/zuoye', perm: 'homework' },
         ],
       },
+      {
+        name: '识记', color: '#7c3aed', icon: '🧠',
+        items: [
+          { name: '识记学习', desc: '家长按批次录入 · 汉字/单词/图卡 · 禅模式认读', status: 'ok', url: '/pages/recognition/recognition', perm: 'recognition' },
+        ],
+      },
     ],
   },
 ];
