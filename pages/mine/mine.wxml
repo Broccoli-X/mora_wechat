@@ -62,9 +62,40 @@
       <view wx:for="{{rules}}" wx:key="*this" class="rule">{{item}}</view>
     </view>
 
-    <view class="foot-tip">发放与兑换在网页端家长页操作,数据自动同步到所有设备</view>
+    <view class="foot-tip">发放与兑换在「积分维护」里操作,数据自动同步到所有设备</view>
   </block>
   </block>
+
+  <!-- 家长维护:入口按家庭权限呈现,一个都没有时整块隐藏 -->
+  <view class="section" wx:if="{{mtAllowed}}">
+    <view class="section-head">
+      <text class="section-title">🧰 家长维护</text>
+    </view>
+    <view class="mt-row" wx:if="{{hwAllowed}}" bindtap="goHwEdit" hover-class="link-hover">
+      <text class="mt-icon">✏️</text>
+      <view class="mt-col">
+        <text class="mt-name">作业维护</text>
+        <text class="mt-desc">按日期登记、修改每天的作业与整体要求</text>
+      </view>
+      <text class="mt-arrow">›</text>
+    </view>
+    <view class="mt-row" wx:if="{{ptAllowed}}" bindtap="goPointsEdit" hover-class="link-hover">
+      <text class="mt-icon">⭐</text>
+      <view class="mt-col">
+        <text class="mt-name">积分维护</text>
+        <text class="mt-desc">发放星星与兑换奖励,进门要家长验证</text>
+      </view>
+      <text class="mt-arrow">›</text>
+    </view>
+    <view class="mt-row" wx:if="{{tdAllowed}}" bindtap="goTodoEdit" hover-class="link-hover">
+      <text class="mt-icon">⏰</text>
+      <view class="mt-col">
+        <text class="mt-name">待办事项维护</text>
+        <text class="mt-desc">登记每天/每周几/单次的代办</text>
+      </view>
+      <text class="mt-arrow">›</text>
+    </view>
+  </view>
 
   <!-- 家庭账号:登录态与退出(鉴权与网页端家长登录同源) -->
   <view class="section account">

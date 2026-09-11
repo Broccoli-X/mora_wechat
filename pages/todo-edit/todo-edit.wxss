@@ -1,0 +1,343 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24rpx 24rpx 56rpx;
+  background: linear-gradient(160deg, #c7e0ff 0%, #e6d9ff 48%, #ffe9c9 100%);
+}
+
+.blocked {
+  margin-top: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.blocked-icon {
+  font-size: 72rpx;
+}
+
+.blocked-txt {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #33415c;
+}
+
+.blocked-sub {
+  font-size: 24rpx;
+  color: #8a90a3;
+}
+
+.sheet {
+  max-width: 720rpx;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #0b7285;
+  letter-spacing: 4rpx;
+}
+
+.sub {
+  text-align: center;
+  margin-top: 12rpx;
+  font-size: 23rpx;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.tip {
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 20rpx 0;
+}
+
+.error {
+  margin-top: 40rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 48rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.error-txt {
+  font-size: 28rpx;
+  color: #4b5563;
+}
+
+.retry-btn {
+  border-radius: 999rpx;
+  padding: 16rpx 56rpx;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0ca678 0%, #0b7285 100%);
+}
+
+.btn-hover {
+  opacity: 0.85;
+}
+
+.btn-press {
+  transform: translateY(2rpx);
+  opacity: 0.9;
+}
+
+/* ── 录入表单 ───────────────────────────────────── */
+.card {
+  margin-top: 26rpx;
+  background: #ffffff;
+  border: 2rpx solid #e3e6ef;
+  border-radius: 22rpx;
+  padding: 26rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 22rpx;
+}
+
+.card.editing {
+  border-color: #7c5cf0;
+  box-shadow: 0 0 0 3rpx #d9cffa;
+}
+
+.f-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+.f-row.center {
+  justify-content: center;
+}
+
+.f-row-between {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.f-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+}
+
+.f-label {
+  flex: 0 0 auto;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #33415c;
+}
+
+.f-small {
+  font-size: 21rpx;
+  font-weight: 600;
+  color: #8a90a0;
+}
+
+.cnt {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #8a90a0;
+}
+
+/* 原生 input 文本区高度固定,纵向 padding 撑不开会裁字:显式给高,只留横向 padding(与登录页同款) */
+.f-input {
+  width: 100%;
+  height: 76rpx;
+  box-sizing: border-box;
+  border: 3rpx solid #d4d9e2;
+  border-radius: 14rpx;
+  padding: 0 18rpx;
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.f-picker {
+  border: 3rpx solid #d4d9e2;
+  border-radius: 14rpx;
+  padding: 12rpx 18rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #1f2937;
+  background: #ffffff;
+}
+
+.chips {
+  display: flex;
+  gap: 14rpx;
+  flex-wrap: wrap;
+}
+
+/* 重复类型按钮:选中染上各自深色块(wxml 内联 style 上色) */
+.r-btn {
+  border: 3rpx solid #d4d9e2;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 10rpx 26rpx;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #41556e;
+}
+
+.r-btn.on {
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* 每周几勾选:可多选 */
+.w-btn {
+  border: 3rpx solid #d4d9e2;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 10rpx 0;
+  width: 88rpx;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #41556e;
+}
+
+.w-btn.on {
+  color: #ffffff;
+  border-color: transparent;
+  background: #1d5fbf;
+}
+
+.main-btn {
+  border-radius: 999rpx;
+  padding: 18rpx 52rpx;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 2rpx;
+  background: linear-gradient(135deg, #0ca678 0%, #0b7285 100%);
+  box-shadow: 0 6rpx 16rpx rgba(11, 114, 133, 0.35);
+}
+
+.main-btn.disabled {
+  opacity: 0.6;
+}
+
+.ghost-btn {
+  border: 3rpx solid #d4d9e2;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 16rpx 36rpx;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #5b6472;
+}
+
+.hint {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #8a90a0;
+  line-height: 1.6;
+}
+
+/* ── 已登记的代办 ───────────────────────────────── */
+.hist {
+  margin-top: 30rpx;
+}
+
+.hist-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #0b7285;
+  margin-bottom: 16rpx;
+}
+
+.h-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  border: 2rpx solid #e3e6ef;
+  border-radius: 18rpx;
+  background: #ffffff;
+  padding: 16rpx 18rpx;
+  margin-bottom: 12rpx;
+}
+
+.rep-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 23rpx;
+  line-height: 1.2;
+  border-radius: 14rpx;
+  padding: 8rpx 16rpx;
+  white-space: nowrap;
+}
+
+.time-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  background: #0b7285;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 23rpx;
+  border-radius: 14rpx;
+  padding: 8rpx 16rpx;
+  white-space: nowrap;
+}
+
+.h-row .txt {
+  flex: 1;
+  min-width: 100%;
+  font-size: 27rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+.ops {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 12rpx;
+}
+
+.op {
+  background: #eef1f8;
+  border-radius: 12rpx;
+  padding: 8rpx 16rpx;
+  font-size: 23rpx;
+  font-weight: 700;
+  color: #33415c;
+}
+
+.op.del {
+  background: #fdecea;
+  color: #c9392b;
+}
+
+.empty {
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #9aa1b0;
+  text-align: center;
+  padding: 24rpx 0;
+}
+
+.foot-tip {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #8a90a0;
+  line-height: 1.8;
+  padding: 0 24rpx;
+}

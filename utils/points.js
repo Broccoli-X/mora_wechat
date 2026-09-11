@@ -1,5 +1,5 @@
-/* 积分只读同步:数据源与网页端相同的服务(/api/progress,module=points)。
-   发放/兑换在网页端家长页(points-edit.html)维护(带家长算术门),小程序端只做查看。
+/* 积分同步:数据源与网页端相同的服务(/api/progress,module=points)。
+   小程序端维护页可发放/兑换(家长验证在进页时做,单条上报与网页端 points-edit.html 同协议)。
    payload 为短键 JSON:{d:日期, r:理由, s:分数, j:科目, n:备注};空 payload 是删除墓碑,直接跳过。
    统计口径与网页端 lib/points-core.js 一致:累计 = 发放合计(兑换不动,emoji 只看它),
    剩余 = 累计 - 已兑换;10 积分 = 1 元。鉴权走 utils/auth.js 家长登录会话。 */
@@ -52,6 +52,14 @@ function reasonOf(key) {
   return REASONS.filter(r => r.key === key)[0] ||
          CONSUMES.filter(c => c.key === key)[0] || null;
 }
+
+function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+function toDateStr(d) {
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+
+function todayStr() { return toDateStr(new Date()); }
 
 function cleanNote(n) {
   return typeof n === 'string' ? n.trim().slice(0, NOTE_MAX) : '';
@@ -177,10 +185,76 @@ function fetchPoints(done, fail) {
   });
 }
 
+/* ── 写入层:发放/兑换单条上报(与网页端 points-edit.html 同协议) ── */
+
+function newId() {
+  return 'pt' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+/* 条目 → 同步载荷短键 JSON(与网页端 lib/points-core.js encodeEntry 同源):
+   j/n 仅在有值时出现;消耗恒为负分。上报必须带全字段——服务端整条覆盖,
+   缺了的字段会被存成空(积分压平教训),空 payload 还会被当成墓碑 */
+function encodeEntry(e) {
+  const o = { d: e.date, r: e.reason, s: e.score };
+  if (e.subject) o.j = e.subject;
+  if (e.note) o.n = e.note;
+  return JSON.stringify(o);
+}
+
+/* 单条上报:服务端同键新时间戳(含相等)者胜;401 交 auth.on401 弹登录门,
+   失败回调 onFail 由页面提示(下次进页重新拉数,以服务端为准)。未登录返回 false */
+function pushEntry(entry, onFail) {
+  const token = auth.getToken();
+  if (!token) return false;
+  wx.request({
+    url: API_BASE + '/api/progress',
+    method: 'POST',
+    header: { 'Content-Type': 'application/json' },
+    data: {
+      token: token,
+      items: [{
+        module: 'points',
+        itemKey: entry.id,
+        mastered: 0,
+        updatedAt: entry.updatedAt,
+        device: auth.deviceTag(),
+        payload: encodeEntry(entry),
+      }],
+    },
+    success(res) {
+      if (res.statusCode === 401) auth.on401();
+    },
+    fail() { if (onFail) onFail(); },
+  });
+  return true;
+}
+
+/* ── 家长算术门(与网页端 lib/points-core.js 同源):
+   三位数加减两位数,进维护页时验证一次,发放/兑换不再重复验 ── */
+function mathChallenge(rng) {
+  const r = rng || Math.random;
+  const a = 100 + Math.floor(r() * 900);
+  const plus = r() < 0.5;
+  let b = 10 + Math.floor(r() * 90);
+  if (!plus) b = Math.min(b, a - 1);
+  return { a: a, op: plus ? '+' : '-', b: b, answer: plus ? a + b : a - b };
+}
+
+function challengeText(ch) {
+  return ch.a + ' ' + ch.op + ' ' + ch.b + ' = ?';
+}
+
+function checkAnswer(ch, input) {
+  const s = String(input == null ? '' : input).trim();
+  return /^\d{1,4}$/.test(s) && parseInt(s, 10) === ch.answer;
+}
+
 module.exports = {
   LEVELS, REASONS, CONSUMES, RULES, SUBJECTS,
   CUSTOM_MAX, CONSUME_MAX, POINTS_PER_YUAN,
   reasonOf, normalize, decodeItems, sortByNew,
   totalsOf, emojiFor, yuanText, describe, fmtScore,
-  fetchPoints,
+  toDateStr, todayStr, fetchPoints,
+  newId, encodeEntry, pushEntry,
+  mathChallenge, challengeText, checkAnswer,
 };

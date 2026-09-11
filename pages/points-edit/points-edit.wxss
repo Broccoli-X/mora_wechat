@@ -1,0 +1,375 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24rpx 24rpx 56rpx;
+  background: linear-gradient(160deg, #c7e0ff 0%, #e6d9ff 48%, #ffe9c9 100%);
+}
+
+.blocked {
+  margin-top: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.blocked-icon {
+  font-size: 72rpx;
+}
+
+.blocked-txt {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #33415c;
+}
+
+.blocked-sub {
+  font-size: 24rpx;
+  color: #8a90a3;
+}
+
+.tip {
+  margin-top: 20rpx;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.error {
+  margin-top: 40rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 48rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.error-txt {
+  font-size: 28rpx;
+  color: #4b5563;
+}
+
+.retry-btn {
+  border-radius: 999rpx;
+  padding: 16rpx 56rpx;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b6ef5, #7c5cf0);
+}
+
+.link-hover {
+  opacity: 0.7;
+}
+
+.btn-hover {
+  opacity: 0.85;
+}
+
+.btn-press {
+  transform: translateY(2rpx);
+  opacity: 0.9;
+}
+
+/* ── 家长算术门 ─────────────────────────────────── */
+.gate-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.gate-card {
+  width: 100%;
+  max-width: 560rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 44rpx 36rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22rpx;
+  box-shadow: 0 16rpx 48rpx rgba(15, 23, 42, 0.25);
+}
+
+.gate-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.gate-sub {
+  font-size: 23rpx;
+  font-weight: 600;
+  color: #8a90a0;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.gate-q {
+  font-size: 44rpx;
+  font-weight: 800;
+  letter-spacing: 4rpx;
+  color: #1f2937;
+}
+
+/* 原生 input 文本区高度固定,纵向 padding 撑不开会裁字:显式给高,只留横向 padding(与登录页同款) */
+.gate-input {
+  width: 240rpx;
+  height: 88rpx;
+  box-sizing: border-box;
+  border: 3rpx solid #d4d9e2;
+  border-radius: 16rpx;
+  padding: 0 18rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  text-align: center;
+  color: #1f2937;
+}
+
+.gate-btns {
+  width: 100%;
+  display: flex;
+  gap: 18rpx;
+  justify-content: center;
+}
+
+.gate-ghost {
+  flex: 1;
+  border: 3rpx solid #d4d9e2;
+  border-radius: 999rpx;
+  padding: 16rpx 0;
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 800;
+  color: #5b6472;
+}
+
+.gate-main {
+  flex: 1;
+  border-radius: 999rpx;
+  padding: 16rpx 0;
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b6ef5 0%, #7c5cf0 100%);
+  box-shadow: 0 6rpx 16rpx rgba(80, 100, 220, 0.35);
+}
+
+.gate-back {
+  font-size: 25rpx;
+  font-weight: 700;
+  color: #8a90a0;
+}
+
+/* ── 总览卡(与网页端 sum 同款暖色) ─────────────── */
+.sum {
+  border-radius: 22rpx;
+  padding: 30rpx 24rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #fff3bf 0%, #ffe8cc 100%);
+  border: 3rpx solid #f59f00;
+}
+
+.sum-emoji {
+  font-size: 48rpx;
+  line-height: 1.5;
+  letter-spacing: 4rpx;
+  word-break: break-all;
+}
+
+.sum-emoji-none {
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #b08d2f;
+}
+
+.sum-chips {
+  margin-top: 16rpx;
+  display: flex;
+  gap: 14rpx;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-block;
+  border-radius: 999rpx;
+  padding: 10rpx 24rpx;
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.c-earn { background: #e8590c; }
+.c-left { background: #2b8a3e; }
+.c-yuan { background: #1971c2; }
+
+/* ── 表单卡 ─────────────────────────────────────── */
+.card {
+  margin-top: 24rpx;
+  background: #ffffff;
+  border: 2rpx solid #e3e6ef;
+  border-radius: 22rpx;
+  padding: 26rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #333f8f;
+}
+
+.consume {
+  border-color: #f3d9d3;
+}
+
+.consume-title {
+  color: #c92a2a;
+}
+
+.f-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+.f-label {
+  flex: 0 0 auto;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #33415c;
+}
+
+.f-small {
+  font-size: 21rpx;
+  font-weight: 600;
+  color: #8a90a0;
+}
+
+.f-picker {
+  border: 3rpx solid #d4d9e2;
+  border-radius: 14rpx;
+  padding: 12rpx 18rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #1f2937;
+  background: #ffffff;
+}
+
+/* 原生 input 文本区高度固定:显式给高,纵向 padding 会让文字上顶下空(与登录页同款) */
+.f-input {
+  flex: 1;
+  min-width: 240rpx;
+  height: 76rpx;
+  box-sizing: border-box;
+  border: 3rpx solid #d4d9e2;
+  border-radius: 14rpx;
+  padding: 0 18rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #1f2937;
+  background: #ffffff;
+}
+
+.f-input-num {
+  flex: 0 0 200rpx;
+  min-width: 0;
+  text-align: center;
+}
+
+.chips {
+  display: flex;
+  gap: 14rpx;
+  flex-wrap: wrap;
+}
+
+.s-btn {
+  border: 3rpx solid #d4d9e2;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 10rpx 26rpx;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #41556e;
+}
+
+.s-btn.on {
+  color: #ffffff;
+  border-color: transparent;
+  background: #3b6ef5;
+}
+
+.hint {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #8a90a0;
+  line-height: 1.6;
+}
+
+.main-btn {
+  border-radius: 999rpx;
+  padding: 20rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 2rpx;
+  background: linear-gradient(135deg, #3b6ef5 0%, #7c5cf0 100%);
+  box-shadow: 0 6rpx 16rpx rgba(80, 100, 220, 0.35);
+}
+
+.warn-btn {
+  border-radius: 999rpx;
+  padding: 20rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 2rpx;
+  background: linear-gradient(135deg, #f76707 0%, #e8590c 100%);
+  box-shadow: 0 6rpx 16rpx rgba(230, 90, 20, 0.35);
+}
+
+/* ── 规则 ───────────────────────────────────────── */
+.rule {
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #33415c;
+  line-height: 1.9;
+  padding-left: 30rpx;
+  position: relative;
+}
+
+.rule::before {
+  content: "·";
+  position: absolute;
+  left: 10rpx;
+  font-weight: 800;
+  color: #f59f00;
+}
+
+.foot-tip {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #8a90a0;
+  line-height: 1.8;
+  padding: 0 24rpx;
+}

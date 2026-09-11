@@ -41,6 +41,19 @@ Page({
     auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
   },
 
+  /* 页面定义了 onShareAppMessage 右上角菜单的「转发」才会亮起,否则提示"当前页面不可转发";
+     页内「↗ 分享」按钮(open-type=share)也走这里。onShareTimeline 点亮「分享到朋友圈」 */
+  onShareAppMessage() {
+    return {
+      title: 'Mora 学习卡片 · 今日作业与代办一查便知',
+      path: '/pages/index/index',
+    };
+  },
+
+  onShareTimeline() {
+    return { title: 'Mora 学习卡片 · 碎片时间高效记忆' };
+  },
+
   /* 按当前家庭的权限摆区块:未开通的整个不呈现,也不发起取数 */
   applyPerms(done) {
     const flags = {
@@ -168,6 +181,10 @@ Page({
 
   goKebiao() {
     wx.navigateTo({ url: '/pages/kebiao/kebiao' });
+  },
+
+  goTodoDetail() {
+    wx.navigateTo({ url: '/pages/todo/todo' });
   },
 
   goZuoye() {

@@ -20,6 +20,9 @@ Page({
     rules: pt.RULES,
     family: '',         // 已登录的家庭ID(登录时服务端下发)
     ptAllowed: false,   // 功能权限:未开通「积分」整块不呈现
+    hwAllowed: false,   // 家长维护入口按各自权限呈现
+    tdAllowed: false,
+    mtAllowed: false,   // 三个维护入口一个都没有时整块隐藏
   },
 
   onShow() {
@@ -35,18 +38,40 @@ Page({
     auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
   },
 
-  /* 积分功能权限:未开通「积分」的家庭不呈现卡片/明细/规则 */
+  /* 功能权限:积分卡片看「积分」,维护入口各自看「作业/积分/代办」 */
   applyPerms(done) {
     const ptAllowed = auth.hasPerm('points');
-    this.setData({ ptAllowed });
+    const hwAllowed = auth.hasPerm('homework');
+    const tdAllowed = auth.hasPerm('todo');
+    this.setData({
+      ptAllowed: ptAllowed,
+      hwAllowed: hwAllowed,
+      tdAllowed: tdAllowed,
+      mtAllowed: ptAllowed || hwAllowed || tdAllowed,
+    });
     if (!ptAllowed) { if (done) done(); return; }
     this.loadPoints(done);
   },
 
   /* 权限没变化就不重取数据 */
   applyPermsIfChanged() {
-    if (this.data.ptAllowed === auth.hasPerm('points')) return;
+    if (this.data.ptAllowed === auth.hasPerm('points') &&
+        this.data.hwAllowed === auth.hasPerm('homework') &&
+        this.data.tdAllowed === auth.hasPerm('todo')) return;
     this.applyPerms();
+  },
+
+  /* ── 家长维护入口 ── */
+  goHwEdit() {
+    wx.navigateTo({ url: '/pages/hw-edit/hw-edit' });
+  },
+
+  goPointsEdit() {
+    wx.navigateTo({ url: '/pages/points-edit/points-edit' });
+  },
+
+  goTodoEdit() {
+    wx.navigateTo({ url: '/pages/todo-edit/todo-edit' });
   },
 
   loadPoints(done) {

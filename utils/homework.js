@@ -1,9 +1,10 @@
 /* 作业数据同步:数据源与网页端相同的服务(/api/progress,module=homework)。
-   录入/删除在网页端维护(zuoye-edit.html),小程序端只做查看与勾选完成。
+   小程序端维护页可登记作业(单条上报与网页端 zuoye-edit.html 同协议),
+   作业本页查看与勾选完成。
    payload 为短键 JSON:{d:日期, s:科目, t:内容, g:[图片id], c:已完成 1};
    与网页端 lib/homework-core.js 同源:未完成不产生 c 键,空 payload 是删除墓碑,直接跳过。
-   勾选完成走单条上报(toggleDone,与网页端 zuoye.html 同协议):payload 必须带全 g——
-   服务端会清理不再被引用的图片。图片本体走 GET /api/image?id=<id>(不带 token)。
+   上报必须带全 g——服务端会清理不再被引用的图片。图片本体走 GET /api/image?id=<id>(不带 token),
+   上传走 POST /api/image(dataURL ≤ 80 万字符,与网页端同协议)。
    鉴权走 utils/auth.js 家长登录会话(与网页端 lib/auth.js 同协议);上线前需在小程序后台把
    API_BASE 配置为 request 合法域名。 */
 const API_BASE = 'https://www.tcued.com';
@@ -175,8 +176,84 @@ function toggleDone(entry, onFail) {
   return entry.done;
 }
 
+/* ── 写入层:维护页新增/修改作业(与网页端 zuoye-edit.html 同协议) ── */
+
+function newId() {
+  /* 随机段 6 位:4 位时同毫秒批量生成会撞 id(与网页端 newId 同款) */
+  return 'hw' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+/* 编辑已有条目:同 id 覆盖(服务端同键新者胜),完成标记保留原状;
+   图片 = 保留的旧引用 + 新上传 id,统一过滤非法并封顶(与 decode 同规)。
+   日期/科目/内容任一非法返回 null,由页面提示 */
+function buildEntry(existing, patch) {
+  if (!existing || !existing.id) return null;
+  const text = typeof patch.text === 'string' ? patch.text.trim() : '';
+  if (!parseDate(patch.date) || SUBJECT_NAMES.indexOf(patch.subject) < 0 || !text) return null;
+  return {
+    id: String(existing.id),
+    date: patch.date,
+    subject: patch.subject,
+    text: text,
+    done: existing.done ? 1 : 0,
+    imgs: imgsOf(patch.imgs),
+  };
+}
+
+/* 保存整条作业:顶新时间戳单条上报,payload 必须带全 g 图片引用——服务端会清理
+   不再被引用的图片。401 交 auth.on401 弹登录门;失败回调 onFail 由页面提示,
+   成功回调 onOk(新 id 必被服务端接受,可靠)由页面清表单。未登录返回 false */
+function saveEntry(entry, onFail, onOk) {
+  const token = auth.getToken();
+  if (!token) return false;
+  entry.updatedAt = Date.now();
+  wx.request({
+    url: API_BASE + '/api/progress',
+    method: 'POST',
+    header: { 'Content-Type': 'application/json' },
+    data: {
+      token: token,
+      items: [{
+        module: 'homework',
+        itemKey: entry.id,
+        mastered: 0,
+        updatedAt: entry.updatedAt,
+        device: auth.deviceTag(),
+        payload: encodeEntry(entry),
+      }],
+    },
+    success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
+      if (res.statusCode === 200 && onOk) onOk();
+    },
+    fail() { if (onFail) onFail(); },
+  });
+  return true;
+}
+
+/* 作业图片上传:POST /api/image 换服务端 id(id 即内容,可永久缓存,与网页端同协议);
+   dataUrl 为 data:image/…;base64 格式(≤ 80 万字符)。401 交 auth.on401 */
+function uploadImage(dataUrl, onOk, onFail) {
+  const token = auth.getToken();
+  if (!token) { if (onFail) onFail(); return; }
+  const id = 'img' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  wx.request({
+    url: API_BASE + '/api/image',
+    method: 'POST',
+    header: { 'Content-Type': 'application/json' },
+    data: { token: token, id: id, data: dataUrl },
+    success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
+      if (res.statusCode === 200 && res.data && res.data.ok) { onOk(id); return; }
+      if (onFail) onFail();
+    },
+    fail() { if (onFail) onFail(); },
+  });
+}
+
 module.exports = {
   SUBJECTS, SUBJECT_NAMES, WEEKDAY_CN,
   metaOf, toDateStr, todayStr, parseDate, weekdayCN, fmtCN, weekOf,
   sortByDay, decodeItems, encodeEntry, fetchHomework, toggleDone, imgUrl,
+  newId, buildEntry, saveEntry, uploadImage,
 };

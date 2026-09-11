@@ -1,0 +1,125 @@
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通积分功能</view>
+    <view class="blocked-sub">请联系管理员开通后再来发放星星哦</view>
+  </view>
+
+  <block wx:else>
+  <!-- 家长算术门:进页先验证,过后发放/兑换不再重复验 -->
+  <view class="gate-mask" wx:if="{{!verified}}">
+    <view class="gate-card">
+      <view class="gate-title">🔒 家长验证</view>
+      <view class="gate-sub">发放与兑换只限家长,算对下面这题就能进入</view>
+      <view class="gate-q">{{gateText}}</view>
+      <input
+        class="gate-input"
+        type="number"
+        value="{{gateInput}}"
+        placeholder="答案"
+        bindinput="onGateInput"
+      />
+      <view class="gate-btns">
+        <view class="gate-ghost" bindtap="refreshGate" hover-class="link-hover">换一题</view>
+        <view class="gate-main" bindtap="submitGate" hover-class="link-hover">验证进入</view>
+      </view>
+      <view class="gate-back" bindtap="cancelGate" hover-class="link-hover">← 返回</view>
+    </view>
+  </view>
+
+  <block wx:if="{{verified}}">
+    <view class="tip" wx:if="{{state === 'loading'}}">积分同步中…</view>
+
+    <view class="error" wx:if="{{state === 'error'}}">
+      <text class="error-txt">积分同步失败，请检查网络后重试</text>
+      <view class="retry-btn" bindtap="retry" hover-class="link-hover">重试</view>
+    </view>
+
+    <block wx:if="{{state === 'ok'}}">
+      <!-- 积分总览:发放不动剩余,兑换只扣剩余 -->
+      <view class="sum">
+        <view class="sum-emoji {{empty ? 'sum-emoji-none' : ''}}">{{empty ? '还没有星星,发第一颗吧!' : emoji}}</view>
+        <view class="sum-chips">
+          <text class="chip c-earn">累计 {{earned}} 分</text>
+          <text class="chip c-left">剩余 {{remaining}} 分</text>
+          <text class="chip c-yuan">可换 {{yuan}} 元</text>
+        </view>
+      </view>
+
+      <!-- 发放积分 -->
+      <view class="card">
+        <view class="card-title">🎁 发放积分</view>
+        <view class="f-row">
+          <text class="f-label">日期</text>
+          <picker mode="date" value="{{awardDate}}" end="{{today}}" bindchange="onAwardDate">
+            <view class="f-picker">{{awardDate}}</view>
+          </picker>
+        </view>
+        <view class="f-row">
+          <text class="f-label">理由</text>
+          <picker range="{{awardLabels}}" value="{{awardReasonIndex}}" bindchange="onAwardReason">
+            <view class="f-picker">{{awardLabels[awardReasonIndex]}}</view>
+          </picker>
+        </view>
+        <view class="f-row" wx:if="{{showSubject}}">
+          <text class="f-label">科目</text>
+          <view class="chips">
+            <view
+              wx:for="{{subjects}}"
+              wx:key="*this"
+              class="s-btn {{item === subject ? 'on' : ''}}"
+              data-s="{{item}}"
+              bindtap="pickSubject"
+              hover-class="btn-hover"
+            >{{item}}</view>
+          </view>
+        </view>
+        <view class="f-row" wx:if="{{showCustom}}">
+          <text class="f-label">分值 <text class="f-small">1~5 分</text></text>
+          <input class="f-input f-input-num" type="number" value="{{customScore}}" placeholder="1~5" bindinput="onCustomScore" />
+        </view>
+        <view class="f-row" wx:if="{{showCustom}}">
+          <text class="f-label">备注 <text class="f-small">好在哪里,可选</text></text>
+          <input class="f-input" value="{{note}}" maxlength="30" placeholder="例:帮着收拾了书桌" bindinput="onNote" />
+        </view>
+        <view class="main-btn" bindtap="submitAward" hover-class="btn-press">➕ 发放积分</view>
+      </view>
+
+      <!-- 消耗积分 -->
+      <view class="card consume">
+        <view class="card-title consume-title">🛒 消耗积分</view>
+        <view class="f-row">
+          <text class="f-label">日期</text>
+          <picker mode="date" value="{{consumeDate}}" end="{{today}}" bindchange="onConsumeDate">
+            <view class="f-picker">{{consumeDate}}</view>
+          </picker>
+        </view>
+        <view class="f-row">
+          <text class="f-label">理由</text>
+          <picker range="{{consumeLabels}}" value="{{consumeReasonIndex}}" bindchange="onConsumeReason">
+            <view class="f-picker">{{consumeLabels[consumeReasonIndex]}}</view>
+          </picker>
+        </view>
+        <view class="f-row">
+          <text class="f-label">分值</text>
+          <input class="f-input f-input-num" type="number" value="{{consumeScore}}" placeholder="1~999" bindinput="onConsumeScore" />
+        </view>
+        <view class="f-row">
+          <text class="f-label">{{consumeReasons[consumeReasonIndex].custom ? '理由' : '备注'}} <text class="f-small">{{consumeReasons[consumeReasonIndex].custom ? '必填' : '换了什么,可选'}}</text></text>
+          <input class="f-input" value="{{consumeNote}}" maxlength="30" placeholder="{{consumeReasons[consumeReasonIndex].custom ? '例:乱发脾气' : '例:乐高小人'}}" bindinput="onConsumeNote" />
+        </view>
+        <view class="hint">{{consumeHint}}</view>
+        <view class="warn-btn" bindtap="submitConsume" hover-class="btn-press">➖ 消耗积分</view>
+      </view>
+
+      <!-- 积分规则 -->
+      <view class="card">
+        <view class="card-title">📜 积分规则</view>
+        <view wx:for="{{rules}}" wx:key="*this" class="rule">{{item}}</view>
+      </view>
+
+      <view class="foot-tip">发放与消耗自动同步到所有设备;改错删除在网页端积分维护页操作</view>
+    </block>
+  </block>
+  </block>
+</view>

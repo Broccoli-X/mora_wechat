@@ -1,0 +1,102 @@
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通作业功能</view>
+    <view class="blocked-sub">请联系管理员开通后再来登记作业哦</view>
+  </view>
+
+  <block wx:else>
+  <view class="sheet">
+    <view class="title">✏️ 作业维护</view>
+    <view class="sub">按日期登记与修改每天的作业,作业本页面按周查看;所有设备自动同步</view>
+
+    <!-- 编辑中横幅:点列表条目进入,可取消回到新增 -->
+    <view class="editing-banner" wx:if="{{editing}}">
+      <text class="eb-txt">✏️ 正在修改：{{editingLabel}}</text>
+      <text class="cancel-edit" bindtap="cancelEdit" hover-class="btn-hover">取消编辑</text>
+    </view>
+
+    <view class="card">
+      <view class="f-row">
+        <text class="f-label">日期</text>
+        <picker mode="date" value="{{date}}" end="{{today}}" bindchange="onDate">
+          <view class="f-picker">{{date}}</view>
+        </picker>
+      </view>
+
+      <view class="f-row">
+        <text class="f-label">科目</text>
+        <view class="chips">
+          <view
+            wx:for="{{subjects}}"
+            wx:key="name"
+            class="s-btn {{item.on ? 'on' : ''}}"
+            style="{{item.on ? 'background:' + item.main : ''}}"
+            data-s="{{item.name}}"
+            bindtap="pickSubject"
+            hover-class="btn-hover"
+          >{{item.icon}} {{item.name}}</view>
+        </view>
+      </view>
+
+      <view class="f-col">
+        <view class="f-row f-row-between">
+          <text class="f-label">作业内容</text>
+          <text class="cnt">{{counter}}</text>
+        </view>
+        <textarea
+          class="f-textarea"
+          value="{{text}}"
+          maxlength="300"
+          placeholder="{{textPlaceholder}}"
+          bindinput="onText"
+        />
+      </view>
+
+      <view class="f-col">
+        <text class="f-label">作业图片 <text class="f-small">可选,最多 {{picsMax}} 张</text></text>
+        <view class="pics">
+          <!-- 编辑中保留的旧图(服务端已存),可点 ✕ 移除 -->
+          <view wx:for="{{existImgs}}" wx:key="id" class="pic">
+            <image class="pic-img" src="{{item.url}}" mode="aspectFill" />
+            <view class="pic-del" data-ei="{{index}}" bindtap="removeExistImg">✕</view>
+          </view>
+          <view wx:for="{{pics}}" wx:key="*this" class="pic">
+            <image class="pic-img" src="{{item}}" mode="aspectFill" />
+            <view class="pic-del" data-pi="{{index}}" bindtap="removePic">✕</view>
+          </view>
+          <view wx:if="{{pics.length + existImgs.length < picsMax}}" class="pic-add" bindtap="addPics" hover-class="btn-hover">📷 添加图片</view>
+        </view>
+      </view>
+
+      <view class="main-btn {{submitting ? 'disabled' : ''}}" bindtap="submit" hover-class="btn-press">
+        {{submitting ? '📤 处理图片中…' : (editing ? '💾 保存修改' : '➕ 添加作业')}}
+      </view>
+    </view>
+
+    <!-- 按日期列表:呈现表单日期当天已登记的作业,点条目进编辑 -->
+    <view class="card">
+      <view class="f-row f-row-between">
+        <text class="f-label">{{dateLine}} 已登记</text>
+        <text class="cnt" wx:if="{{listState === 'ok'}}">{{rows.length}} 条 · 点条目修改</text>
+      </view>
+      <view class="day-list" wx:if="{{listState === 'ok' && rows.length}}">
+        <view wx:for="{{rows}}" wx:key="id" class="day-row" data-id="{{item.id}}" bindtap="editRow" hover-class="btn-hover">
+          <view class="s-chip" style="background:{{item.color}}">{{item.icon}}{{item.subject}}</view>
+          <text class="day-text">{{item.text}}</text>
+          <text wx:if="{{item.pics}}" class="day-flag">📎{{item.pics}}</text>
+          <text wx:if="{{item.done}}" class="day-done">✓</text>
+        </view>
+      </view>
+      <view class="note" wx:if="{{listState === 'ok' && !rows.length}}">这天还没有登记作业</view>
+      <view class="note" wx:if="{{listState === 'loading'}}">作业同步中…</view>
+      <view class="list-error" wx:if="{{listState === 'error'}}">
+        <text class="error-txt">作业同步失败</text>
+        <text class="retry" catchtap="retryList" hover-class="btn-hover">重试</text>
+      </view>
+    </view>
+
+    <view class="foot-tip">登记与修改同步到所有设备,在作业本页查看与勾选完成;删除请用网页端作业维护页</view>
+  </view>
+  </block>
+</view>

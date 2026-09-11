@@ -15,6 +15,10 @@
     "pages/poems/poems",
     "pages/poems/zen",
     "pages/mine/mine",
+    "pages/hw-edit/hw-edit",
+    "pages/points-edit/points-edit",
+    "pages/todo-edit/todo-edit",
+    "pages/todo/todo",
     "pages/login/login"
   ],
   "window": {

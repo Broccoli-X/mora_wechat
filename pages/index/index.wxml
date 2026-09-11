@@ -7,7 +7,11 @@
         <text class="brand-sub">{{subtitle}}</text>
       </view>
     </view>
-    <text class="date-line">{{dateLine}}</text>
+    <view class="head-right">
+      <text class="date-line">{{dateLine}}</text>
+      <!-- 分享按钮:open-type=share 拉起转发,标题/路径走 onShareAppMessage -->
+      <button class="share-btn" open-type="share" hover-class="link-hover">↗ 分享</button>
+    </view>
   </view>
 
   <!-- 积分总览:emoji 只看累计,剩余折算零钱;点按去「我的」看明细与规则;未开通不呈现 -->
@@ -35,10 +39,11 @@
     </view>
   </view>
 
-  <!-- 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后;未开通不呈现 -->
-  <view class="section" wx:if="{{tdAllowed}}">
+  <!-- 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后;点区块进代办详情按日期查看 -->
+  <view class="section" wx:if="{{tdAllowed}}" bindtap="goTodoDetail" hover-class="link-hover">
     <view class="section-head">
       <text class="section-title">⏰ 今日代办</text>
+      <text class="section-more">按日期查看 ›</text>
     </view>
     <view class="td-list" wx:if="{{tdState === 'ok' && tdItems.length}}">
       <view wx:for="{{tdItems}}" wx:key="id" class="td">
@@ -50,7 +55,7 @@
     <view class="note" wx:if="{{tdState === 'loading'}}">代办同步中…</view>
     <view class="error" wx:if="{{tdState === 'error'}}">
       <text class="error-txt">代办同步失败</text>
-      <text class="retry" bindtap="retryTodos" hover-class="link-hover">重试</text>
+      <text class="retry" catchtap="retryTodos" hover-class="link-hover">重试</text>
     </view>
   </view>
 

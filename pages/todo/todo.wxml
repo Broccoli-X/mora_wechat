@@ -1,0 +1,41 @@
+<!-- 代办详情:按日期筛选查看,只读。日期条 ‹ › 翻天,中间点按弹日期选择器 -->
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通代办功能</view>
+    <view class="blocked-sub">请联系管理员开通后再来看代办哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="date-bar">
+      <view class="day-btn" bindtap="prevDay" hover-class="link-hover">‹</view>
+      <picker mode="date" value="{{date}}" bindchange="onDate">
+        <view class="date-pick" hover-class="link-hover">
+          <text class="date-main">{{dateLine}}</text>
+          <text class="date-sub">{{isToday ? '今天 · 点按选日期' : '点按选日期'}}</text>
+        </view>
+      </picker>
+      <view class="day-btn" bindtap="nextDay" hover-class="link-hover">›</view>
+    </view>
+
+    <view class="section">
+      <view class="td-list" wx:if="{{state === 'ok' && rows.length}}">
+        <view wx:for="{{rows}}" wx:key="id" class="td">
+          <view class="td-time" style="background:{{item.color}}">{{item.icon}}{{item.time}}</view>
+          <view class="td-body">
+            <text class="td-text">{{item.text}}</text>
+            <text class="td-tag">{{item.tag}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="note" wx:if="{{state === 'ok' && !rows.length}}">这天没有代办，尽情玩吧 🎉</view>
+      <view class="note" wx:if="{{state === 'loading'}}">代办同步中…</view>
+      <view class="error" wx:if="{{state === 'error'}}">
+        <text class="error-txt">代办同步失败</text>
+        <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+      </view>
+    </view>
+
+    <view class="foot-tip">增删改在「我的 → 待办事项维护」，所有设备自动同步</view>
+  </block>
+</view>

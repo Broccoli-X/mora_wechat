@@ -292,6 +292,52 @@
   color: #4f7cff;
 }
 
+/* ── 家长维护入口 ───────────────────────────────── */
+.mt-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border: 2rpx solid #eef0f5;
+  border-radius: 16rpx;
+  padding: 22rpx 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.mt-row:last-child {
+  margin-bottom: 0;
+}
+
+.mt-icon {
+  flex: 0 0 auto;
+  font-size: 40rpx;
+}
+
+.mt-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.mt-name {
+  font-size: 29rpx;
+  font-weight: 800;
+  color: #1f2333;
+}
+
+.mt-desc {
+  font-size: 22rpx;
+  color: #8a90a3;
+}
+
+.mt-arrow {
+  flex: 0 0 auto;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #b6bccb;
+}
+
 /* ── 家庭账号 ───────────────────────────────────── */
 .acc-row {
   display: flex;

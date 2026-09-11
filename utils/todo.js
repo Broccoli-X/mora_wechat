@@ -1,7 +1,8 @@
-/* 今日代办只读同步:数据源与网页端相同的服务(/api/progress,module=todo)。
-   条目在网页端家长页(todo-edit.html)维护,小程序端首页只看当天清单,无完成状态。
+/* 今日代办同步:数据源与网页端相同的服务(/api/progress,module=todo)。
+   小程序端维护页可添加/修改/删除(单条上报与网页端 todo-edit.html 同协议),
+   首页只看当天清单,无完成状态。
    payload 为短键 JSON:{t:内容, m:时间, r:重复, d:日期(仅单次), w:每周几(0=周日)};
-   空 payload 是删除墓碑,直接跳过。校验与「某天有哪些代办」的挑选口径
+   空 payload 是删除墓碑。校验与「某天有哪些代办」的挑选口径
    和网页端 lib/todo-core.js 一致:每天恒真/单次比日期/每周几看星期几勾选。
    鉴权走 utils/auth.js 家长登录会话(与网页端 lib/auth.js 同协议)。 */
 const API_BASE = 'https://www.tcued.com';
@@ -116,6 +117,76 @@ function todosOn(entries, dateStr) {
     .sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : a.updatedAt - b.updatedAt));
 }
 
+/* ── 写入层:添加/修改单条上报 + 删除墓碑(与网页端 todo-edit.html 同协议) ── */
+
+function newId() {
+  return 'td' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function fmtCN(dateStr) {
+  const d = parseDate(dateStr);
+  return d ? (d.getMonth() + 1) + '月' + d.getDate() + '日' : '';
+}
+
+/* 重复说明文案(与网页端 describe 同源):每天 / 单次·9月5日 / 每周一、三、五 */
+function describe(e) {
+  const r = repeatOf(e.repeat);
+  if (!r) return e.repeat || '';
+  if (e.repeat === 'once') return r.label + '·' + fmtCN(e.date);
+  if (e.repeat === 'weekly') return '每周' + e.weekdays.map(w => WEEKDAY_CN[w]).join('、');
+  return r.label;
+}
+
+/* 维护页列表顺序:最近编辑的在前 */
+function sortByNew(entries) {
+  return (entries || []).slice().sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
+/* 条目 → 同步载荷短键 JSON(与网页端 lib/todo-core.js encodeEntry 同源):
+   单次才有 d,每周几才有 w */
+function encodeEntry(e) {
+  const o = { t: e.text, m: e.time, r: e.repeat };
+  if (e.repeat === 'once') o.d = e.date;
+  if (e.repeat === 'weekly') o.w = e.weekdays;
+  return JSON.stringify(o);
+}
+
+/* 单条上报公共通道:服务端同键新时间戳(含相等)者胜;401 交 auth.on401 弹登录门,
+   失败回调 onFail 由页面提示。payload 传空串即删除墓碑,其他设备拉到后同样删除 */
+function pushItem(itemKey, payload, updatedAt, onFail) {
+  const token = auth.getToken();
+  if (!token) return false;
+  wx.request({
+    url: API_BASE + '/api/progress',
+    method: 'POST',
+    header: { 'Content-Type': 'application/json' },
+    data: {
+      token: token,
+      items: [{
+        module: 'todo',
+        itemKey: itemKey,
+        mastered: 0,
+        updatedAt: updatedAt,
+        device: auth.deviceTag(),
+        payload: payload,
+      }],
+    },
+    success(res) {
+      if (res.statusCode === 401) auth.on401();
+    },
+    fail() { if (onFail) onFail(); },
+  });
+  return true;
+}
+
+function pushEntry(entry, onFail) {
+  return pushItem(entry.id, encodeEntry(entry), entry.updatedAt, onFail);
+}
+
+function pushTombstone(id, onFail) {
+  return pushItem(id, '', Date.now(), onFail);
+}
+
 /* 拉取全部进度,客户端过滤出代办(module=todo):成功 done(entries),失败 fail(err);
    401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchTodos(done, fail) {
@@ -134,7 +205,8 @@ function fetchTodos(done, fail) {
 
 module.exports = {
   REPEATS, WEEKDAY_CN,
-  repeatOf, todayStr, toDateStr, parseDate,
+  repeatOf, todayStr, toDateStr, parseDate, fmtCN,
   normalize, decodeItems, occursOn, todosOn,
+  describe, sortByNew, newId, encodeEntry, pushEntry, pushTombstone,
   fetchTodos,
 };

@@ -1,0 +1,103 @@
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通代办功能</view>
+    <view class="blocked-sub">请联系管理员开通后再来登记代办哦</view>
+  </view>
+
+  <block wx:else>
+  <view class="sheet">
+    <view class="title">⏰ 待办事项维护</view>
+    <view class="sub">登记每天/每周几/单次的代办,首页顶端滚动展示当天事项;所有设备自动同步</view>
+
+    <view class="error" wx:if="{{state === 'error'}}">
+      <text class="error-txt">代办同步失败，请检查网络后重试</text>
+      <view class="retry-btn" bindtap="retry" hover-class="btn-hover">重试</view>
+    </view>
+
+    <block wx:if="{{state !== 'error'}}">
+    <view class="card {{editing ? 'editing' : ''}}">
+      <view class="f-col">
+        <view class="f-row f-row-between">
+          <text class="f-label">事项内容</text>
+          <text class="cnt">{{counter}}</text>
+        </view>
+        <input class="f-input" value="{{text}}" maxlength="60" placeholder="例:睡前刷牙 / 周六上钢琴课 / 交手工" bindinput="onText" />
+      </view>
+
+      <view class="f-row">
+        <text class="f-label">重复</text>
+        <view class="chips">
+          <view
+            wx:for="{{repeats}}"
+            wx:key="key"
+            class="r-btn {{item.key === repeat ? 'on' : ''}}"
+            style="{{item.key === repeat ? 'background:' + item.main : ''}}"
+            data-r="{{item.key}}"
+            bindtap="pickRepeat"
+            hover-class="btn-hover"
+          >{{item.icon}} {{item.label}}</view>
+        </view>
+      </view>
+
+      <view class="f-row" wx:if="{{repeat === 'once'}}">
+        <text class="f-label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDate">
+          <view class="f-picker">{{date}}</view>
+        </picker>
+      </view>
+
+      <view class="f-row" wx:if="{{repeat === 'weekly'}}">
+        <text class="f-label">每周几</text>
+        <view class="chips">
+          <view
+            wx:for="{{weekdays}}"
+            wx:key="*this"
+            class="w-btn {{weekOn[index] ? 'on' : ''}}"
+            data-w="{{index}}"
+            bindtap="toggleWeek"
+            hover-class="btn-hover"
+          >周{{item}}</view>
+        </view>
+      </view>
+
+      <view class="f-row">
+        <text class="f-label">时间 <text class="f-small">首页滚动条按时间先后展示</text></text>
+        <picker mode="time" value="{{time}}" bindchange="onTime">
+          <view class="f-picker">{{time}}</view>
+        </picker>
+      </view>
+
+      <view class="f-row center">
+        <view class="main-btn" bindtap="submit" hover-class="btn-press">
+          {{editing ? '💾 保存修改' : '➕ 添加代办'}}
+        </view>
+        <view wx:if="{{editing}}" class="ghost-btn" bindtap="cancelEdit" hover-class="btn-hover">取消编辑</view>
+      </view>
+
+      <view class="hint">每天:每天都会提醒;单次:只在选中的那天;每周几:可多选,勾中的星期几都会提醒</view>
+    </view>
+
+    <!-- 已登记的代办(最近编辑在前) -->
+    <view class="hist">
+      <view class="hist-title">📋 已登记的代办</view>
+      <view class="tip" wx:if="{{state === 'loading'}}">代办同步中…</view>
+      <block wx:if="{{state === 'ok'}}">
+        <view wx:for="{{rows}}" wx:key="id" class="h-row">
+          <view class="rep-chip" style="background:{{item.chipBg}}">{{item.chipText}}</view>
+          <view class="time-chip">{{item.time}}</view>
+          <text class="txt">{{item.text}}</text>
+          <view class="ops">
+            <view class="op" data-id="{{item.id}}" bindtap="editRow" hover-class="btn-hover">✏️ 改</view>
+            <view class="op del" data-id="{{item.id}}" bindtap="delRow" hover-class="btn-hover">🗑️ 删</view>
+          </view>
+        </view>
+        <view class="empty" wx:if="{{!rows.length}}">还没有代办事项,从上面添加第一条吧 ✨</view>
+      </block>
+    </view>
+
+    <view class="foot-tip">删除会同步到所有设备;首页顶端滚动条展示今天的代办,按时间先后排</view>
+    </block>
+  </view>
+  </block>
+</view>
