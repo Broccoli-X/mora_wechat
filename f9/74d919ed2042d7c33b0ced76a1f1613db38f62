@@ -1,0 +1,38 @@
+tests/cards-css.test.js
+  s_e0bb805fffaadc::t_9fbcc090060cf3 76-80
+  s_b15f6ee2ffd66d::t_701461c68bb2ff 1-15,17-70,81
+  s_0e4282e009d354::t_1ab3023ee3278e 71-75
+  s_b15f6ee2ffd66d::t_209715560b1d4f 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "f974d919ed2042d7c33b0ced76a1f1613db38f62",
+  "prompts": {},
+  "sessions": {
+    "s_0e4282e009d354": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_4cb8c345-9271-45bb-b5fc-a9afa3fbd759",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    },
+    "s_b15f6ee2ffd66d": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_53780701-e894-40bd-99a4-e3a987fd815a",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    },
+    "s_e0bb805fffaadc": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_6d0352de-5a81-4e5c-9a39-202feb30eab0",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
