@@ -1,0 +1,81 @@
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通人物单词卡</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="head">
+      <view class="head-title">🧑‍🤝‍🧑 英语人物单词卡</view>
+      <view class="head-sub">江苏一年级 · 译林版教材人物 · 纯认读不带发音</view>
+      <!-- 已掌握胶囊:点击只看已掌握的人物,再点恢复全部(与字母卡一致) -->
+      <view class="progress {{learnedOnly ? 'on' : ''}}" bindtap="onToggleLearnedOnly" hover-class="p-hover">
+        <text>已掌握 </text><text class="p-num {{learnedOnly ? 'p-num-on' : ''}}">{{masteredCount}}</text><text> / {{total}} ⭐</text>
+      </view>
+    </view>
+
+    <view class="grid">
+      <view wx:if="{{!items.length}}" class="learned-empty">🌟 还没有已掌握的人物~ 点卡片右上角 ⭐ 标记已掌握吧!</view>
+
+      <view
+        wx:for="{{items}}"
+        wx:key="n"
+        class="card {{item.mastered ? 'learned' : ''}}"
+        data-i="{{item.i}}"
+        bindtap="onTapCard"
+        hover-class="card-hover"
+      >
+        <view class="accent" style="background:{{item.color}}"></view>
+        <view
+          class="star {{item.mastered ? 'star-on' : ''}}"
+          data-n="{{item.n}}"
+          catchtap="onToggleStar"
+        >{{item.mastered ? '⭐' : '☆'}}</view>
+        <image wx:if="{{!item.failed}}" class="avatar-img" src="{{item.img}}" mode="aspectFit"
+               lazy-load binderror="onImgError" data-i="{{item.i}}" />
+        <text wx:else class="avatar-fallback">{{item.emoji}}</text>
+        <view class="name" style="color:{{item.color}}">{{item.n}}</view>
+        <view class="zh">{{item.zh}}</view>
+      </view>
+    </view>
+
+    <view class="tip">点 ⭐ 标记已掌握 · 点卡片弹出大卡,看人物猜名字,翻面看英文和中文</view>
+  </block>
+
+  <!-- 弹出大卡:正面人物头像,翻面只显示英文和中文;点图片翻面,左右滑动换小朋友 -->
+  <view class="mask" wx:if="{{popup}}" bindtap="onClosePopup" catchtouchmove="noop">
+    <view class="pop" catchtap="noop"
+          bindtouchstart="onTouchStart"
+          bindtouchend="onTouchEnd"
+          bindtouchcancel="onTouchCancel">
+      <view class="pop-close" catchtap="onClosePopup">✕</view>
+
+      <view class="swap swap-{{dir}}-{{seq % 2}}">
+        <view class="pop-pos">{{cur + 1}} / {{total}}</view>
+
+        <view class="flip {{flipped ? 'flipped' : ''}} {{item.mastered ? 'learned' : ''}}" data-flip="1">
+          <!-- 正面:人物头像(猜名字)。data-flip 铺满卡片内所有子元素:
+               e.target 取最深节点,点在图/文字上也要归到「点卡片翻面」 -->
+          <view class="face front" data-flip="1">
+            <image wx:if="{{!item.failed}}" class="avatar-img-big" src="{{item.img}}" mode="aspectFit"
+                   data-flip="1" binderror="onImgError" data-i="{{item.i}}" />
+            <text wx:else class="avatar-fallback-big" data-flip="1">{{item.emoji}}</text>
+            <view class="face-tip" data-flip="1">👆 点卡片看名字</view>
+          </view>
+          <!-- 背面:只显示英文和中文 -->
+          <view class="face back" data-flip="1">
+            <view class="back-name" style="color:{{item.color}}" data-flip="1">{{item.n}}</view>
+            <view class="back-zh" data-flip="1">{{item.zh}}</view>
+          </view>
+        </view>
+
+        <view class="pop-master {{item.mastered ? 'on' : ''}}" catchtap="onToggleStarPopup">
+          {{item.mastered ? '⭐ 已掌握' : '☆ 标为已掌握'}}
+        </view>
+      </view>
+
+      <view class="pop-tip">点图片翻面 · 左右滑动换小朋友</view>
+    </view>
+  </view>
+</view>

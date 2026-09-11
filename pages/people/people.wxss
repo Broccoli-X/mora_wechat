@@ -1,0 +1,384 @@
+/* 样式与字母卡同族:蓝粉橙渐变底 + 白卡顶部点缀色条 + ⭐掌握金边。
+   弹出大卡为 3D 翻面卡:正面人物头像,翻面只显示英文和中文。
+   尺寸按 2rpx ≈ 1px 换算。 */
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 32rpx 28rpx 60rpx;
+  background: linear-gradient(135deg, #a1c4fd 0%, #fbc2eb 45%, #ffecd2 100%);
+}
+
+.blocked {
+  padding: 160rpx 40rpx;
+  text-align: center;
+}
+
+.blocked-icon {
+  font-size: 88rpx;
+}
+
+.blocked-txt {
+  margin-top: 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #5f27cd;
+}
+
+.blocked-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b6b8d;
+}
+
+.head {
+  text-align: center;
+  padding-bottom: 30rpx;
+}
+
+.head-title {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #5f27cd;
+  text-shadow: 0 6rpx 0 rgba(255, 255, 255, 0.6);
+  letter-spacing: 2rpx;
+}
+
+.head-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b6b8d;
+}
+
+.progress {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 22rpx;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #5f27cd;
+  box-shadow: 0 8rpx 28rpx rgba(95, 39, 205, 0.15);
+}
+
+.p-hover {
+  transform: scale(0.97);
+}
+
+.progress.on {
+  background: linear-gradient(135deg, #5f27cd, #ee5a6f);
+  color: #ffffff;
+  box-shadow: 0 8rpx 28rpx rgba(95, 39, 205, 0.35);
+}
+
+.p-num {
+  color: #ee5a6f;
+  font-size: 31rpx;
+  font-weight: 800;
+}
+
+.p-num-on {
+  color: #ffd900;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+}
+
+/* 空态(只看已掌握且还没有) */
+.learned-empty {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 48rpx;
+  padding: 88rpx 36rpx;
+  box-shadow: 0 16rpx 44rpx rgba(95, 39, 205, 0.12);
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #6b6b8d;
+}
+
+.card {
+  position: relative;
+  width: calc((100% - 24rpx) / 2);
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 48rpx;
+  border: 6rpx solid transparent;
+  padding: 44rpx 24rpx 36rpx;
+  box-shadow: 0 16rpx 44rpx rgba(95, 39, 205, 0.12);
+  overflow: hidden;
+  text-align: center;
+}
+
+.card-hover {
+  transform: scale(0.97);
+}
+
+.card.learned {
+  border-color: #ffd900;
+  box-shadow: 0 16rpx 52rpx rgba(255, 217, 0, 0.45);
+}
+
+/* 顶部点缀色条(字母卡同款) */
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16rpx;
+}
+
+.star {
+  position: absolute;
+  top: 24rpx;
+  right: 24rpx;
+  font-size: 40rpx;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+
+.star-on {
+  filter: drop-shadow(0 4rpx 8rpx rgba(255, 217, 0, 0.6));
+}
+
+.avatar-img {
+  width: 100%;
+  height: 168rpx;
+}
+
+/* 头像图加载失败时的 emoji 兜底(尺寸对位 .avatar-img) */
+.avatar-fallback {
+  display: block;
+  width: 100%;
+  height: 168rpx;
+  line-height: 168rpx;
+  font-size: 120rpx;
+  text-align: center;
+}
+
+.name {
+  margin-top: 14rpx;
+  font-size: 46rpx;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 1rpx;
+  word-break: break-all;
+}
+
+.zh {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #3a3a55;
+}
+
+.tip {
+  margin-top: 40rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #7a7a9a;
+}
+
+/* ── 弹出大卡 ── */
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: maskIn 0.2s ease both;
+}
+
+@keyframes maskIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pop {
+  position: relative;
+  width: 78vw;
+  max-width: 620rpx;
+  perspective: 1600rpx;
+  animation: popIn 0.24s ease both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9) translateY(24rpx); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* 换人入场动画:方向感知,seq 奇偶交替类名强制重放(字母卡 zen 同款思路)。
+   关键:同名动画重复声明不会重放(CSS 规范),奇偶类名必须绑不同的 animation-name
+   ——每方向备 a/b 两份画面相同的 keyframes,同方向连滑也换名强制重放。 */
+.swap-l-0 { animation: swapInRa 0.28s ease both; }
+.swap-l-1 { animation: swapInRb 0.28s ease both; }
+.swap-r-0 { animation: swapInLa 0.28s ease both; }
+.swap-r-1 { animation: swapInLb 0.28s ease both; }
+
+@keyframes swapInRa {
+  from { transform: translateX(64rpx) scale(0.96); opacity: 0.3; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes swapInRb {
+  from { transform: translateX(64rpx) scale(0.96); opacity: 0.3; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes swapInLa {
+  from { transform: translateX(-64rpx) scale(0.96); opacity: 0.3; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes swapInLb {
+  from { transform: translateX(-64rpx) scale(0.96); opacity: 0.3; }
+  to { transform: none; opacity: 1; }
+}
+
+.pop-pos {
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.35);
+  margin-bottom: 18rpx;
+}
+
+/* 关闭钮:挂在卡片右上角(页面有默认导航栏,不在胶囊遮挡区) */
+.pop-close {
+  position: absolute;
+  top: -24rpx;
+  right: -18rpx;
+  z-index: 3;
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 60rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 34rpx;
+  font-weight: 800;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.18);
+}
+
+/* 3D 翻面:正面头像 / 背面英文+中文 */
+.flip {
+  position: relative;
+  width: 100%;
+  height: 720rpx;
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+}
+
+.flip.flipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 48rpx;
+  border: 8rpx solid transparent;
+  box-shadow: 0 24rpx 60rpx rgba(0, 0, 0, 0.3);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip.learned .face {
+  border-color: #ffd900;
+  box-shadow: 0 24rpx 60rpx rgba(0, 0, 0, 0.3), 0 0 0 4rpx rgba(255, 217, 0, 0.45);
+}
+
+.face.back {
+  transform: rotateY(180deg);
+}
+
+.avatar-img-big {
+  width: 80%;
+  height: 340rpx;
+}
+
+.avatar-fallback-big {
+  display: block;
+  width: 80%;
+  height: 340rpx;
+  line-height: 340rpx;
+  font-size: 240rpx;
+  text-align: center;
+}
+
+.face-tip {
+  margin-top: 26rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #9a9ab0;
+}
+
+.back-name {
+  font-size: 76rpx;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 2rpx;
+  text-align: center;
+  padding: 0 20rpx;
+  word-break: break-all;
+}
+
+.back-zh {
+  margin-top: 24rpx;
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #3a3a55;
+}
+
+.pop-master {
+  margin: 26rpx auto 0;
+  display: table;
+  background: #ffffff;
+  border: 3rpx solid #cbd5e1;
+  border-radius: 999rpx;
+  padding: 16rpx 38rpx;
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.pop-master.on {
+  background: linear-gradient(135deg, #51cf66, #37b24d);
+  border-color: #37b24d;
+  color: #ffffff;
+  box-shadow: 0 8rpx 20rpx rgba(55, 178, 77, 0.35);
+}
+
+.pop-tip {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
