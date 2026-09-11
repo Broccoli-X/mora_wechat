@@ -1,0 +1,134 @@
+pages/mine/mine.js
+  s_6cded56e644fb6::t_5e58f769a2d7a7 23-25,41,44-51,58-60,64-75
+  s_6cded56e644fb6::t_403286400ff053 76
+tests/homework.test.js
+  s_6cded56e644fb6::t_57f84d8ca52f86 156-234
+  s_6cded56e644fb6::t_7f5d8d7002e7e2 235-237
+pages/todo/todo.json
+  s_b15f6ee2ffd66d::t_c33f91eb8baebd 1-4
+utils/points.js
+  s_6cded56e644fb6::t_4664154dfb2445 56-63
+  s_6cded56e644fb6::t_ab43a56b32e83b 257
+  s_6cded56e644fb6::t_bacc70bd58bec0 188-250,258-259
+  s_6cded56e644fb6::t_52d5c469743a68 1-2
+  s_6cded56e644fb6::t_fd31a1ca9c9b45 251
+pages/points-edit/points-edit.json
+  s_6cded56e644fb6::t_1af64c4bcfebdf 1-4
+pages/todo-edit/todo-edit.wxss
+  s_6cded56e644fb6::t_8c561b71658079 152,155,159
+  s_6cded56e644fb6::t_97578bd1d714a7 1-151,153-154,156-158,160-343
+pages/index/index.js
+  s_8bd1a080e965cd::t_9196b3e37710a5 46-47,49-50,55-56,188
+  s_b15f6ee2ffd66d::t_66cf21f8a227cf 44-45,48,51-54
+  s_b15f6ee2ffd66d::t_d4360fb6803586 186-187
+  s_8bd1a080e965cd::t_e1574cf99003f9 189
+pages/index/index.wxml
+  s_b15f6ee2ffd66d::t_cb85bceadc6498 10-14
+  s_b15f6ee2ffd66d::t_7ed97e826a12a3 42-43,46,58
+pages/todo/todo.wxss
+  s_b15f6ee2ffd66d::t_a7383528d15486 1-151
+pages/index/index.wxss
+  s_b15f6ee2ffd66d::t_763182b36bf501 58-81
+pages/todo-edit/todo-edit.json
+  s_6cded56e644fb6::t_9524b7440880ee 1-4
+pages/points-edit/points-edit.wxml
+  s_6cded56e644fb6::t_a16ec2a5220320 78
+  s_6cded56e644fb6::t_ca577eda1a04f2 1-77,79-125
+tests/todo.test.js
+  s_6cded56e644fb6::t_7b0d03cacbe532 1-136
+pages/hw-edit/hw-edit.json
+  s_6cded56e644fb6::t_1791c1c7a77420 1,4
+  s_b15f6ee2ffd66d::t_85ac8c347236df 2-3
+pages/points-edit/points-edit.wxss
+  s_6cded56e644fb6::t_bf1f7411c7f64b 127,130,134
+  s_6cded56e644fb6::t_0ed3569a27b1a4 276,280-281,284
+  s_6cded56e644fb6::t_c569cf57a8ee2e 1-126,128-129,131-133,135-275,277-279,282-283,285-375
+pages/mine/mine.wxml
+  s_b15f6ee2ffd66d::t_d9c5cf98a43f55 78
+  s_6cded56e644fb6::t_744dfc6da22ef5 65,69-77,79-98
+  s_6cded56e644fb6::t_28aa2f7afc3e97 99
+pages/points-edit/points-edit.js
+  s_6cded56e644fb6::t_467019bd0f1e48 148-153,182-183
+  s_6cded56e644fb6::t_773a8b8e830007 238
+  s_6cded56e644fb6::t_be22756d4392e0 1-147,154-181,184-237,239-241
+app.json
+  s_6cded56e644fb6::t_7f9d6e4ba0067b 18-20
+  s_b15f6ee2ffd66d::t_cbef226f592019 21
+pages/todo-edit/todo-edit.wxml
+  s_6cded56e644fb6::t_e1c024609bea92 1-55,57-71,73-103
+  s_6cded56e644fb6::t_306d75c1edf9c6 72
+  s_6cded56e644fb6::t_32ad149a00ebb4 56
+pages/hw-edit/hw-edit.wxss
+  s_6cded56e644fb6::t_fe573889c14454 1-108,110-111,113-115,117-231
+  s_b15f6ee2ffd66d::t_27bd7df022b5c9 232-354
+  s_6cded56e644fb6::t_63a72057180712 109,112,116
+pages/hw-edit/hw-edit.js
+  s_6cded56e644fb6::t_794e8403bd2ad2 1-14,16-21,29-30,34-41,43-45,92-94,96,100-116,118,120-143,152-195,198-202,231,233,235-247,251-253,266,273-287
+  s_6cded56e644fb6::t_b4323baedbeeae 267,271
+  s_b15f6ee2ffd66d::t_b11594d0371fed 15,22-28,31-33,42,46-91,95,97-99,117,119,144-151,196-197,203-230,232,234,248-250,254-265,268-270,272
+utils/homework.js
+  s_6cded56e644fb6::t_904771c32abb48 179-185,203,207-225,228-253
+  s_b15f6ee2ffd66d::t_7a8da7d6dc9d2c 258
+  s_6cded56e644fb6::t_07999bbb72b618 204-206,226-227
+  s_b15f6ee2ffd66d::t_e691e3112a123e 186-202
+  s_6cded56e644fb6::t_49c0e374419682 2-3,6-7
+pages/todo/todo.wxml
+  s_b15f6ee2ffd66d::t_586eca6b4cca84 1-41
+pages/mine/mine.wxss
+  s_6cded56e644fb6::t_b87a57c6c8701c 295-340
+pages/todo-edit/todo-edit.js
+  s_6cded56e644fb6::t_6fd96b51eda678 83-89,95
+  s_6cded56e644fb6::t_9e7622cfebb812 18
+  s_6cded56e644fb6::t_ee3462a1a2858f 116
+  s_6cded56e644fb6::t_c81a3e0cf77d14 186
+  s_6cded56e644fb6::t_cd920d8e97ffa3 153,158,163
+  s_6cded56e644fb6::t_f2a3079577e884 1-17,19-82,90-94,96-115,117-152,154-157,164-166,168,170-185,187-215
+  s_6cded56e644fb6::t_fba80bccfedcfd 159-162,167,169
+tests/points.test.js
+  s_6cded56e644fb6::t_6bde92ad4f1bed 5,7-8,17,20,23-27
+  s_6cded56e644fb6::t_80b377781523fe 31
+  s_6cded56e644fb6::t_6f0313b8325156 80-156
+  s_6cded56e644fb6::t_4f07c7e4b98de1 28
+  s_6cded56e644fb6::t_1e93562885ed60 157
+pages/hw-edit/hw-edit.wxml
+  s_b15f6ee2ffd66d::t_d95346fc9dd62d 11,13-18,59-63,68,73-95,99
+  s_6cded56e644fb6::t_48a8a81c0b8a17 1-10,12,19-58,64-67,69-72,96-98,100-102
+utils/todo.js
+  s_6cded56e644fb6::t_08b0ca06cc81d9 120-189
+  s_6cded56e644fb6::t_6cf7552e823331 1-3,5
+  s_6cded56e644fb6::t_20530c96bc58c5 208,210
+pages/todo/todo.js
+  s_b15f6ee2ffd66d::t_f40ca441be8d1c 1-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "85ad8e95b856fb7d04723e10c1a42eca66c5040c",
+  "prompts": {},
+  "sessions": {
+    "s_6cded56e644fb6": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_64252ec9-5de9-41dc-83cb-8e79266ea988",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    },
+    "s_8bd1a080e965cd": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_e1ce1fa3-6a06-432e-aedf-c6ec31e1a13a",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    },
+    "s_b15f6ee2ffd66d": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_53780701-e894-40bd-99a4-e3a987fd815a",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
