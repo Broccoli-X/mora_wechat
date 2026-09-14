@@ -1,0 +1,23 @@
+pages/index/index.wxss
+  s_3947f643a569d5::t_98edee07562e78 10
+pages/index/index.js
+  s_3947f643a569d5::t_d15abca87f3109 44-45
+pages/index/index.wxml
+  s_3947f643a569d5::t_cdb14b05869a99 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "769d9ed1b22ae3d29434fd0805b5100e7d230a0e",
+  "prompts": {},
+  "sessions": {
+    "s_3947f643a569d5": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_86e7f49e-a938-4a2d-9a6f-1ee001619005",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
