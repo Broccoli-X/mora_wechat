@@ -7,11 +7,7 @@
         <text class="brand-sub">{{subtitle}}</text>
       </view>
     </view>
-    <view class="head-right">
-      <text class="date-line">{{dateLine}}</text>
-      <!-- 分享按钮:open-type=share 拉起转发,标题/路径走 onShareAppMessage -->
-      <button class="share-btn" open-type="share" hover-class="link-hover">↗ 分享</button>
-    </view>
+    <text class="date-line">{{dateLine}}</text>
   </view>
 
   <!-- 积分总览:emoji 只看累计,剩余折算零钱;点按去「我的」看明细与规则;未开通不呈现 -->

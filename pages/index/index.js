@@ -41,8 +41,8 @@ Page({
     auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
   },
 
-  /* 页面定义了 onShareAppMessage 右上角菜单的「转发」才会亮起,否则提示"当前页面不可转发";
-     页内「↗ 分享」按钮(open-type=share)也走这里。onShareTimeline 点亮「分享到朋友圈」 */
+  /* 页面定义了 onShareAppMessage 右上角胶囊菜单的「转发」才会亮起,否则提示"当前页面不可转发";
+     onShareTimeline 点亮「分享到朋友圈」。页内不放分享按钮,分享只走胶囊菜单 */
   onShareAppMessage() {
     return {
       title: 'Mora 学习卡片 · 今日作业与代办一查便知',
