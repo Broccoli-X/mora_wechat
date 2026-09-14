@@ -1,5 +1,6 @@
 /* 作业数据同步:数据源与网页端相同的服务(/api/progress,module=homework)。
-   小程序端维护页可登记作业(单条上报与网页端 zuoye-edit.html 同协议),
+   小程序端维护页可登记作业(单条上报与网页端 zuoye-edit.html 同协议,日期不限未来——
+   网页端日期输入也没有上限,提前登记明天的作业是同一条目、同一读写路径),
    作业本页查看与勾选完成。
    payload 为短键 JSON:{d:日期, s:科目, t:内容, g:[图片id], c:已完成 1};
    与网页端 lib/homework-core.js 同源:未完成不产生 c 键,空 payload 是删除墓碑,直接跳过。
@@ -56,6 +57,19 @@ function weekdayCN(dateStr) {
 function fmtCN(dateStr) {
   const d = parseDate(dateStr);
   return d ? (d.getMonth() + 1) + '月' + d.getDate() + '日' : '';
+}
+
+/* 相对称呼:今天/明天/后天(未来)与昨天/前天(过去)。维护页可以提前登记未来几天的
+   作业,光看日期串不好确认选中的是哪天,给个锚点;超出这个范围不称呼(返回空串)。
+   base 可传入固定比较基准(默认今天),坏日期串返回空串 */
+function relLabel(dateStr, base) {
+  const d = parseDate(dateStr);
+  const b = parseDate(base || todayStr());
+  if (!d || !b) return '';
+  /* 两端都是本地零点,跨夏令时相差 ±1 小时,取整到天 */
+  const n = Math.round((d - b) / 86400000);
+  return n === 0 ? '今天' : n === 1 ? '明天' : n === 2 ? '后天'
+    : n === -1 ? '昨天' : n === -2 ? '前天' : '';
 }
 
 /* 某天所在一周:周一到周日共 7 个日期串(周日属于本周,不滚到下周) */
@@ -253,7 +267,7 @@ function uploadImage(dataUrl, onOk, onFail) {
 
 module.exports = {
   SUBJECTS, SUBJECT_NAMES, WEEKDAY_CN,
-  metaOf, toDateStr, todayStr, parseDate, weekdayCN, fmtCN, weekOf,
+  metaOf, toDateStr, todayStr, parseDate, weekdayCN, fmtCN, weekOf, relLabel,
   sortByDay, decodeItems, encodeEntry, fetchHomework, toggleDone, imgUrl,
   newId, buildEntry, saveEntry, uploadImage,
 };

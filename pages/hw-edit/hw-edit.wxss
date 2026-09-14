@@ -90,7 +90,29 @@
   color: #8a90a0;
 }
 
+/* 日期行:‹ › 一天一天挪(提前登记明天以后的作业常用),中间点开日历可选任意日期 */
+.date-nav {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.nav-btn {
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 52rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: #3b6ef5;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
 .f-picker {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
   border: 3rpx solid #d4d9e2;
   border-radius: 14rpx;
   padding: 12rpx 18rpx;
@@ -98,6 +120,22 @@
   font-weight: 700;
   color: #1f2937;
   background: #ffffff;
+}
+
+/* 「今天/明天/后天」胶囊:提前登记未来作业时确认选中的是哪天 */
+.rel-pill {
+  padding: 2rpx 12rpx;
+  border-radius: 999rpx;
+  background: #eaf0ff;
+  color: #3b6ef5;
+  font-size: 20rpx;
+  font-weight: 800;
+}
+
+.list-head {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
 }
 
 .cnt {

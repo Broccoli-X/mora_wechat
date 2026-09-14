@@ -13,6 +13,8 @@ Page({
     today: '',
     date: '',
     dateLine: '',         // 「9月11日 · 星期五」,列表标题用
+    relLabel: '',         // 「今天/明天/后天」,提前登记未来作业时的锚点
+    emptyNote: '这天还没有登记作业',
     subjects: [],         // {name, icon, main, on}
     text: '',
     counter: '0/' + TEXT_MAX,
@@ -89,6 +91,24 @@ Page({
     this.setData({
       date: date,
       dateLine: hw.fmtCN(date) + ' · ' + hw.weekdayCN(date),
+      relLabel: hw.relLabel(date),
+      /* 空列表提示:未来的空白天顺带告诉家长能提前登记;过去/今天不提
+         (日期串定长零填,字典序即时间序) */
+      emptyNote: date > this.data.today
+        ? '这天还没有登记作业,可在上面提前登记'
+        : '这天还没有登记作业',
+    });
+    this.syncEditingLabel();
+  },
+
+  /* 编辑中换了日期(选日期器或 ‹ ›):横幅如实写成「原日期 · 科目 → 新日期」,
+     否则家长翻了天再点保存,会把作业悄悄挪到另一天 */
+  syncEditingLabel() {
+    const e = this.editingEntry;
+    if (!this.data.editing || !e) return;
+    const from = hw.fmtCN(e.date) + ' · ' + e.subject;
+    this.setData({
+      editingLabel: e.date === this.data.date ? from : from + ' → ' + hw.fmtCN(this.data.date),
     });
   },
 
@@ -98,6 +118,19 @@ Page({
     this.setDate(e.detail.value);
     this.renderList();
   },
+
+  /* ‹ › 翻天:提前登记明天的作业时一天一天挪比开日期器快;换日只重筛本地数据不重拉 */
+  shiftDay(n) {
+    const d = hw.parseDate(this.data.date);
+    if (!d) return;
+    d.setDate(d.getDate() + n);
+    this.setDate(hw.toDateStr(d));
+    this.renderList();
+  },
+
+  prevDay() { this.shiftDay(-1); },
+
+  nextDay() { this.shiftDay(1); },
 
   pickSubject(e) {
     const name = e.currentTarget.dataset.s;
@@ -192,9 +225,10 @@ Page({
     });
   },
 
+  /* 存完/取消后回「新增」态:选中日期保留——提前登记明天那几条(语文/数学/英语…)时
+     不用每条都重选一遍日期,表单看着停在哪天(带今天/明天胶囊)一目了然 */
   resetForm() {
     this.editingEntry = null;
-    this.setDate(this.data.today);
     this.setData({
       subjects: this.data.subjects.map(s => ({ ...s, on: s.name === '语文' })),
       text: '',
@@ -220,8 +254,6 @@ Page({
     this.editingEntry = entry;
     this.setData({
       editing: true,
-      editingLabel: hw.fmtCN(entry.date) + ' · ' + entry.subject,
-      date: entry.date,
       subjects: this.data.subjects.map(s => ({ ...s, on: s.name === entry.subject })),
       text: entry.text,
       counter: entry.text.length + '/' + TEXT_MAX,
@@ -231,6 +263,7 @@ Page({
       pics: [],
       existImgs: entry.imgs.map(g => ({ id: g, url: hw.imgUrl(g) })),
     });
+    this.setDate(entry.date); // 日期(含今天/明天胶囊)与「正在修改」横幅同走一处
     wx.pageScrollTo({ scrollTop: 0, duration: 200 });
   },
 

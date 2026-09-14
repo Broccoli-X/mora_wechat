@@ -8,7 +8,7 @@
   <block wx:else>
   <view class="sheet">
     <view class="title">✏️ 作业维护</view>
-    <view class="sub">按日期登记与修改每天的作业,作业本页面按周查看;所有设备自动同步</view>
+    <view class="sub">按日期登记与修改每天的作业,可提前登记明天以后的;作业本页面按周查看,所有设备自动同步</view>
 
     <!-- 编辑中横幅:点列表条目进入,可取消回到新增 -->
     <view class="editing-banner" wx:if="{{editing}}">
@@ -19,9 +19,17 @@
     <view class="card">
       <view class="f-row">
         <text class="f-label">日期</text>
-        <picker mode="date" value="{{date}}" end="{{today}}" bindchange="onDate">
-          <view class="f-picker">{{date}}</view>
-        </picker>
+        <!-- ‹ › 一天一天挪(提前登记明天以后常用);日期本身点开日历可选任意日期,不限今天 -->
+        <view class="date-nav">
+          <view class="nav-btn" bindtap="prevDay" hover-class="btn-hover">‹</view>
+          <picker mode="date" value="{{date}}" bindchange="onDate">
+            <view class="f-picker" hover-class="btn-hover">
+              <text>{{date}}</text>
+              <text wx:if="{{relLabel}}" class="rel-pill">{{relLabel}}</text>
+            </view>
+          </picker>
+          <view class="nav-btn" bindtap="nextDay" hover-class="btn-hover">›</view>
+        </view>
       </view>
 
       <view class="f-row">
@@ -77,7 +85,10 @@
     <!-- 按日期列表:呈现表单日期当天已登记的作业,点条目进编辑 -->
     <view class="card">
       <view class="f-row f-row-between">
-        <text class="f-label">{{dateLine}} 已登记</text>
+        <view class="list-head">
+          <text class="f-label">{{dateLine}} 已登记</text>
+          <text wx:if="{{relLabel}}" class="rel-pill">{{relLabel}}</text>
+        </view>
         <text class="cnt" wx:if="{{listState === 'ok'}}">{{rows.length}} 条 · 点条目修改</text>
       </view>
       <view class="day-list" wx:if="{{listState === 'ok' && rows.length}}">
@@ -88,7 +99,7 @@
           <text wx:if="{{item.done}}" class="day-done">✓</text>
         </view>
       </view>
-      <view class="note" wx:if="{{listState === 'ok' && !rows.length}}">这天还没有登记作业</view>
+      <view class="note" wx:if="{{listState === 'ok' && !rows.length}}">{{emptyNote}}</view>
       <view class="note" wx:if="{{listState === 'loading'}}">作业同步中…</view>
       <view class="list-error" wx:if="{{listState === 'error'}}">
         <text class="error-txt">作业同步失败</text>

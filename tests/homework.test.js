@@ -259,4 +259,31 @@ test('buildEntry:日期/科目/内容非法返回 null;图片封顶 9 张;未完
   assert.strictEqual(e.imgs.length, 9);
 });
 
+/* ── relLabel:相对今天的称呼(维护页提前登记未来作业时的锚点) ── */
+test('relLabel:今天/明天/后天与昨天/前天,基准可传入;超出范围与坏串不称呼', () => {
+  assert.strictEqual(hw.relLabel('2026-09-14', '2026-09-14'), '今天');
+  assert.strictEqual(hw.relLabel('2026-09-15', '2026-09-14'), '明天');
+  assert.strictEqual(hw.relLabel('2026-09-16', '2026-09-14'), '后天');
+  assert.strictEqual(hw.relLabel('2026-09-13', '2026-09-14'), '昨天');
+  assert.strictEqual(hw.relLabel('2026-09-12', '2026-09-14'), '前天');
+  assert.strictEqual(hw.relLabel('2026-09-17', '2026-09-14'), '');
+  assert.strictEqual(hw.relLabel('2026-09-11', '2026-09-14'), '');
+  assert.strictEqual(hw.relLabel('2026-09-14', '2026-09-14'), '今天');
+  assert.strictEqual(hw.relLabel('bad', '2026-09-14'), '');
+  assert.strictEqual(hw.relLabel('', '2026-09-14'), '');
+  assert.strictEqual(hw.relLabel('2026-09-15', 'bad'), '');
+  assert.strictEqual(hw.relLabel('2026-09-15', ''), hw.relLabel('2026-09-15'), '空基准 = 今天');
+});
+
+test('relLabel:跨月跨年按真实天数算(不按字符串差),默认基准是今天', () => {
+  assert.strictEqual(hw.relLabel('2026-10-01', '2026-09-30'), '明天');
+  assert.strictEqual(hw.relLabel('2027-01-01', '2026-12-31'), '明天');
+  assert.strictEqual(hw.relLabel('2026-03-01', '2026-02-28'), '明天'); // 平年 2 月
+  assert.strictEqual(hw.relLabel('2024-03-01', '2024-02-29'), '明天'); // 闰年 2 月
+  const t = new Date();
+  assert.strictEqual(hw.relLabel(hw.todayStr()), '今天');
+  t.setDate(t.getDate() + 1);
+  assert.strictEqual(hw.relLabel(hw.toDateStr(t)), '明天');
+});
+
 console.log('\n全部通过:' + passed + ' 个用例');
