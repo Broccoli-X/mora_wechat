@@ -1,0 +1,22 @@
+utils/recognition.js
+  s_e0bb805fffaadc::t_09f7887a5978dd 26-27,30-31
+  s_e0bb805fffaadc::t_134a6b00a64ca5 6,21,32,67,75,154,170
+pages/recognition/recognition.wxml
+  s_e0bb805fffaadc::t_cb7d6d78dbdb23 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3a581572361bbecd0763960bcc350d2ab5dda49e",
+  "prompts": {},
+  "sessions": {
+    "s_e0bb805fffaadc": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_6d0352de-5a81-4e5c-9a39-202feb30eab0",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
