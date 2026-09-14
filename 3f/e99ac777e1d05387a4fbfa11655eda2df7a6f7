@@ -1,0 +1,53 @@
+pages/hw-edit/hw-edit.wxml
+  s_222271fb119d11::t_f554f9a664fd02 102
+  s_222271fb119d11::t_0d54a5eb5646b3 11
+  s_222271fb119d11::t_c67e19c106a4f5 22-32
+  s_222271fb119d11::t_1ea68ec0a82c22 88-91
+pages/hw-edit/hw-edit.js
+  s_222271fb119d11::t_7a274bc6958193 16
+  s_222271fb119d11::t_f4528cb5e708ea 266
+  s_222271fb119d11::t_6b3b872efe109c 94,101-111,122-133
+  s_222271fb119d11::t_5edee3692e061f 17
+  s_222271fb119d11::t_9dbd1e0e1c2289 95-99
+  s_222271fb119d11::t_c1a6fe5924ff18 228-229
+  s_222271fb119d11::t_24dfabd6e2eb44 100
+  s_222271fb119d11::t_d6ccd535176bf1 134
+README.md
+  s_222271fb119d11::t_dd5ef6958cdbae 46
+  s_222271fb119d11::t_7b7afdb8610d2d 36
+tests/hw-edit-pages.test.js
+  s_222271fb119d11::t_484464a722871d 205-206,213,215
+  s_222271fb119d11::t_61a220808b356a 54-55
+  s_222271fb119d11::t_7aedfc83a7271a 146,154,164-165,167
+  s_222271fb119d11::t_450f6999b1d30e 131
+  s_222271fb119d11::t_e62a82f8cac25c 138,153,161
+  s_222271fb119d11::t_3eaf1af9e1f046 1-2,4-53,56-102,104-111,113-130,132-137,139-145,147-152,155-158,162,166,168-204,207-212,214,216-243
+  s_222271fb119d11::t_c8393b98790678 159-160,163
+  s_222271fb119d11::t_13c7757daa501f 3
+  s_222271fb119d11::t_ce9ac98170af21 103,112
+utils/homework.js
+  s_222271fb119d11::t_734f3f09c415c0 62-74
+  s_222271fb119d11::t_6600fd243fe711 2-3
+  s_222271fb119d11::t_4e18f19a0be5ab 270
+pages/hw-edit/hw-edit.wxss
+  s_222271fb119d11::t_d94518bbdc46ae 93-111,113-115,125-139
+  s_222271fb119d11::t_28d9fc4aa281fe 140
+tests/homework.test.js
+  s_222271fb119d11::t_db6a78a2bb96c4 262-288
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3fe99ac777e1d05387a4fbfa11655eda2df7a6f7",
+  "prompts": {},
+  "sessions": {
+    "s_222271fb119d11": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_ccc46314-6b02-4643-bed1-0aa89181ac13",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
