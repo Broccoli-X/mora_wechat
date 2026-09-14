@@ -1,28 +1,45 @@
-<!-- 禅模式:批次内容一张一张认(与字母卡 zen 同款动效,内容是家长录入的批次条目)。
+<!-- 禅模式:批次内容一张一张认(与字母卡 zen 同款换卡动效,内容是家长录入的批次条目)。
      ✕ 固定左上角——右上角是小程序胶囊按钮,放右侧会被遮住点不到。
-     卡面内容三科同构(主面 + 答案行 + 附注行),故用 template 复用:
-     旧卡(换卡动画期间滑出)与当前卡共用一套 markup,只换数据。 -->
+     学英语 / 识图:**正面只给主体**(词句 / 图片),点卡片翻面才显示意思(中文 / 名称 + 音标 / 英文)
+     ——小朋友在正面看不到任何提示;识汉字不翻面(汉字 + 拼音 + 组词一屏给全)。
+     卡面用 template 复用:旧卡(换卡动画期间滑出)与当前卡共用一套 markup,只换数据。 -->
 <template name="rcCard">
   <view class="accent" style="background:{{color}}"></view>
 
-  <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·学英语:大字主面 -->
-  <block wx:if="{{imgUrl}}">
-    <image wx:if="{{!failed}}" class="zen-img" src="{{imgUrl}}" mode="aspectFit"
-           data-i="{{i}}" binderror="onImgError" />
-    <text wx:else class="zen-emoji">{{face || '🖼️'}}</text>
-  </block>
-  <text wx:elif="{{kind === 'image'}}" class="zen-emoji">{{face || '🖼️'}}</text>
-  <text wx:else class="zen-face {{kind === 'hanzi' ? 'zen-hanzi' : 'zen-word zen-word-' + fs}}"
-        style="color:{{color}}">{{face}}</text>
+  <!-- 学英语 / 识图:3D 翻面,答案那一面朝里 -->
+  <view wx:if="{{flip}}" class="flip {{flipped ? 'flipped' : ''}}">
+    <view class="face front">
+      <block wx:if="{{imgUrl}}">
+        <image wx:if="{{!failed}}" class="zen-img" src="{{imgUrl}}" mode="aspectFit"
+               data-i="{{i}}" binderror="onImgError" />
+        <text wx:else class="zen-emoji">{{face || '🖼️'}}</text>
+      </block>
+      <text wx:elif="{{kind === 'image'}}" class="zen-emoji">{{face || '🖼️'}}</text>
+      <text wx:else class="zen-face zen-word zen-word-{{fs}}" style="color:{{color}}">{{face}}</text>
+    </view>
 
-  <view class="zen-row" wx:if="{{answer}}">
-    <text class="zen-lbl">{{labelA}}</text>
-    <text class="zen-val" style="color:{{color}}">{{answer}}</text>
+    <view class="face back">
+      <text class="zen-back-cap">{{labelA}}</text>
+      <view class="zen-ans zen-ans-{{ansFs}}" style="color:{{color}}">{{answer}}</view>
+      <view class="zen-row ext" wx:if="{{extra}}">
+        <text class="zen-lbl">{{labelB}}</text>
+        <text class="zen-ext">{{extra}}</text>
+      </view>
+    </view>
   </view>
-  <view class="zen-row ext" wx:if="{{extra}}">
-    <text class="zen-lbl">{{labelB}}</text>
-    <text class="zen-ext">{{extra}}</text>
-  </view>
+
+  <!-- 识汉字:汉字 + 拼音 + 组词(不翻面) -->
+  <block wx:else>
+    <text class="zen-face zen-hanzi" style="color:{{color}}">{{face}}</text>
+    <view class="zen-row" wx:if="{{answer}}">
+      <text class="zen-lbl">{{labelA}}</text>
+      <text class="zen-val" style="color:{{color}}">{{answer}}</text>
+    </view>
+    <view class="zen-row ext" wx:if="{{extra}}">
+      <text class="zen-lbl">{{labelB}}</text>
+      <text class="zen-ext">{{extra}}</text>
+    </view>
+  </block>
 </template>
 
 <view
@@ -59,6 +76,6 @@
       </view>
     </view>
 
-    <view class="zen-hint">{{total > 1 ? '← 左滑下一张 · 右滑上一张 →' : '这一批只有一张'}}</view>
+    <view class="zen-hint">{{hint}}</view>
   </block>
 </view>

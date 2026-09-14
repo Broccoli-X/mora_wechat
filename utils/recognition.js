@@ -167,29 +167,42 @@ function sections(list) {
 /* ── 卡面视图:批次网格与禅模式共用(三科同一套字段,页面一套 markup 渲染) ──
    face 主面(汉字/单词或整句/无图条目的 emoji)、answer/extra 副行、imgUrl 识图图片地址;
    labelA/labelB 是两行副行的标签(拼音·组词 / 中文·音标 / 名称·英文);
-   fs 是学英语的字号档(单词或整句长度差很大:短词大字、长句缩小才排得下) */
+   fs/ansFs 是字号档(单词与整句长度差很大,短词大字、长句缩小才排得下);
+   flip=true 的学科在禅模式里翻面看意思(正面只给主体,答案不露) */
 function faceSize(subject, face) {
   if (subject !== 'words') return '';
   const n = (face || '').length;
   return n <= 10 ? 'lg' : n <= 24 ? 'md' : 'sm';
 }
 
+/* 背面的意思(中文/名称)字号档:整句释义也要放得下 */
+function answerSize(answer) {
+  const n = (answer || '').length;
+  return n <= 6 ? 'lg' : n <= 14 ? 'md' : 'sm';
+}
+
 function itemView(subject, it, i) {
   const k = kindOf(subject);
   const img = (it && it.img) || '';
   const face = (it && it.face) || '';
+  const answer = (it && it.answer) || '';
   return {
     i: i == null ? 0 : i,
     kind: subject,
     color: k.main,
     face: face,
     fs: faceSize(subject, face),
-    answer: (it && it.answer) || '',
+    answer: answer,
+    ansFs: answerSize(answer),
     extra: (it && it.extra) || '',
     img: img,
     imgUrl: img ? IMG_API + encodeURIComponent(img) : '',
     labelA: subject === 'hanzi' ? '拼音' : subject === 'words' ? '中文' : '名称',
     labelB: subject === 'hanzi' ? '组词' : subject === 'words' ? '音标' : '英文',
+    /* 学英语的词句、识图的图片:正面只给主体,点卡片翻面才是意思(小朋友看不到提示);
+       识汉字不翻面——汉字 + 拼音 + 组词本来就要一屏给全,拼音是认读的一部分 */
+    flip: subject !== 'hanzi',
+    flipped: false,
   };
 }
 
@@ -333,7 +346,7 @@ module.exports = {
   DATE_RE, IMG_ID_RE, BATCH_ID_RE, LIST_KEY, ITEM_KEY, LEGACY_ITEM_KEY,
   parseDate, fmtCN, weekdayCN,
   normalizeItem, normalizeBrief, normalizeBatch, sortBatches, statsOf, sections,
-  faceSize, itemView, itemViews, batchView,
+  faceSize, answerSize, itemView, itemViews, batchView,
   loadBatches, saveBatches, loadBatch, saveBatch, setCurrent, current,
   fetchBatches, fetchBatch, stepIndex,
 };

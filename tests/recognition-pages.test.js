@@ -275,6 +275,73 @@ test('禅模式:竖向滑动/轻扫不换卡;单张批次滑动不响应(不重�
   assert.equal(p2.data.seq, 1, '单张不重放动画');
 });
 
+test('禅模式:点卡片翻面看意思(学英语/识图),再点翻回;滑动换卡不带翻面', () => {
+  reset({ '/api/recognition/batch': { statusCode: 200, data: { ok: true, batch: BATCHES.rbwords01 } } });
+  const p = load(PAGE('zen.js'));
+  p.onLoad({ id: 'rbwords01', i: '0' });
+  const tap = () => {
+    p.onTouchStart({ touches: [{ clientX: 300, clientY: 400 }] });
+    p.onTouchEnd({ changedTouches: [{ clientX: 302, clientY: 401 }] });   // 原地轻点
+  };
+  assert.equal(p.data.item.flip, true, '学英语正面只给主体,可翻面');
+  assert.equal(p.data.item.flipped, false, '起手是正面');
+  tap();
+  assert.equal(p.data.item.flipped, true, '翻到背面看意思');
+  assert.equal(p.data.item.face, 'apple', '主体信息还在卡里(背面靠 CSS 转过去)');
+  assert.equal(p.data.item.answer, '苹果');
+  tap();
+  assert.equal(p.data.item.flipped, false, '再点翻回正面');
+  assert.equal(p.data.cur, 0, '轻点不换卡');
+
+  /* 翻面状态下滑动换卡:新卡一定正面,旧卡保留当时的面(飞出去时不突然翻回来) */
+  tap();
+  assert.equal(p.data.item.flipped, true);
+  p.onTouchStart({ touches: [{ clientX: 300, clientY: 400 }] });
+  p.onTouchEnd({ changedTouches: [{ clientX: 200, clientY: 402 }] });
+  assert.equal(p.data.cur, 1, '换到下一张');
+  assert.equal(p.data.item.flipped, false, '新卡从正面起,不泄露下一条答案');
+  assert.equal(p.data.prev.flipped, true, '旧卡保持当时的背面');
+});
+
+test('禅模式:识汉字不翻面(点卡片保持正面全给),提示语随学科分档', () => {
+  reset({ '/api/recognition/batch': { statusCode: 200, data: { ok: true, batch: BATCHES.rbhanzi01 } } });
+  const p = load(PAGE('zen.js'));
+  p.onLoad({ id: 'rbhanzi01', i: '0' });
+  assert.equal(p.data.item.flip, false, '识汉字不翻转');
+  assert.ok(p.data.hint.indexOf('点卡片看意思') < 0, '识汉字提示语不提翻面');
+  assert.ok(p.data.hint.indexOf('左滑下一张') >= 0);
+  p.onTouchStart({ touches: [{ clientX: 300, clientY: 400 }] });
+  p.onTouchEnd({ changedTouches: [{ clientX: 300, clientY: 400 }] });
+  assert.equal(p.data.item.flipped, false, '点了也不翻');
+
+  reset({ '/api/recognition/batch': { statusCode: 200, data: { ok: true, batch: BATCHES.rbwords01 } } });
+  const p2 = load(PAGE('zen.js'));
+  p2.onLoad({ id: 'rbwords01', i: '0' });
+  assert.ok(p2.data.hint.indexOf('点卡片看意思') === 0, '学英语提示语先说点卡片看意思');
+});
+
+test('禅模式正面不泄露答案(静态卡面契约):正面只有主体,意思全在背面', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const wxml = fs.readFileSync(path.join(__dirname, '..', 'pages', 'recognition', 'zen.wxml'), 'utf8');
+  const iFront = wxml.indexOf('class="face front"');
+  const iBack = wxml.indexOf('class="face back"');
+  assert.ok(iFront > 0 && iBack > iFront, '卡面应分正面/背面两块');
+  const front = wxml.slice(iFront, iBack);
+  const back = wxml.slice(iBack, wxml.indexOf('</template>', iBack));
+  ['answer', 'extra', 'labelA', 'labelB', 'ansFs'].forEach(k => {
+    assert.ok(front.indexOf(k) < 0, '正面不许出现 ' + k + '(小朋友会看到提示)');
+  });
+  assert.ok(front.indexOf('{{face}}') >= 0, '正面只给主体(词句/图片/emoji)');
+  assert.ok(back.indexOf('{{answer}}') >= 0, '意思在背面');
+  assert.ok(back.indexOf('ansFs') >= 0, '背面意思带字号档');
+  assert.ok(wxml.indexOf('wx:if="{{flip}}"') >= 0, '学英语/识图才翻面');
+  /* 识汉字走不翻面的分支:汉字 + 拼音 + 组词 */
+  const elseBlock = wxml.slice(wxml.indexOf('<block wx:else>'));
+  assert.ok(elseBlock.indexOf('zen-hanzi') >= 0 && elseBlock.indexOf('{{answer}}') >= 0,
+    '识汉字不翻面,拼音与组词直接给');
+});
+
 test('禅模式:用批次页交接的内容(不再拉一次);识图失败回退 emoji', () => {
   reset({});
   rc.setCurrent(rc.normalizeBatch(BATCHES.rbimage01));

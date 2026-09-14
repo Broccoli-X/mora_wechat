@@ -117,6 +117,69 @@
   line-height: 1.15;
 }
 
+/* ── 翻面(学英语 / 识图):正面只有主体,点卡片转 180° 看意思 ──
+   两面同尺寸叠放(绝对定位),故翻转容器给固定高度、内容居中;3D 翻面写法与人物卡同款 */
+.flip {
+  position: relative;
+  height: 520rpx;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+}
+
+.flip.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip .face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip .face.back {
+  transform: rotateY(180deg);
+}
+
+/* 背面的意思:小标 + 大字(中文/名称)+ 附注行(音标/英文) */
+.zen-back-cap {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #b3b9c9;
+  letter-spacing: 3rpx;
+  margin-bottom: 16rpx;
+}
+
+.zen-ans {
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.zen-ans-lg {
+  font-size: 88rpx;
+}
+
+.zen-ans-md {
+  font-size: 64rpx;
+}
+
+.zen-ans-sm {
+  font-size: 46rpx;
+}
+
 .zen-hanzi {
   font-size: 240rpx;
   font-weight: 900;

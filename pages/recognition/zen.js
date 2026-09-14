@@ -14,6 +14,7 @@ Page({
     prev: null,         // 上一张:换卡动画期间从滑动方向滑出
     dir: 'l',           // 本次滑动方向:'l'=往左滑(旧出左、新自右入) / 'r'=镜像
     seq: 0,             // 换卡序号:奇偶交替类名强制重放入出场动画
+    hint: '',           // 底部操作提示(能翻面的学科多一句「点卡片看意思」)
     statusBarH: 20,     // 自定义导航:内容与 ✕ 避让状态栏
   },
 
@@ -59,9 +60,16 @@ Page({
     this.items = v.items;
     this.setData({
       title: v.title, total: v.count,
+      hint: this.hintFor(v.count, v.items.length ? v.items[0].flip : false),
       loading: false, gone: false, loadError: false,
     });
     this.show(Math.min(this.start, Math.max(v.count - 1, 0)));
+  },
+
+  /* 操作提示:能翻面的学科才提「点卡片看意思」 */
+  hintFor(count, canFlip) {
+    const nav = count > 1 ? '← 左滑下一张 · 右滑上一张 →' : '这一批只有一张';
+    return canFlip ? '点卡片看意思 · ' + nav : nav;
   },
 
   /* 首张入场(无旧卡):从左侧滑入 */
@@ -80,14 +88,26 @@ Page({
   },
 
   /* 左右滑动换卡:左滑下一张、右滑上一张,首尾循环(批次是家长排好序的一组内容,
-     顺序认读比随机抽认更合用;动效与字母卡禅模式同款:方向感知 + 轻震动) */
+     顺序认读比随机抽认更合用;动效与字母卡禅模式同款:方向感知 + 轻震动);
+     原地轻点则是翻面看意思(见 onFlip) */
   onTouchEnd(e) {
     const t = e.changedTouches && e.changedTouches[0];
     if (!t || !this.data.item || this._sx == null) return;
     const dx = t.clientX - this._sx;
     const dy = t.clientY - this._sy;
-    if (Math.abs(dx) <= 48 || Math.abs(dx) <= Math.abs(dy)) return;
-    this.step(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
+      this.step(dx < 0 ? 1 : -1);
+      return;
+    }
+    if (Math.abs(dx) <= 24 && Math.abs(dy) <= 24) this.onFlip();
+  },
+
+  /* 点卡片翻面:正面只给主体(学英语的词句 / 识图的图),翻过来才是意思——
+     小朋友在正面看不到任何提示;识汉字不翻面(拼音是认读的一部分) */
+  onFlip() {
+    const it = this.data.item;
+    if (!it || !it.flip) return;
+    this.setData({ item: Object.assign({}, it, { flipped: !it.flipped }) });
   },
 
   step(d) {
@@ -96,10 +116,10 @@ Page({
     const next = rc.stepIndex(this.data.cur, d, n);
     try { wx.vibrateShort({ type: 'light', fail: () => {} }); } catch (e) { /* 老机型无此 API */ }
     this.setData({
-      prev: this.data.item,
+      prev: this.data.item,             // 旧卡保留它当时的正/反面,飞出去时不突然翻回来
       dir: d > 0 ? 'l' : 'r',
       cur: next,
-      item: this.items[next],
+      item: this.items[next],           // 新卡一定从正面起(不泄露下一条的答案)
       seq: this.data.seq + 1,
     });
   },

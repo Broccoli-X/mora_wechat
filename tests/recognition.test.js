@@ -248,6 +248,28 @@ test('卡面视图:三科标签与主面/副行字段(批次网格与禅模式�
   assert.deepEqual(vs.map(v => v.i), [0, 1], 'i 为批次内序号(禅模式导航用)');
 });
 
+test('卡面视图:学英语/识图在禅模式翻面看意思,识汉字不翻(拼音是认读的一部分)', () => {
+  assert.equal(rc.itemView('words', { face: 'apple', answer: '苹果' }).flip, true);
+  assert.equal(rc.itemView('image', { face: '🍎', answer: '苹果' }).flip, true);
+  assert.equal(rc.itemView('hanzi', { face: '口', answer: 'kǒu' }).flip, false, '识汉字一直正面全给');
+  rc.itemViews('words', [{ face: 'apple', answer: '苹果' }]).forEach(v => {
+    assert.equal(v.flipped, false, '新卡一律从正面起(不泄露答案)');
+  });
+});
+
+test('字号分档:主体按词句长度、意思按释义长度各取档(lg/md/sm)', () => {
+  assert.equal(rc.faceSize('words', 'apple'), 'lg');
+  assert.equal(rc.faceSize('words', 'Yang Ling'), 'lg', '10 字以内大字');
+  assert.equal(rc.faceSize('words', 'Good morning, Miss Li.'), 'md');
+  assert.equal(rc.faceSize('words', 'x'.repeat(30)), 'sm');
+  assert.equal(rc.faceSize('hanzi', '口'), '', '汉字不走字号分档(固定大字)');
+  assert.equal(rc.answerSize('苹果'), 'lg');
+  assert.equal(rc.answerSize('早上好,李老师'), 'md');
+  assert.equal(rc.answerSize('这是一句很长的释义要去到小档字号'), 'sm');
+  assert.equal(rc.itemView('words', { face: 'apple', answer: '苹果' }).ansFs, 'lg');
+  assert.equal(rc.itemView('words', { face: 'apple', answer: '早上好,李老师' }).ansFs, 'md');
+});
+
 test('批次视图:头部字段(学科口径/日期文案/条数)与卡片数组一次给全', () => {
   const v = rc.batchView(rc.normalizeBatch(HANZI_BATCH));
   assert.equal(v.title, '第5课生字');
