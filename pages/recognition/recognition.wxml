@@ -11,7 +11,7 @@
   <block wx:else>
     <view class="head">
       <view class="head-title">🧠 识记学习</view>
-      <view class="head-sub">家长按批次录入 · 认汉字 / 认单词 / 识图</view>
+      <view class="head-sub">家长按批次录入 · 识汉字 / 学英语 / 识图</view>
       <view class="progress" wx:if="{{total}}">共 {{total}} 批 · {{itemCount}} 条</view>
     </view>
 

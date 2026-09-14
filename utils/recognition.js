@@ -3,7 +3,7 @@
    小程序端只负责取来给孩子认读。两步接口取用(与网页端 server/README.md「六」同协议):
      ① GET /api/recognition/batches[?subject=]  批次列表(**只有概要,没有条目**)
      ② GET /api/recognition/batch?id=rb…        按批次取整批(含 items)
-   条目形状:识汉字 face 单字 + answer 拼音;认单词 face 是单词**或整句**(大小写照原样,
+   条目形状:识汉字 face 单字 + answer 拼音;学英语 face 是单词**或整句**(大小写照原样,
    如 "Good morning, Miss Li.")+ answer 中文;识图 face(emoji)/img + answer 名称。
    客户端只做渲染保护、不重复服务端的字面校验(见 normalizeItem 注释)。
    网页端口径「本站不出题、不记成绩」,服务端进度同步的 MODULES 白名单也不含
@@ -18,16 +18,18 @@ const API_BASE = 'https://www.tcued.com';
 const IMG_API = API_BASE + '/api/image?id=';
 const LIST_KEY = 'mora-recognition-batches-v1';   // 批次列表缓存
 const ITEM_KEY = 'mora-recognition-batch-v2';     // 按 id 的整批内容缓存(秒开禅模式/离线兜底)
-/* v1 是「认单词按小写单词校验」那版写的缓存:face 被转成了小写、含空格的条目那时已丢,
+/* v1 是「学英语按小写单词校验」那版写的缓存:face 被转成了小写、含空格的条目那时已丢,
    命中它会先渲染出一版不是家长原样的卡面(小写/缺条)。读到即作废并清掉,一律回服务端取 */
 const LEGACY_ITEM_KEY = 'mora-recognition-batch-v1';
 const CACHE_MAX = 60;                             // 缓存的批次数上限,超出按 updatedAt 淘汰最旧
 
-/* 三科学科:与网页端 lib/recognition-core.js KINDS 同口径(id/名称/学科/图标/主色一致,
-   两端变更需同步维护) */
+/* 三科学科(识汉字 / 学英语 / 识图):与网页端 lib/recognition-core.js KINDS 同口径
+   (id/名称/学科/图标/主色一致,两端变更需同步维护) */
 const KINDS = [
   { id: 'hanzi', name: '识汉字', subject: '语文', icon: '📖', main: '#c9392b' },
-  { id: 'words', name: '认单词', subject: '英语', icon: '🔤', main: '#177a3e' },
+  /* 显示名是「学英语」(网页端 2026-09-14 由「认单词」改名),但 id 仍是 words:
+     历史批次与接口的 subject 值都不动 */
+  { id: 'words', name: '学英语', subject: '英语', icon: '🔤', main: '#177a3e' },
   { id: 'image', name: '识图',   subject: '其他', icon: '🖼️', main: '#8a5a2b' },
 ];
 const KIND_IDS = KINDS.map(k => k.id);
@@ -62,7 +64,7 @@ function weekdayCN(s) {
 
 /* ── 条目清洗:只判「能不能渲染」与长度保护,不复刻服务端的字面校验 ──
    内容以服务端为真源(写入时已按网页端规则校验过),客户端再判一次曾闯祸:
-   网页端「认单词支持整句、保留大写」(2026-09-11)后,小程序仍按旧的小写单词规则
+   网页端「学英语支持整句、保留大写」(2026-09-11)后,小程序仍按旧的小写单词规则
    静默丢掉含空格的课本人名(Yang Ling / Liu Tao …),11 条只显示 6 条。
    故这里只挡「没东西可认」的条目,并把过长文本截到显示上限;规则以后再变也不会悄悄吃内容。 */
 const TITLE_MAX = 30;
@@ -70,7 +72,7 @@ const NOTE_MAX = 60;
 const ANSWER_MAX = 30;     // 拼音/中文/名称(句子释义长一点也放得下,与网页端同款)
 const EXTRA_MAX = 40;      // 组词 / 音标 / 英文
 const ITEMS_MAX = 60;      // 一个批次最多多少条
-const FACE_MAX = 60;       // 认单词:单词或整句(与网页端 FACE_MAX 同款)
+const FACE_MAX = 60;       // 学英语:单词或整句(与网页端 FACE_MAX 同款)
 const EMOJI_MAX = 8;       // 识汉字单字 / 识图 emoji 的显示长度
 const IMG_ID_RE = /^img[0-9a-z]{4,30}$/;
 const BATCH_ID_RE = /^rb[0-9a-z]{4,30}$/;   // 与服务端 BATCH_ID 同款
@@ -149,7 +151,7 @@ function statsOf(list) {
   };
 }
 
-/* 学科分节(列表页):按 KINDS 固定顺序(识汉字→认单词→识图),空科不呈现;
+/* 学科分节(列表页):按 KINDS 固定顺序(识汉字→学英语→识图),空科不呈现;
    节内沿用 day 倒序。批次卡要显示的日期文案/学科名在这里补好,页面不拼字符串 */
 function sections(list) {
   const all = sortBatches((list || []).filter(Boolean));
@@ -165,7 +167,7 @@ function sections(list) {
 /* ── 卡面视图:批次网格与禅模式共用(三科同一套字段,页面一套 markup 渲染) ──
    face 主面(汉字/单词或整句/无图条目的 emoji)、answer/extra 副行、imgUrl 识图图片地址;
    labelA/labelB 是两行副行的标签(拼音·组词 / 中文·音标 / 名称·英文);
-   fs 是认单词的字号档(单词或整句长度差很大:短词大字、长句缩小才排得下) */
+   fs 是学英语的字号档(单词或整句长度差很大:短词大字、长句缩小才排得下) */
 function faceSize(subject, face) {
   if (subject !== 'words') return '';
   const n = (face || '').length;

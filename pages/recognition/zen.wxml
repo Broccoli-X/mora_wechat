@@ -5,7 +5,7 @@
 <template name="rcCard">
   <view class="accent" style="background:{{color}}"></view>
 
-  <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·认单词:大字主面 -->
+  <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·学英语:大字主面 -->
   <block wx:if="{{imgUrl}}">
     <image wx:if="{{!failed}}" class="zen-img" src="{{imgUrl}}" mode="aspectFit"
            data-i="{{i}}" binderror="onImgError" />

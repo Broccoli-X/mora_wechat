@@ -75,10 +75,10 @@ test('三科口径与网页端 lib/recognition-core.js KINDS 一致(id/名称/�
   assert.deepEqual(rc.KIND_IDS, ['hanzi', 'words', 'image']);
   assert.deepEqual(rc.KINDS.map(k => [k.id, k.name, k.subject, k.icon, k.main]), [
     ['hanzi', '识汉字', '语文', '📖', '#c9392b'],
-    ['words', '认单词', '英语', '🔤', '#177a3e'],
+    ['words', '学英语', '英语', '🔤', '#177a3e'],
     ['image', '识图', '其他', '🖼️', '#8a5a2b'],
   ]);
-  assert.equal(rc.kindOf('words').name, '认单词');
+  assert.equal(rc.kindOf('words').name, '学英语');
   assert.equal(rc.kindOf('music').name, 'music', '未知名按原样回,不崩');
   assert.equal(rc.kindOf('').icon, '📌');
 });
@@ -108,7 +108,7 @@ test('条目清洗-识汉字:拼音/组词照收,长文本按显示上限截断(
   assert.equal(rc.normalizeItem('music', { face: 'x', answer: 'y' }), null, '未知学科不猜渲染方式');
 });
 
-test('条目清洗-认单词:单词或整句都收,大小写照原样(网页端 1efd1b2 后不再强制小写)', () => {
+test('条目清洗-学英语:单词或整句都收,大小写照原样(网页端 1efd1b2 后不再强制小写)', () => {
   assert.deepEqual(rc.normalizeItem('words', { face: 'APPLE', answer: '苹果', extra: '/ˈæpl/' }),
     { face: 'APPLE', answer: '苹果', extra: '/ˈæpl/' }, '大小写照原样,不再转小写');
   assert.deepEqual(rc.normalizeItem('words', { face: 'Yang Ling', answer: '杨玲' }),
@@ -219,7 +219,7 @@ test('概览统计:批次数 / 条目总数 / 最近日期', () => {
   assert.deepEqual(rc.statsOf(null), { batches: 0, items: 0, lastDay: '' });
 });
 
-test('学科分节:固定顺序(识汉字→认单词→识图)、空科不呈现、节内日期文案拼好', () => {
+test('学科分节:固定顺序(识汉字→学英语→识图)、空科不呈现、节内日期文案拼好', () => {
   const list = rc.sortBatches([
     { id: 'rbw', subject: 'words', title: 'w', day: '2026-09-12', count: 2, note: '', updatedAt: 1 },
     { id: 'rbh', subject: 'hanzi', title: 'h', day: '2026-09-11', count: 3, note: '', updatedAt: 1 },
