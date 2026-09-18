@@ -1,0 +1,26 @@
+tests/knowledge-pages.test.js
+  s_ca3076efc5709b::t_27690a8e4085ac 281-297
+utils/knowledge.js
+  s_ca3076efc5709b::t_7e5b73cf2cdbde 305
+  s_ca3076efc5709b::t_d23997d1285bf5 317
+tests/knowledge.test.js
+  s_ca3076efc5709b::t_f8cd5decc40635 145
+pages/knowledge/zen.wxml
+  s_ca3076efc5709b::t_849ee469958fe2 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "2ac4a7a9f97370a64716e2266538f682a69096a4",
+  "prompts": {},
+  "sessions": {
+    "s_ca3076efc5709b": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_bb5cef3c-7bb8-4f78-b1c8-0186cfdbf18b",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
