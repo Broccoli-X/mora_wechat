@@ -278,4 +278,21 @@ test('禅模式:深链无交接回落缓存,再没有才拉远端;空册给 gone
   assert.ok(navs.indexOf('back') >= 0, '✕ 关闭返回');
 });
 
+test('wxml 卫生:文本节点不得有裸花括号(字面 { 会被编译器当绑定吞掉,曾崩 zen.wxml)', () => {
+  const fs = require('fs');
+  const walk = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(d => {
+    const p = path.join(dir, d.name);
+    return d.isDirectory() ? walk(p) : (p.endsWith('.wxml') ? [p] : []);
+  });
+  const pagesDir = path.join(__dirname, '..', 'pages');
+  for (const f of walk(pagesDir)) {
+    /* 先摘 {{...}} 绑定(防绑定表达式里的 > 干扰标签识别),再剥标签;
+       剩下的纯文本里不应再有花括号——字面 { 会让编译器报 expect end-tag */
+    const text = fs.readFileSync(f, 'utf8').replace(/\{\{[\s\S]*?\}\}/g, '').replace(/<[^>]*>/g, '');
+    assert.ok(!/[{}]/.test(text), f + ' 文本节点里有裸花括号,会编译报错');
+  }
+  const zen = fs.readFileSync(path.join(pagesDir, 'knowledge', 'zen.wxml'), 'utf8');
+  assert.ok(/zc-brace">\{\{pr\.brace\}\}</.test(zen), '形近字大括号应从数据绑定传入(pr.brace)');
+});
+
 console.log('\n全部通过:' + passed + ' 个用例');

@@ -302,7 +302,7 @@ function blockView(b, secTitle, c, cd) {
   const pairRows = isPair ? rows.filter(r => r.indexOf('↔') >= 0) : [];
   const pairs = pairRows.map(r => {
     const k = r.indexOf('↔');
-    return { top: r.slice(0, k).trim(), bot: r.slice(k + 1).trim() };
+    return { top: r.slice(0, k).trim(), bot: r.slice(k + 1).trim(), brace: '{' };
   });
   const sp = splitImgs(b);
   const view = {
@@ -314,7 +314,7 @@ function blockView(b, secTitle, c, cd) {
         segs: parseRow(r).map((seg, j) => ({ k: j, t: seg.t, zd: seg.zd })),
         ex: /^(例|仿写)[：:]/.test(r.trim()),
       })),
-    pairs: pairs.map((pr, k) => ({ k: k, top: pr.top, bot: pr.bot })),
+    pairs: pairs.map((pr, k) => ({ k: k, top: pr.top, bot: pr.bot, brace: pr.brace })),
     pics: sp.pics.map((p, k) => ({ k: k, url: p.url, cap: p.cap, failed: false })),
   };
   view.hasRows = view.rows.length > 0;

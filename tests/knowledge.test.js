@@ -142,6 +142,7 @@ test('形近字拆对:小标题含「形近字」且行含 ↔ 才拆;反义词�
   assert.equal(pairs.pairs.length, 2);
   assert.equal(pairs.pairs[0].top, '口(人口)');
   assert.equal(pairs.pairs[0].bot, '田(水田)');
+  assert.equal(pairs.pairs[0].brace, '{', '大括号字符由数据带入(wxml 文本不能写裸 {)');
   assert.equal(pairs.hasPairs, true);
   assert.equal(pairs.hasRows, false);
 

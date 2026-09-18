@@ -34,7 +34,7 @@
   <!-- 形近字:大括号分组,每括罩上下两员 -->
   <view class="zc-pairs" wx:if="{{hasPairs}}">
     <view class="zc-pair" wx:for="{{pairs}}" wx:for-item="pr" wx:key="k">
-      <text class="zc-brace">{</text>
+      <text class="zc-brace">{{pr.brace}}</text>
       <view class="zc-mem">
         <text class="zc-mem-row">{{pr.top}}</text>
         <text class="zc-mem-row">{{pr.bot}}</text>
