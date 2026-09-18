@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-09-18-recognition-article-design.md
+  s_3bad1bcfc05a33::t_b7f9d00222c566 1-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "603cf4bf79415bc249f6f6a382735909d2b8a06c",
+  "prompts": {},
+  "sessions": {
+    "s_3bad1bcfc05a33": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_48988222-2ae7-417d-886e-a1b5be6496bf",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
