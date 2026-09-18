@@ -1,0 +1,59 @@
+pages/recognition/batch.wxss
+  s_3bad1bcfc05a33::t_fbb59230fa9e4e 164-189
+  s_3bad1bcfc05a33::t_4701826f08c6f9 2
+README.md
+  s_3bad1bcfc05a33::t_abdce3eee4e7c0 53-55
+  s_3bad1bcfc05a33::t_d8712b26d96765 57
+tests/recognition-pages.test.js
+  s_3bad1bcfc05a33::t_ca08bf8854d54c 66-68
+  s_3bad1bcfc05a33::t_819b84c35f810a 240-271
+  s_3bad1bcfc05a33::t_fbd9d148eca510 155-175
+  s_3bad1bcfc05a33::t_621167f3b70015 379-433
+pages/recognition/zen.wxml
+  s_3bad1bcfc05a33::t_43654ed3cbe8b5 4-5
+  s_3bad1bcfc05a33::t_c3efbb48f64444 32-39
+pages/recognition/zen.wxss
+  s_3bad1bcfc05a33::t_6beda88d6ca8b1 213-241
+tests/recognition.test.js
+  s_3bad1bcfc05a33::t_7701ec55b1e406 480-483
+  s_3bad1bcfc05a33::t_1b03ea5b8e0c47 56
+  s_3bad1bcfc05a33::t_d85a7c0a81026e 159-171
+  s_3bad1bcfc05a33::t_1444737179c235 75-76,81,84
+  s_3bad1bcfc05a33::t_3840d033092dc0 194-221,223-229
+  s_3bad1bcfc05a33::t_8050d4c5066fc8 337-398
+  s_3bad1bcfc05a33::t_d2123353f5bba7 222
+pages/recognition/recognition.wxml
+  s_3bad1bcfc05a33::t_46cc61a8148032 48-49
+  s_3bad1bcfc05a33::t_83de14279a590a 14
+utils/recognition.js
+  s_3bad1bcfc05a33::t_e80c68a8cf9650 7-8
+  s_3bad1bcfc05a33::t_1e79e47685ba0d 186-187,194-195
+  s_3bad1bcfc05a33::t_a025192e91c21b 27,35-37
+  s_3bad1bcfc05a33::t_3f326bf4876cf8 218-223,226-242
+  s_3bad1bcfc05a33::t_9a76e52ff440eb 121-122,125,127,129,137,139-140
+  s_3bad1bcfc05a33::t_86dc9f72af1563 270-271,275-276,279,282-284,287
+  s_3bad1bcfc05a33::t_8f9446b4956097 81-83
+  s_3bad1bcfc05a33::t_5e0587113fd246 150,153,155-167
+  s_3bad1bcfc05a33::t_72c01c9842ed77 408,411-412
+  s_3bad1bcfc05a33::t_44a89ff521c853 93-98
+pages/recognition/zen.js
+  s_3bad1bcfc05a33::t_51628153111cbf 63,69-73
+pages/recognition/batch.wxml
+  s_3bad1bcfc05a33::t_37d9bf02236ca8 29,31,36,38,50,57-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "fce017449c0df25f210d1b2a0cbbf3c0cd75b594",
+  "prompts": {},
+  "sessions": {
+    "s_3bad1bcfc05a33": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_48988222-2ae7-417d-886e-a1b5be6496bf",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
