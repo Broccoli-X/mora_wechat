@@ -1,7 +1,8 @@
 <!-- 禅模式:批次内容一张一张认(与字母卡 zen 同款换卡动效,内容是家长录入的批次条目)。
      ✕ 固定左上角——右上角是小程序胶囊按钮,放右侧会被遮住点不到。
      学英语 / 识图:**正面只给主体**(词句 / 图片),点卡片翻面才显示意思(中文 / 名称 + 音标 / 英文)
-     ——小朋友在正面看不到任何提示;识汉字不翻面(汉字 + 拼音 + 组词一屏给全)。
+     ——小朋友在正面看不到任何提示;识汉字不翻面(汉字 + 拼音 + 组词一屏给全);
+     学文章也不翻面(无答案栏,全文即正面),整篇长文卡内可上下滚动,左右滑仍是换段。
      卡面用 template 复用:旧卡(换卡动画期间滑出)与当前卡共用一套 markup,只换数据。 -->
 <template name="rcCard">
   <view class="accent" style="background:{{color}}"></view>
@@ -27,6 +28,14 @@
       </view>
     </view>
   </view>
+
+  <!-- 学文章:全文一屏给全(无答案栏,不翻面),字号按长度分档;整篇长文卡内上下滚动 -->
+  <block wx:elif="{{kind === 'article'}}">
+    <scroll-view wx:if="{{artFs === 'sm'}}" class="zen-art-scroll" scroll-y>
+      <text class="zen-art-text" style="color:{{color}}">{{text}}</text>
+    </scroll-view>
+    <text wx:else class="zen-art-text zen-art-{{artFs}}" style="color:{{color}}">{{text}}</text>
+  </block>
 
   <!-- 识汉字:汉字 + 拼音 + 组词(不翻面) -->
   <block wx:else>

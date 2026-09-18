@@ -210,6 +210,35 @@
   font-size: 48rpx;
 }
 
+/* 学文章:全文即正面(无答案栏,不翻面),字号按长度分档(artFs 由 utils 按原文长度给);
+   换行照原样(pre-wrap)保留家长录入的段落;sm 档(整篇)包 scroll-view 卡内上下滚动 */
+.zen-art-scroll {
+  max-height: 560rpx;
+  padding: 0 10rpx;
+  box-sizing: border-box;
+}
+
+.zen-art-text {
+  display: block;
+  font-weight: 700;
+  line-height: 1.9;
+  text-align: left;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.zen-art-lg {
+  font-size: 56rpx;
+}
+
+.zen-art-md {
+  font-size: 42rpx;
+}
+
+.zen-art-sm {
+  font-size: 34rpx;
+}
+
 .zen-emoji {
   display: block;
   font-size: 220rpx;

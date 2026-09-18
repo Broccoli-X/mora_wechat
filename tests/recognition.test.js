@@ -53,6 +53,7 @@ function listPayload() {
         { id: 'rbhanzi01', subject: 'hanzi', title: '第5课生字', day: '2026-09-11', note: '每天读两遍', count: 3, updatedAt: 100 },
         { id: 'rbwords01', subject: 'words', title: 'Unit 1 单词', day: '2026-09-12', note: '', count: 2, updatedAt: 200 },
         { id: 'rbimage01', subject: 'image', title: '动物图卡', day: '2026-09-12', note: '', count: 1, updatedAt: 300 },
+        { id: 'rbart0001', subject: 'article', title: '', day: '2026-09-16', note: '', count: 2, updatedAt: 350, preview: '池塘', lang: 'zh' },
         { id: 'rbmusic01', subject: 'music', title: '坏学科', day: '2026-09-12', count: 1, updatedAt: 400 },
         { id: 'rbbadday1', subject: 'hanzi', title: '坏日期', day: '2026-13-40', count: 1, updatedAt: 500 },
         { id: 'rbbadttl1', subject: 'hanzi', title: '   ', day: '2026-09-12', count: 1, updatedAt: 600 },
@@ -71,14 +72,16 @@ const HANZI_BATCH = {
   ],
 };
 
-test('三科口径与网页端 lib/recognition-core.js KINDS 一致(id/名称/学科/图标/主色)', () => {
-  assert.deepEqual(rc.KIND_IDS, ['hanzi', 'words', 'image']);
+test('四科口径与网页端 lib/recognition-core.js KINDS 一致(id/名称/学科/图标/主色)', () => {
+  assert.deepEqual(rc.KIND_IDS, ['hanzi', 'words', 'image', 'article']);
   assert.deepEqual(rc.KINDS.map(k => [k.id, k.name, k.subject, k.icon, k.main]), [
     ['hanzi', '识汉字', '语文', '📖', '#c9392b'],
     ['words', '学英语', '英语', '🔤', '#177a3e'],
     ['image', '识图', '其他', '🖼️', '#8a5a2b'],
+    ['article', '学文章', '语文/英语', '📄', '#2b57d6'],
   ]);
   assert.equal(rc.kindOf('words').name, '学英语');
+  assert.equal(rc.kindOf('article').name, '学文章');
   assert.equal(rc.kindOf('music').name, 'music', '未知名按原样回,不崩');
   assert.equal(rc.kindOf('').icon, '📌');
 });
@@ -153,6 +156,19 @@ test('回归:服务端存了什么就呈现什么——字面规则变更不再�
     ['你好', '杨玲', '莉莉', '你好', '王兵', '艾米', '刘涛', '苏海', '汤米', '我是', '我是']);
 });
 
+test('条目清洗-学文章:原文照原样(含换行),空串丢弃,超长截到 TEXT_MAX', () => {
+  const para = '池塘里有一群小蝌蚪。\n大大的脑袋,黑灰色的身子。';
+  assert.deepEqual(rc.normalizeItem('article', { text: para }), { text: para }, '换行照原样保留');
+  assert.deepEqual(rc.normalizeItem('article', { text: '  春晓  ' }), { text: '春晓' }, '去首尾空白');
+  assert.equal(rc.normalizeItem('article', { text: '   ' }), null, '空原文丢弃');
+  assert.equal(rc.normalizeItem('article', { text: '' }), null);
+  assert.equal(rc.normalizeItem('article', {}), null);
+  assert.equal(rc.normalizeItem('article', null), null);
+  const long = rc.normalizeItem('article', { text: '春\n'.repeat(1200) });
+  assert.equal(long.text.length, rc.TEXT_MAX, '超长截断(纯防御;服务端本就拒收 >2000)');
+  assert.equal(rc.normalizeItem('article', { face: '春晓' }), null, 'article 只认 text,face 不当原文');
+});
+
 test('条目清洗-识图:emoji 与图片 id 至少一个,坏图片 id 只丢图不丢条目', () => {
   assert.deepEqual(rc.normalizeItem('image', { face: '🍎', answer: '苹果' }),
     { face: '🍎', answer: '苹果', extra: '' });
@@ -173,6 +189,42 @@ test('概要清洗:学科/名称/日期缺一不可,count 只认正整数', () =
   assert.equal(rc.normalizeBrief({ subject: 'hanzi', title: '  ', day: '2026-09-11' }), null);
   assert.equal(rc.normalizeBrief(null), null);
   assert.equal(rc.normalizeBrief({ subject: 'hanzi', title: 'a', day: '2026-09-11' }).count, 0, '缺 count 记 0');
+});
+
+test('概要清洗-学文章:标题可不填,preview/lang 照收(lang 非 zh/en 按 zh),其余学科仍要求标题', () => {
+  const b = rc.normalizeBrief({
+    id: 'rbart0001', subject: 'article', title: '', day: '2026-09-15', note: '',
+    count: 5, updatedAt: 1, preview: 'x'.repeat(30), lang: 'zh',
+  });
+  assert.ok(b, '无标题的文章批次要收下(服务端概要带首条预览)');
+  assert.equal(b.title, '');
+  assert.equal(b.preview.length, 20, '预览按服务端口径只收前 20 字');
+  assert.equal(b.lang, 'zh');
+  assert.equal(rc.normalizeBrief({
+    id: 'rbart0001', subject: 'article', title: 'Lesson 1', day: '2026-09-15', count: 1, lang: 'en',
+  }).lang, 'en', '英语文章 lang=en');
+  assert.equal(rc.normalizeBrief({
+    id: 'rbart0001', subject: 'article', title: '', day: '2026-09-15', count: 1, lang: 'fr',
+  }).lang, 'zh', '未知语种一律按语文');
+  assert.equal(rc.normalizeBrief({ subject: 'article', title: 'x', day: '2026-09-15', count: 1 }).lang,
+    'zh', '缺 lang 也按语文');
+  assert.equal(rc.normalizeBrief({ subject: 'hanzi', title: '  ', day: '2026-09-11' }), null,
+    '其余三科标题仍必填');
+});
+
+test('显示名兜底 titleOf:标题 → 首条原文/概要预览前 12 字加省略号 → 未命名(与网页端 displayName 同口径)', () => {
+  assert.equal(rc.titleOf({ title: '春晓' }), '春晓');
+  const p12 = '一二三四五六七八九十甲乙';             // 恰 12 字
+  assert.equal(rc.titleOf({ preview: p12 }), p12, '恰 12 字不加省略号');
+  assert.equal(rc.titleOf({ preview: p12 + '丙' }), p12 + '…', '超 12 字截断加省略号');
+  assert.equal(rc.titleOf({ items: [{ text: '春晓' }] }), '春晓', '整批取首条原文开头');
+  assert.equal(rc.titleOf({ items: [{ text: '春眠不觉晓,\n处处闻啼鸟。' }] }),
+    '春眠不觉晓, 处处闻啼鸟' + '…', '换行压成空格再取前 12 字');
+  assert.equal(rc.titleOf({ items: [{ text: '春晓' }], preview: 'x'.repeat(20) }), '春晓',
+    '有整批时首条原文优先于概要预览');
+  assert.equal(rc.titleOf({}), '未命名');
+  assert.equal(rc.titleOf(null), '未命名');
+  assert.equal(rc.titleOf({ items: [] }), '未命名', '首条都没有叫未命名,不崩');
 });
 
 test('整批清洗:概要 + 条目逐条清洗;一条内容都没有 = 坏批次', () => {
@@ -282,6 +334,68 @@ test('批次视图:头部字段(学科口径/日期文案/条数)与卡片数组
   assert.equal(rc.batchView(null), null);
 });
 
+test('卡面视图-学文章:段号+预览(压平空白、超长省略)+全文,不翻面无答案行', () => {
+  const v = rc.itemView('article', { text: '池塘里有一群小蝌蚪。\n大大的脑袋,黑灰色的身子。' }, 2);
+  assert.equal(v.kind, 'article');
+  assert.equal(v.color, '#2b57d6');
+  assert.equal(v.paraNo, 3, '段号 = 批次内序号 + 1');
+  assert.equal(v.flip, false, '无答案可藏,不翻面');
+  assert.equal(v.flipped, false);
+  assert.ok(v.text.indexOf('\n') >= 0, '全文保留换行(禅模式 pre-wrap 展示)');
+  assert.equal(v.preview, '池塘里有一群小蝌蚪。 大大的脑袋,黑灰色的身子。', '预览把换行压成空格');
+  assert.ok(v.preview.indexOf('…') < 0, '短段不加省略号');
+  const long = rc.itemViews('article', [{ text: '春'.repeat(60) }])[0];
+  assert.equal(long.preview, '春'.repeat(rc.PREVIEW_MAX) + '…', '超长预览截断加省略号');
+  assert.equal(rc.itemView('article', { text: '春'.repeat(40) }).artFs, 'lg', '短段大字');
+  assert.equal(rc.itemView('article', { text: '春'.repeat(41) }).artFs, 'md');
+  assert.equal(rc.itemView('article', { text: '春'.repeat(150) }).artFs, 'md');
+  assert.equal(rc.itemView('article', { text: '春'.repeat(151) }).artFs, 'sm', '长文走可滚动档');
+});
+
+test('批次视图-学文章:显示名兜底/语种/单位/开始文案一次给全,其余学科字段不变', () => {
+  const b = rc.normalizeBatch({
+    id: 'rbart0001', subject: 'article', title: '', day: '2026-09-15', lang: 'zh',
+    items: [{ text: '池塘里有一群小蝌蚪。' }, { text: '大大的脑袋。' }],
+  });
+  assert.equal(b.lang, 'zh', '整批保留语种');
+  const v = rc.batchView(b);
+  assert.equal(v.title, '池塘里有一群小蝌蚪。', '无标题取首段开头(10 字不加省略号)');
+  assert.equal(v.langText, '语文');
+  assert.equal(v.unit, '段');
+  assert.equal(v.main, '#2b57d6');
+  assert.equal(v.kindIcon, '📄');
+  assert.ok(v.goText.indexOf('开始学习') >= 0 && v.goText.indexOf('2 段') >= 0, '文章开始按钮换文案带段数');
+  const en = rc.batchView(rc.normalizeBatch({
+    id: 'rbart0002', subject: 'article', title: 'Lesson 1', day: '2026-09-15', lang: 'en',
+    items: [{ text: 'Good morning.' }],
+  }));
+  assert.equal(en.langText, '英语');
+  assert.equal(en.title, 'Lesson 1', '有标题用标题');
+  const h = rc.batchView(rc.normalizeBatch(HANZI_BATCH));
+  assert.equal(h.unit, '条', '其余学科单位不变');
+  assert.equal(h.langText, '', '非文章无语种胶囊');
+  assert.ok(h.goText.indexOf('开始认读') >= 0 && h.goText.indexOf('3 张') >= 0, '其余学科开始文案不变');
+});
+
+test('学科分节-学文章:四科固定顺序,文章节「语文/英语」,批次带显示名兜底与条/段单位', () => {
+  const preview = '池塘里有一群小蝌蚪,大大的脑袋';   // 14 字(服务端预览口径 ≤20)
+  const list = rc.sortBatches([
+    { id: 'rbart0001', subject: 'article', title: '', day: '2026-09-15', count: 2, note: '', updatedAt: 1, preview: preview },
+    { id: 'rbh', subject: 'hanzi', title: 'h', day: '2026-09-11', count: 3, note: '', updatedAt: 1 },
+  ]);
+  const secs = rc.sections(list);
+  assert.deepEqual(secs.map(s => s.key), ['hanzi', 'article'], '文章节固定在最后(此处无识图/学英语)');
+  const art = secs[1];
+  assert.equal(art.name, '学文章');
+  assert.equal(art.subject, '语文/英语');
+  assert.equal(art.icon, '📄');
+  assert.equal(art.main, '#2b57d6');
+  assert.equal(art.batches[0].dispTitle, preview.slice(0, 12) + '…', '无标题列表卡用首条原文开头');
+  assert.equal(art.batches[0].unit, '段');
+  assert.equal(secs[0].batches[0].dispTitle, 'h', '有标题原样');
+  assert.equal(secs[0].batches[0].unit, '条');
+});
+
 test('本机缓存-列表:写入可读回,脏缓存(坏批次)读出即丢', () => {
   store.clear();
   rc.saveBatches([{ id: 'rbhanzi01', subject: 'hanzi', title: '第5课生字', day: '2026-09-11', count: 3, note: '', updatedAt: 1 }]);
@@ -363,7 +477,10 @@ test('第一步接口:批次列表解析 + 写本机缓存(坏批次丢弃,day �
   signIn();
   let got = null;
   rc.fetchBatches(list => { got = list; });
-  assert.deepEqual(got.map(b => b.id), ['rbimage01', 'rbwords01', 'rbhanzi01'], '同日 updatedAt 新者在前');
+  assert.deepEqual(got.map(b => b.id), ['rbart0001', 'rbimage01', 'rbwords01', 'rbhanzi01'],
+    'day 倒序(文章批次日期最新排最前);无标题文章不丢');
+  assert.equal(got[0].preview, '池塘', '文章概要带首条预览');
+  assert.equal(got[0].lang, 'zh');
   assert.ok(reqs[0].url.indexOf('/api/recognition/batches?token=T') > 0,
     '带 token 与查询串(与网页端外部系统对接同款)');
   assert.deepEqual(rc.loadBatches().map(b => b.id), got.map(b => b.id), '成功即写缓存');

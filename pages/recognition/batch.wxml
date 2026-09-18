@@ -26,15 +26,16 @@
         <view class="h-title">{{batch.title}}</view>
         <view class="h-chips">
           <text class="h-chip kind" style="background:{{batch.main}}">{{batch.kindIcon}} {{batch.kindName}}</text>
+          <text class="h-chip" wx:if="{{batch.langText}}">{{batch.langText}}</text>
           <text class="h-chip">{{batch.dayCN}}</text>
-          <text class="h-chip">共 {{batch.count}} 条</text>
+          <text class="h-chip">共 {{batch.count}} {{batch.unit}}</text>
         </view>
         <view class="h-note" wx:if="{{batch.note}}">📝 {{batch.note}}</view>
       </view>
 
-      <view class="go" bindtap="onStart" hover-class="go-hover">🔀 开始认读（{{batch.count}} 张）</view>
+      <view class="go" bindtap="onStart" hover-class="go-hover">{{batch.goText}}</view>
 
-      <!-- 列数随学科:识汉字 3 列大字卡 / 学英语·识图 2 列 -->
+      <!-- 列数随学科:识汉字 3 列大字卡 / 学英语·识图 2 列 / 学文章 1 列宽卡(段号+预览) -->
       <view class="grid grid-{{batch.kind}}">
         <view
           wx:for="{{batch.items}}"
@@ -46,13 +47,17 @@
         >
           <view class="accent" style="background:{{item.color}}"></view>
 
-          <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·学英语:大字主面 -->
+          <!-- 识图:图片(失败就地回退 emoji/🖼️);识汉字·学英语:大字主面;学文章:段号 + 预览 -->
           <block wx:if="{{item.imgUrl}}">
             <image wx:if="{{!item.failed}}" class="c-img" src="{{item.imgUrl}}" mode="aspectFit"
                    lazy-load binderror="onImgError" data-i="{{item.i}}" />
             <text wx:else class="c-emoji">{{item.face || '🖼️'}}</text>
           </block>
           <text wx:elif="{{item.kind === 'image'}}" class="c-emoji">{{item.face || '🖼️'}}</text>
+          <block wx:elif="{{item.kind === 'article'}}">
+            <view class="c-para" style="color:{{item.color}}">第 {{item.paraNo}} 段</view>
+            <text class="c-para-preview">{{item.preview}}</text>
+          </block>
           <text wx:else class="c-face {{item.kind === 'hanzi' ? 'c-hanzi' : 'c-word c-word-' + item.fs}}"
                 style="color:{{item.color}}">{{item.face}}</text>
 

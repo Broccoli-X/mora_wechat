@@ -60,15 +60,17 @@ Page({
     this.items = v.items;
     this.setData({
       title: v.title, total: v.count,
-      hint: this.hintFor(v.count, v.items.length ? v.items[0].flip : false),
+      hint: this.hintFor(v.count, v.items.length ? v.items[0].flip : false, v.kind === 'article'),
       loading: false, gone: false, loadError: false,
     });
     this.show(Math.min(this.start, Math.max(v.count - 1, 0)));
   },
 
-  /* 操作提示:能翻面的学科才提「点卡片看意思」 */
-  hintFor(count, canFlip) {
-    const nav = count > 1 ? '← 左滑下一张 · 右滑上一张 →' : '这一批只有一张';
+  /* 操作提示:能翻面的学科才提「点卡片看意思」;学文章没有答案栏,按段计数 */
+  hintFor(count, canFlip, art) {
+    const nav = count > 1
+      ? (art ? '← 左滑下一段 · 右滑上一段 →' : '← 左滑下一张 · 右滑上一张 →')
+      : (art ? '这篇只有一段' : '这一批只有一张');
     return canFlip ? '点卡片看意思 · ' + nav : nav;
   },
 

@@ -4,7 +4,8 @@
      ① GET /api/recognition/batches[?subject=]  批次列表(**只有概要,没有条目**)
      ② GET /api/recognition/batch?id=rb…        按批次取整批(含 items)
    条目形状:识汉字 face 单字 + answer 拼音;学英语 face 是单词**或整句**(大小写照原样,
-   如 "Good morning, Miss Li.")+ answer 中文;识图 face(emoji)/img + answer 名称。
+   如 "Good morning, Miss Li.")+ answer 中文;识图 face(emoji)/img + answer 名称;
+   学文章 text 一段原文(一行一段或整篇带换行),没有答案栏。
    客户端只做渲染保护、不重复服务端的字面校验(见 normalizeItem 注释)。
    网页端口径「本站不出题、不记成绩」,服务端进度同步的 MODULES 白名单也不含
    recognition(/api/progress 不收该 module),故本模块不带 ⭐ 掌握标记与进度上报,
@@ -23,7 +24,7 @@ const ITEM_KEY = 'mora-recognition-batch-v2';     // 按 id 的整批内容缓�
 const LEGACY_ITEM_KEY = 'mora-recognition-batch-v1';
 const CACHE_MAX = 60;                             // 缓存的批次数上限,超出按 updatedAt 淘汰最旧
 
-/* 三科学科(识汉字 / 学英语 / 识图):与网页端 lib/recognition-core.js KINDS 同口径
+/* 四科学科(识汉字 / 学英语 / 识图 / 学文章):与网页端 lib/recognition-core.js KINDS 同口径
    (id/名称/学科/图标/主色一致,两端变更需同步维护) */
 const KINDS = [
   { id: 'hanzi', name: '识汉字', subject: '语文', icon: '📖', main: '#c9392b' },
@@ -31,6 +32,9 @@ const KINDS = [
      历史批次与接口的 subject 值都不动 */
   { id: 'words', name: '学英语', subject: '英语', icon: '🔤', main: '#177a3e' },
   { id: 'image', name: '识图',   subject: '其他', icon: '🖼️', main: '#8a5a2b' },
+  /* 学文章:条目是 { text } 一段原文(一行一段拆开,或整篇存一条带换行),没有答案栏;
+     批次带 lang(zh/en,记语文/英语),标题可不填——显示名取首条原文开头(见 titleOf) */
+  { id: 'article', name: '学文章', subject: '语文/英语', icon: '📄', main: '#2b57d6' },
 ];
 const KIND_IDS = KINDS.map(k => k.id);
 const META = {};
@@ -74,6 +78,9 @@ const EXTRA_MAX = 40;      // 组词 / 音标 / 英文
 const ITEMS_MAX = 60;      // 一个批次最多多少条
 const FACE_MAX = 60;       // 学英语:单词或整句(与网页端 FACE_MAX 同款)
 const EMOJI_MAX = 8;       // 识汉字单字 / 识图 emoji 的显示长度
+const TEXT_MAX = 2000;     // 学文章一条原文的上限(一段或整篇存一条,与网页端 TEXT_MAX 同口径;
+                           // 服务端写入时已拒收超长,这里截断只是防御)
+const PREVIEW_MAX = 48;    // 学文章网格卡预览字段的上限(展示以样式两行省略为准)
 const IMG_ID_RE = /^img[0-9a-z]{4,30}$/;
 const BATCH_ID_RE = /^rb[0-9a-z]{4,30}$/;   // 与服务端 BATCH_ID 同款
 
@@ -83,6 +90,12 @@ function clean(s, max) {
 
 function normalizeItem(subject, it) {
   if (!it || typeof it !== 'object') return null;
+  if (subject === 'article') {
+    /* 学文章:条目就是一段原文(含换行照原样),没有答案栏;太长不静默截丢,只按上限防御 */
+    const text = typeof it.text === 'string' ? it.text.trim() : '';
+    if (!text) return null;                     // 没原文可读
+    return { text: text.slice(0, TEXT_MAX) };
+  }
   const answer = clean(it.answer, ANSWER_MAX);
   const extra = clean(it.extra, EXTRA_MAX);
   const img = typeof it.img === 'string' && IMG_ID_RE.test(it.img) ? it.img : '';
@@ -105,13 +118,15 @@ function normalizeItem(subject, it) {
   return null;                                  // 未知学科:不猜怎么渲染
 }
 
-/* 列表概要清洗:学科合法 + 名称非空 + 日期合法才收;count 只认非负整数(接口给的是条目数) */
+/* 列表概要清洗:学科合法 + 名称非空(学文章可不填)+ 日期合法才收;count 只认非负整数(接口给的是条目数)。
+   preview 是服务端给的首条预览(前 20 字,专为无标题文章的列表页显示);lang 仅学文章有(zh/en 之外按 zh) */
 function normalizeBrief(b) {
   if (!b || typeof b !== 'object' || KIND_IDS.indexOf(b.subject) < 0) return null;
+  const art = b.subject === 'article';
   const title = clean(b.title, TITLE_MAX);
-  if (!title || !parseDate(b.day)) return null;
+  if ((!title && !art) || !parseDate(b.day)) return null;
   const n = Number.isInteger(b.count) && b.count > 0 ? Math.min(b.count, ITEMS_MAX) : 0;
-  return {
+  const out = {
     id: String(b.id || ''),
     subject: b.subject,
     title: title,
@@ -119,7 +134,10 @@ function normalizeBrief(b) {
     note: clean(b.note, NOTE_MAX),
     count: n,
     updatedAt: Number.isInteger(b.updatedAt) ? b.updatedAt : 0,
+    preview: clean(b.preview, 20),
   };
+  if (art) out.lang = b.lang === 'en' ? 'en' : 'zh';
+  return out;
 }
 
 /* 整批清洗:概要 + items(逐条清洗、1~60 条,一条都不剩视为坏批次返回 null) */
@@ -129,10 +147,24 @@ function normalizeBatch(b) {
   const items = (Array.isArray(b.items) ? b.items : [])
     .map(it => normalizeItem(b.subject, it)).filter(Boolean).slice(0, ITEMS_MAX);
   if (!items.length) return null;
-  return {
+  const out = {
     id: brief.id, subject: brief.subject, title: brief.title, day: brief.day,
     note: brief.note, count: items.length, items: items, updatedAt: brief.updatedAt,
+    preview: brief.preview,
   };
+  if (brief.lang) out.lang = brief.lang;        // 学文章才带语种
+  return out;
+}
+
+/* 批次显示名:有名称用名称;学文章可不命名,取首条原文(整批)/概要预览(列表)开头当名字,
+   再没有叫「未命名」——与网页端 displayName 同口径。列表卡、批次页导航标题、禅模式顶部胶囊
+   共用这一个兜底,别的地方不要再自己拼;换行压成空格,免得折行的名字难看 */
+function titleOf(b) {
+  if (b && b.title) return b.title;
+  const first = (b && b.items && b.items[0]) || {};
+  const t = String(first.text || (b && b.preview) || '').replace(/\s+/g, ' ').trim();
+  if (!t) return '未命名';
+  return t.slice(0, 12) + (t.length > 12 ? '…' : '');
 }
 
 /* 列表顺序:日期倒序,同日按录入时间倒序(与服务端 ORDER BY day DESC, updated_at DESC 一致) */
@@ -151,14 +183,16 @@ function statsOf(list) {
   };
 }
 
-/* 学科分节(列表页):按 KINDS 固定顺序(识汉字→学英语→识图),空科不呈现;
-   节内沿用 day 倒序。批次卡要显示的日期文案/学科名在这里补好,页面不拼字符串 */
+/* 学科分节(列表页):按 KINDS 固定顺序(识汉字→学英语→识图→学文章),空科不呈现;
+   节内沿用 day 倒序。批次卡要显示的显示名兜底/日期文案/学科名/条数单位在这里补好,页面不拼字符串 */
 function sections(list) {
   const all = sortBatches((list || []).filter(Boolean));
   return KINDS.map(k => ({
     key: k.id, name: k.name, subject: k.subject, icon: k.icon, main: k.main,
     batches: all.filter(b => b.subject === k.id).map(b => Object.assign({}, b, {
       kindName: k.name,
+      dispTitle: titleOf(b),
+      unit: k.id === 'article' ? '段' : '条',
       dayCN: fmtCN(b.day) + (weekdayCN(b.day) ? ' ' + weekdayCN(b.day) : ''),
     })),
   })).filter(s => s.batches.length);
@@ -181,8 +215,31 @@ function answerSize(answer) {
   return n <= 6 ? 'lg' : n <= 14 ? 'md' : 'sm';
 }
 
+/* 学文章卡面字号档:短段大字、长文中字、整篇小字(超一屏由禅模式卡内上下滚动) */
+function artSize(text) {
+  const n = (text || '').length;
+  return n <= 40 ? 'lg' : n <= 150 ? 'md' : 'sm';
+}
+
 function itemView(subject, it, i) {
   const k = kindOf(subject);
+  const idx = i == null ? 0 : i;
+  if (subject === 'article') {
+    const text = (it && it.text) || '';
+    const one = text.replace(/\s+/g, ' ').trim();
+    return {
+      i: idx,
+      kind: subject,
+      color: k.main,
+      text: text,                    // 全文(保留换行,禅模式 pre-wrap 展示)
+      preview: one.slice(0, PREVIEW_MAX) + (one.length > PREVIEW_MAX ? '…' : ''),
+      paraNo: idx + 1,               // 第 N 段(批次页网格的行首标)
+      artFs: artSize(text),
+      /* 无答案栏可藏:不翻面,正面即全文 */
+      flip: false,
+      flipped: false,
+    };
+  }
   const img = (it && it.img) || '';
   const face = (it && it.face) || '';
   const answer = (it && it.answer) || '';
@@ -210,18 +267,24 @@ function itemViews(subject, items) {
   return (items || []).map((it, i) => itemView(subject, it, i));
 }
 
-/* 批次视图(详情页头部 + 禅模式):学科口径、日期文案、卡片数组一次给全 */
+/* 批次视图(详情页头部 + 禅模式):学科口径、显示名兜底、日期文案、语种/单位/开始文案、
+   卡片数组一次给全 */
 function batchView(b) {
   if (!b) return null;
   const k = kindOf(b.subject);
+  const art = b.subject === 'article';
+  const n = (b.items || []).length;
   return {
     id: b.id,
-    title: b.title,
+    title: titleOf(b),
     note: b.note || '',
     kind: k.id, kindName: k.name, kindIcon: k.icon, main: k.main, subjectText: k.subject,
+    langText: art ? (b.lang === 'en' ? '英语' : '语文') : '',
+    unit: art ? '段' : '条',
+    goText: art ? '▶ 开始学习（共 ' + n + ' 段）' : '🔀 开始认读（' + n + ' 张）',
     day: b.day,
     dayCN: fmtCN(b.day) + (weekdayCN(b.day) ? ' ' + weekdayCN(b.day) : ''),
-    count: (b.items || []).length,
+    count: n,
     items: itemViews(b.subject, b.items),
   };
 }
@@ -342,11 +405,11 @@ function stepIndex(curIdx, d, total) {
 
 module.exports = {
   API_BASE, IMG_API, KINDS, KIND_IDS, kindOf,
-  TITLE_MAX, NOTE_MAX, ANSWER_MAX, EXTRA_MAX, ITEMS_MAX, FACE_MAX, EMOJI_MAX,
+  TITLE_MAX, NOTE_MAX, ANSWER_MAX, EXTRA_MAX, ITEMS_MAX, FACE_MAX, EMOJI_MAX, TEXT_MAX, PREVIEW_MAX,
   DATE_RE, IMG_ID_RE, BATCH_ID_RE, LIST_KEY, ITEM_KEY, LEGACY_ITEM_KEY,
   parseDate, fmtCN, weekdayCN,
-  normalizeItem, normalizeBrief, normalizeBatch, sortBatches, statsOf, sections,
-  faceSize, answerSize, itemView, itemViews, batchView,
+  normalizeItem, normalizeBrief, normalizeBatch, sortBatches, statsOf, sections, titleOf,
+  faceSize, answerSize, artSize, itemView, itemViews, batchView,
   loadBatches, saveBatches, loadBatch, saveBatch, setCurrent, current,
   fetchBatches, fetchBatch, stepIndex,
 };
