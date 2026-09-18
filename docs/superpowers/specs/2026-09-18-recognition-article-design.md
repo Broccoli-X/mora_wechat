@@ -42,11 +42,13 @@
 - `titleOf()`:title → 无标题取 preview(列表)/首条 text(整批)前 12 字加「…」→ 「未命名」,
   与网页端 `displayName` 同口径;`sections` 与 `batchView` 统一补 `dispTitle`,
   列表卡、批次页导航标题(`wx.setNavigationBarTitle`)、禅模式顶部胶囊三处自动一致。
-- `itemView`(article):`flip:false`、`paraNo = i+1`、`preview`(前 48 字、`/\s+/g`→空格、超长省略)、
+- `itemView`(article):`flip:false`、`paraNo = i+1`、`preview`(前 48 字、`/\s+/g`→空格、超长省略;
+  展示以样式两行 line-clamp 省略为准,48 字只是字段上限)、
   `text`(全文)、字号档 `artFs`:≤40 字 `lg` / ≤150 字 `md` / 其余 `sm`(可滚动档);
   无 answer/extra/labelA/labelB。
-- `batchView`(article):补 `langText`(zh→语文 / en→英语)与单位字段
-  `unit`(article→「段」,其余→「条」),头部胶囊与按钮文案页面直接取用。
+- 单位字段 `unit`(article→「段」,其余→「条」):`batchView` 与 `sections` 都补,
+  列表卡「N 段」、批次头「共 N 段」、开始按钮文案页面直接取用,页面不自己拼。
+- `batchView`(article):补 `langText`(zh→语文 / en→英语),头部语种胶囊直接取用。
 
 ## 页面
 
