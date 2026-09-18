@@ -78,4 +78,9 @@ test('recognition zen 换卡动画:in/out 各方向奇偶异名(8 类名),滑动
     ['in-l-0', 'in-l-1', 'in-r-0', 'in-r-1', 'out-l-0', 'out-l-1', 'out-r-0', 'out-r-1'], 'zen.wxss');
 });
 
+test('knowledge zen 换卡动画:in/out 各方向奇偶异名(8 类名),滑动始终重放', () => {
+  assertSwapContract(read('knowledge' + '/zen.wxss'),
+    ['in-l-0', 'in-l-1', 'in-r-0', 'in-r-1', 'out-l-0', 'out-l-1', 'out-r-0', 'out-r-1'], 'zen.wxss');
+});
+
 console.log('\n全部通过:' + passed + ' 个用例');

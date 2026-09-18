@@ -1,0 +1,40 @@
+<!-- 单元列表:一册教材按单元列卡(配色与网页端 knowledge.html 同表轮换),
+     点单元进禅模式逐块背。 -->
+<view class="page">
+  <view class="head">
+    <view class="head-title">📖 {{title}}</view>
+    <view class="head-sub" wx:if="{{unitCount}}">共 {{unitCount}} 个单元 · 点单元开始背</view>
+  </view>
+
+  <view class="state" wx:if="{{loading && !units.length}}">教材内容同步中…</view>
+
+  <view class="state error" wx:elif="{{loadError}}">
+    <text class="error-txt">教材内容同步失败</text>
+    <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+  </view>
+
+  <view class="empty" wx:elif="{{empty}}">
+    <view class="empty-icon">📭</view>
+    <view class="empty-txt">这一册还没有内容</view>
+    <view class="empty-sub">请家长在网页端「知识点录入」先维护这一册</view>
+  </view>
+
+  <view
+    wx:for="{{units}}"
+    wx:key="i"
+    class="u-card"
+    data-i="{{item.i}}"
+    bindtap="onTapUnit"
+    hover-class="u-hover"
+  >
+    <view class="u-head" style="background:{{item.c}}">
+      <view class="u-name">{{item.name}}</view>
+      <view class="u-cnt">{{item.secs}} 个板块 · {{item.blks}} 项</view>
+    </view>
+    <view class="u-foot">
+      <text class="u-go" style="color:{{item.cd}}">开始背诵 ›</text>
+    </view>
+  </view>
+
+  <view class="tip" wx:if="{{!empty && units.length}}">单元内每个知识块一张卡，左右滑动逐项背</view>
+</view>

@@ -1,0 +1,373 @@
+/* 禅模式样式:与识记禅模式同款(同一渐变底 + 居中白卡 + 顶部点缀色条),
+   点缀色换成该单元的轮换主色(与网页端 knowledge.html 同表)。
+   ✕ 在左上角(右上角是小程序胶囊,不能放)。
+   换卡动画:方向感知——往左滑旧卡飞出左侧、新卡自右滑入;往右滑镜像。
+   in/out 各备奇偶两个类名,换卡时交替触发,强制动画重放。 */
+.zen {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #a1c4fd 0%, #fbc2eb 45%, #ffecd2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30rpx;
+  overflow: hidden;
+}
+
+/* ✕ 固定左上,远离右上胶囊按钮 */
+.zen-close {
+  position: fixed;
+  left: 28rpx;
+  width: 68rpx;
+  height: 68rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #a83a31;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 8rpx 24rpx rgba(140, 60, 50, 0.2);
+  z-index: 9;
+}
+
+/* 顶部胶囊:单元名 + 当前序号 */
+.zen-chip {
+  max-width: 78%;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #a83a31;
+  box-shadow: 0 8rpx 28rpx rgba(140, 60, 50, 0.15);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zen-state {
+  text-align: center;
+  background: #ffffff;
+  border-radius: 40rpx;
+  padding: 60rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #4b5563;
+  box-shadow: 0 16rpx 44rpx rgba(140, 60, 50, 0.15);
+}
+
+.zen-retry {
+  display: inline-block;
+  margin-top: 24rpx;
+  padding: 12rpx 40rpx;
+  background: #a83a31;
+  color: #ffffff;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.zen-hover {
+  opacity: 0.85;
+}
+
+/* 舞台:入卡在文档流里撑起高度,出卡绝对定位叠在其下 */
+.zen-stage {
+  position: relative;
+  width: 88%;
+}
+
+.zen-card {
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 44rpx;
+  padding: 64rpx 36rpx 48rpx;
+  box-shadow: 0 20rpx 56rpx rgba(140, 60, 50, 0.16);
+  overflow: hidden;
+  text-align: center;
+  /* 大块(如整节词语)也要放得下:超出就地内部滚动,横滑换卡不受影响 */
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+.zen-card.in {
+  position: relative;
+  z-index: 2;
+}
+
+.zen-card.out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16rpx;
+}
+
+/* 节名小签 + 块小标题 */
+.zc-sec {
+  display: inline-block;
+  border-radius: 999rpx;
+  padding: 8rpx 26rpx 10rpx;
+  font-size: 24rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 2rpx;
+  box-shadow: 0 6rpx 16rpx rgba(60, 70, 120, 0.16);
+}
+
+.zc-h {
+  margin-top: 22rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+  letter-spacing: 1rpx;
+}
+
+/* ── 普通行:段式渲染,着重号段下加红点 ── */
+.zc-rows {
+  margin-top: 26rpx;
+}
+
+.zc-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 31rpx;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 2;
+  letter-spacing: 1rpx;
+}
+
+.zc-row-ex {
+  color: #6b7280;
+  font-size: 27rpx;
+}
+
+.zc-seg {
+  max-width: 100%;
+  word-break: break-all;
+}
+
+/* 着重号:注音所标的字下加红点(PDF 同款) */
+.zc-zd {
+  position: relative;
+  font-style: normal;
+}
+
+.zc-zd::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.08em;
+  transform: translateX(-50%);
+  width: 0.26em;
+  height: 0.26em;
+  border-radius: 50%;
+  background: #c9392b;
+}
+
+/* ── 象形字配图:图卡 + 图注(汉字,楷体) ── */
+.zc-pics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14rpx;
+  margin-top: 24rpx;
+}
+
+.zc-pic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fdfdfe;
+  border: 2rpx solid #eef1f6;
+  border-radius: 16rpx;
+  padding: 10rpx 8rpx 4rpx;
+}
+
+.zc-img {
+  width: 164rpx;
+  height: 164rpx;
+}
+
+.zc-img-miss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  background: #f4f5fa;
+}
+
+.zc-cap {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1.5;
+  font-family: 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+}
+
+/* ── 形近字:大括号分组(每括罩上下两员,PDF 同款) ── */
+.zc-pairs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16rpx 40rpx;
+  margin-top: 26rpx;
+}
+
+.zc-pair {
+  display: flex;
+  align-items: stretch;
+}
+
+.zc-brace {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 300;
+  font-size: 84rpx;
+  line-height: 0.9;
+  color: #8a94a6;
+  display: flex;
+  align-items: center;
+  margin-right: 8rpx;
+}
+
+.zc-mem {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.zc-mem-row {
+  font-size: 31rpx;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.75;
+  letter-spacing: 1rpx;
+}
+
+/* ── 换卡动画:方向感知 ──
+   dir 'l' = 往左滑(下一张):旧卡 out-l(飞向左侧),新卡 in-l(自右侧入);dir 'r' = 镜像。
+   关键:同名动画重复声明不会重放(CSS 规范),所以奇偶类名必须绑不同的 animation-name
+   ——每方向备 a/b 两份画面完全相同的 keyframes,换卡交替换名强制重放。 */
+.in-l-0 {
+  animation: knInRa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-l-1 {
+  animation: knInRb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-0 {
+  animation: knInLa 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.in-r-1 {
+  animation: knInLb 0.36s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.out-l-0 {
+  animation: knOutLa 0.3s ease-in both;
+}
+
+.out-l-1 {
+  animation: knOutLb 0.3s ease-in both;
+}
+
+.out-r-0 {
+  animation: knOutRa 0.3s ease-in both;
+}
+
+.out-r-1 {
+  animation: knOutRb 0.3s ease-in both;
+}
+
+@keyframes knInRa {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes knInRb {
+  from {
+    opacity: 0;
+    transform: translateX(200rpx) rotate(4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes knInLa {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes knInLb {
+  from {
+    opacity: 0;
+    transform: translateX(-200rpx) rotate(-4deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes knOutLa {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes knOutLb {
+  to {
+    opacity: 0;
+    transform: translateX(-260rpx) rotate(-6deg) scale(0.9);
+  }
+}
+
+@keyframes knOutRa {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+@keyframes knOutRb {
+  to {
+    opacity: 0;
+    transform: translateX(260rpx) rotate(6deg) scale(0.9);
+  }
+}
+
+.zen-hint {
+  font-size: 25rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: rgba(140, 60, 50, 0.55);
+  padding-bottom: env(safe-area-inset-bottom);
+}

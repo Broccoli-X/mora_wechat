@@ -1,0 +1,42 @@
+<!-- 知识点总结:内容来自网页端「知识点录入」(仅管理员按教材维护单元必背知识)。
+     列表页只挑教材(年级+科目+册),点开进单元列表,再点单元进禅模式背。 -->
+<view class="page">
+  <view class="head">
+    <view class="head-title">📚 知识点总结</view>
+    <view class="head-sub">单元必背知识 · 来自网页端维护</view>
+    <view class="progress" wx:if="{{total}}">共 {{total}} 本教材</view>
+  </view>
+
+  <view class="state" wx:if="{{loading && !books.length}}">教材目录同步中…</view>
+
+  <view class="state error" wx:elif="{{loadError}}">
+    <text class="error-txt">教材目录同步失败</text>
+    <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+  </view>
+
+  <view class="empty" wx:elif="{{empty}}">
+    <view class="empty-icon">📭</view>
+    <view class="empty-txt">还没有教材内容</view>
+    <view class="empty-sub">请家长在网页端「知识点录入」按教材添加，这里就会自动出现啦</view>
+  </view>
+
+  <view
+    wx:for="{{books}}"
+    wx:key="bookKey"
+    class="b-card"
+    data-grade="{{item.grade}}"
+    data-subject="{{item.subject}}"
+    data-volume="{{item.volume}}"
+    bindtap="onTapBook"
+    hover-class="b-hover"
+  >
+    <view class="b-accent"></view>
+    <view class="b-main">
+      <view class="b-title">{{item.title}}</view>
+      <view class="b-meta">{{item.meta}}</view>
+    </view>
+    <text class="b-arrow">›</text>
+  </view>
+
+  <view class="tip" wx:if="{{!empty && books.length}}">点教材进单元列表 · 点单元进禅模式，左右滑动换一项</view>
+</view>
