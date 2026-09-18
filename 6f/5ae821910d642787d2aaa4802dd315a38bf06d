@@ -1,0 +1,23 @@
+docs/superpowers/specs/2026-09-18-knowledge-design.md
+  s_ca3076efc5709b::t_ec4f0e4a5318eb 37
+utils/knowledge.js
+  s_ca3076efc5709b::t_116ddb079dc40c 272-273
+README.md
+  s_ca3076efc5709b::t_3183ba6143cd79 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "6f5ae821910d642787d2aaa4802dd315a38bf06d",
+  "prompts": {},
+  "sessions": {
+    "s_ca3076efc5709b": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_bb5cef3c-7bb8-4f78-b1c8-0186cfdbf18b",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
