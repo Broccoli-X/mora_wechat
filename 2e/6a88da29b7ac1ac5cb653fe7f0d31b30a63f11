@@ -1,0 +1,69 @@
+pages/knowledge/book.js
+  s_ca3076efc5709b::t_796c2187162cdc 1-73
+pages/knowledge/knowledge.wxss
+  s_ca3076efc5709b::t_662eaf7eeb91f8 1-165
+pages/knowledge/zen.json
+  s_ca3076efc5709b::t_93a6fcc89f3fbb 1-5
+pages/knowledge/book.json
+  s_ca3076efc5709b::t_146fdafed154b8 1-5
+utils/knowledge.js
+  s_ca3076efc5709b::t_4b6623c9db16f6 1-270,275-278,285-286,290-291,293-372
+  s_ca3076efc5709b::t_18abf57b668412 271-274,279-284,287-289,292
+pages/knowledge/knowledge.json
+  s_ca3076efc5709b::t_848ffe3aed98d1 1-5
+README.md
+  s_ca3076efc5709b::t_a1420f851b5ea3 40
+  s_ca3076efc5709b::t_339085df50a472 59-60
+  s_ca3076efc5709b::t_a3eb3dcf9d3d96 30
+  s_ca3076efc5709b::t_2f7aa16cba0576 61
+pages/knowledge/book.wxss
+  s_ca3076efc5709b::t_2c9b70539885e3 1-152
+pages/knowledge/zen.js
+  s_ca3076efc5709b::t_9d9ac6ccaa8a7f 1-131
+pages/knowledge/knowledge.wxml
+  s_ca3076efc5709b::t_b5d9f376298af6 1-42
+pages/knowledge/book.wxml
+  s_ca3076efc5709b::t_6dc960d4efa179 1-40
+pages/knowledge/knowledge.js
+  s_ca3076efc5709b::t_0374a2dd8da57d 48
+  s_ca3076efc5709b::t_af901b35d675cc 1-47,49-69
+pages/category/category.js
+  s_ca3076efc5709b::t_57b3ca92025a36 19
+tests/knowledge-pages.test.js
+  s_ca3076efc5709b::t_dd9c0301f75aab 103
+  s_ca3076efc5709b::t_4d078a692468f1 157-159,161
+  s_ca3076efc5709b::t_f50a525af01a49 237
+  s_ca3076efc5709b::t_f12ef822230119 115
+  s_ca3076efc5709b::t_5100dda0b039df 1-102,104-114,116-156,160,162-236,238-264,267-281
+  s_ca3076efc5709b::t_f8bdef7c347921 265-266
+pages/knowledge/zen.wxml
+  s_ca3076efc5709b::t_d2afe82f5557e5 1-81
+pages/knowledge/zen.wxss
+  s_ca3076efc5709b::t_3b69fc7e161d39 1-373
+app.json
+  s_ca3076efc5709b::t_9f18ab1fd1c583 17-19
+tests/cards-css.test.js
+  s_ca3076efc5709b::t_03a64783d20a7a 81-85
+tests/knowledge.test.js
+  s_ca3076efc5709b::t_4a5db83a5b7b8a 175,179-184
+  s_ca3076efc5709b::t_359eeaf9f3b808 255
+  s_ca3076efc5709b::t_11522b4aa0ec5d 1-174,176-178,185-254,256-309
+docs/superpowers/specs/2026-09-18-knowledge-design.md
+  s_ca3076efc5709b::t_191b20cf230ca3 1-80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "2e6a88da29b7ac1ac5cb653fe7f0d31b30a63f11",
+  "prompts": {},
+  "sessions": {
+    "s_ca3076efc5709b": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_bb5cef3c-7bb8-4f78-b1c8-0186cfdbf18b",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
