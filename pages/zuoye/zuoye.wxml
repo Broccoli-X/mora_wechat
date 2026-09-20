@@ -11,7 +11,7 @@
     <view class="wk-label">{{weekLabel}}<text wx:if="{{isThisWeek}}" class="now-pill">本周</text></view>
     <view class="wk-btn" data-n="1" bindtap="shiftWeek" hover-class="wk-btn-hover">下一周 ›</view>
   </view>
-  <view class="back" wx:if="{{!isThisWeek}}" bindtap="backToThis">↩ 回到本周</view>
+  <view class="back" wx:if="{{!isThisWeek}}" bindtap="backToThis" hover-class="wk-btn-hover">↩ 回到本周</view>
 
   <view class="tip" wx:if="{{loading}}">作业同步中…</view>
 
@@ -31,6 +31,14 @@
         <text class="wd {{item.isToday ? 'wd-today' : ''}}">{{item.wd}}</text>
         <text class="dt">{{item.dt}}</text>
         <text wx:if="{{item.isToday}}" class="today-badge">今天</text>
+        <!-- 分享按钮长在今天卡片上:进页定位到的就是今天模块,抬手就能分享 -->
+        <view
+          wx:if="{{item.isToday}}"
+          class="day-share"
+          hover-class="day-share-hover"
+          hover-stay-time="80"
+          bindtap="shareToday"
+        >↗ 分享今天</view>
       </view>
       <view wx:if="{{item.items.length}}" class="items">
         <view wx:for="{{item.items}}" wx:for-item="hw" wx:for-index="ii" wx:key="id" class="hw">
@@ -67,4 +75,7 @@
     </view>
   </view>
   </block>
+
+  <!-- 分享长图的离屏画布:固定 750px 宽、高度按内容动态定 -->
+  <canvas id="share-canvas" type="2d" class="share-canvas"></canvas>
 </view>

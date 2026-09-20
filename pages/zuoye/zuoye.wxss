@@ -58,6 +58,15 @@
   color: #33415c;
 }
 
+/* 分享长图的离屏画布:移出屏幕不显示,尺寸无关绘制(画布大小由 js 设 width/height) */
+.share-canvas {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 750px;
+  height: 240px;
+}
+
 .tip {
   margin-top: 20rpx;
   text-align: center;
@@ -141,6 +150,24 @@
   border-radius: 999rpx;
   padding: 2rpx 14rpx;
   align-self: center;
+}
+
+/* 「分享今天」长在今天卡片的标题行右端:进页定位到的就是今天模块 */
+.day-share {
+  margin-left: auto;
+  align-self: center;
+  border-radius: 999rpx;
+  padding: 10rpx 22rpx;
+  font-size: 24rpx;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b6ef5, #7c5cf0);
+  box-shadow: 0 4rpx 12rpx rgba(59, 110, 245, 0.25);
+}
+
+.day-share-hover {
+  opacity: 0.85;
+  transform: scale(0.96);
 }
 
 .items {

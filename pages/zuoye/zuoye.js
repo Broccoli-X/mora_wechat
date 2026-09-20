@@ -1,5 +1,6 @@
 const hw = require('../../utils/homework');
 const auth = require('../../utils/auth');
+const shareCard = require('./share-card');
 
 Page({
   data: {
@@ -28,6 +29,11 @@ Page({
   onPullDownRefresh() {
     this.fetch(() => wx.stopPullDownRefresh());
   },
+
+  /* 本页刻意不定义 onShareAppMessage/onShareTimeline:作业不发小程序卡片,
+     分享只走页内「分享今天」按钮把当天作业长图发给微信好友。不定义则胶囊
+     菜单的「转发/分享到朋友圈」置灰(提示"当前页面不可转发"),防误发一张
+     只带缩略图的卡片 */
 
   retry() {
     this.fetch();
@@ -64,6 +70,64 @@ Page({
     const urls = e.currentTarget.dataset.urls || [];
     const current = urls[Number(e.currentTarget.dataset.pi)] || urls[0];
     if (urls.length) wx.previewImage({ current, urls });
+  },
+
+  /* 「分享今天」:当天作业(含图片附件)拼一张不透明白底长图发给微信好友。
+     接收方不用装小程序、不用登录就能看到作业与照片(本页不发小程序卡片,
+     见页面顶部注释)。只认今天:按钮长在今天卡片上,翻到别的周自然不出现 */
+  shareToday() {
+    if (this._sharing) return;
+    const day = this.data.days.find(d => d.isToday);
+    const items = day ? day.items : [];
+    if (!items.length) { wx.showToast({ title: '今天没有作业', icon: 'none' }); return; }
+    this._sharing = true;
+    wx.showLoading({ title: '正在生成分享图…', mask: true });
+    const q = wx.createSelectorQuery().in(this);
+    q.select('#share-canvas').fields({ node: true });
+    q.exec(res => {
+      const canvas = res && res[0] && res[0].node;
+      if (!canvas) { this.shareFail(); return; }
+      shareCard.build(canvas, {
+        dateText: hw.fmtCN(this.today) + ' · ' + hw.weekdayCN(this.today),
+        items: items.map(it => ({
+          icon: it.icon, color: it.color, subject: it.subject,
+          text: it.text, imgs: it.imgs,
+        })),
+      }, path => {
+        wx.hideLoading();
+        this._sharing = false;
+        this.sendShareImage(path);
+      }, () => this.shareFail());
+    });
+  },
+
+  shareFail() {
+    wx.hideLoading();
+    this._sharing = false;
+    wx.showToast({ title: '生成失败，请重试', icon: 'none' });
+  },
+
+  /* 发长图:首选微信原生「发送给朋友」菜单(用户可在菜单里选发送/保存/收藏)。
+     用户取消不算失败;真发失败(常见是图过大被微信拒收)给提示,可重试或存相册
+     再发。旧版微信没有该菜单,存相册兜底 */
+  sendShareImage(path) {
+    if (wx.showShareImageMenu) {
+      wx.showShareImageMenu({
+        path: path,
+        fail(r) {
+          if (r && r.errMsg && r.errMsg.indexOf('cancel') >= 0) return;
+          wx.showToast({ title: '没发出去，可重试或存相册再发', icon: 'none' });
+        },
+      });
+      return;
+    }
+    wx.saveImageToPhotosAlbum({
+      success() { wx.showToast({ title: '已存相册，发给好友吧', icon: 'none' }); },
+      fail(r) {
+        const denied = r && r.errMsg && r.errMsg.indexOf('auth') >= 0;
+        wx.showToast({ title: denied ? '请在设置里允许保存相册' : '没保存上，请重试', icon: 'none' });
+      },
+    });
   },
 
   /* 勾选/取消完成:先乐观更新本地条目与视图,上报失败回滚并提示(下次刷新以服务端为准);
