@@ -1,0 +1,21 @@
+pages/math/methods.wxss
+  s_a43087ffd9b743::t_3cdaa375472ffa 12-24,27-28
+pages/math/methods.wxml
+  s_a43087ffd9b743::t_247f00491638aa 7-12,14-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "45de2405a05f774cbecb227dff014129c78f106c",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
