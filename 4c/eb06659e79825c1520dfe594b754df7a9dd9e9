@@ -1,0 +1,21 @@
+pages/math/methods.js
+  s_a43087ffd9b743::t_53b218ebdb846d 287
+tests/math-pages.test.js
+  s_a43087ffd9b743::t_46094c763c08e6 191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "4ceb06659e79825c1520dfe594b754df7a9dd9e9",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
