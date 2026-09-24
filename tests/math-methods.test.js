@@ -126,4 +126,106 @@ test('书写方向:写入/退格(high-first 右拼 / ones-first 左拼 / 3 位�
   assert.equal(core.eraseAnswerDigit('', 'high-first'), '');
 });
 
+/* ── 舞台布局(math-stage) ── */
+const stageLib = require('../utils/math-stage');
+
+test('kindOf:三类分派', () => {
+  assert.equal(stageLib.kindOf('line-add'), 'line');
+  assert.equal(stageLib.kindOf('line-sub'), 'line');
+  assert.equal(stageLib.kindOf('make-ten'), 'oral');
+  assert.equal(stageLib.kindOf('level-ten'), 'oral');
+  assert.equal(stageLib.kindOf('two-digit-add'), 'place');
+  assert.equal(stageLib.kindOf('three-two-sub'), 'place');
+});
+
+test('buildStage:maxStep 口径(line=b+2 / oral=6 / place=位数)', () => {
+  assert.equal(stageLib.buildStage({ methodId: 'line-add', left: 3, right: 4, operator: '+', answer: 7 }).maxStep, 6);
+  assert.equal(stageLib.buildStage({ methodId: 'make-ten', left: 8, right: 5, operator: '+', answer: 13 }).maxStep, 6);
+  assert.equal(stageLib.buildStage({ methodId: 'two-digit-add', left: 38, right: 27, operator: '+', answer: 65 }).maxStep, 2);
+  assert.equal(stageLib.buildStage({ methodId: 'three-two-sub', left: 302, right: 47, operator: '-', answer: 255 }).maxStep, 3);
+});
+
+test('line 舞台:数轴/青蛙/跳跃弧/落点圈/答案块/字幕', () => {
+  const st = stageLib.buildStage({ methodId: 'line-add', left: 3, right: 4, operator: '+', answer: 7 }, '#22B8CF');
+  assert.equal(st.kind, 'line');
+  assert.equal(st.markerX, 30 + 3 * 28 - 20);                    // 青蛙起点 X(3)-20
+  const marker = st.elements.find(e => e.type === 'marker');
+  assert.equal(marker.x, st.markerX);
+  const arcs = st.elements.filter(e => e.type === 'quad');
+  assert.equal(arcs.length, 4);                                   // 每跳一条弧
+  assert.equal(arcs[0].p1[0], 30 + 4 * 28);                       // 第一跳落在 X(4)
+  assert.equal(arcs[0].markerTo, 30 + 4 * 28 - 20);               // 青蛙目标
+  assert.equal(arcs[0].step, 2);                                  // 步号 = hop+1
+  const answer = st.elements.find(e => e.type === 'block' && e.text === '7');
+  assert.equal(answer.step, 6);                                   // 答案块最后显形
+  assert.equal(st.elements.filter(e => e.type === 'caption').length, 6); // 每步一张
+  assert.equal(st.elements.filter(e => e.type === 'circle').length, 5);  // 起点+4 落点
+});
+
+test('oral 舞台:四行布局(8+5 凑十)', () => {
+  const st = stageLib.buildStage({ methodId: 'make-ten', left: 8, right: 5, operator: '+', answer: 13 });
+  assert.equal(st.kind, 'oral');
+  const at = (step, y) => st.elements.filter(e => e.type === 'block' && e.step === step && e.y === y);
+  assert.deepEqual(at(0, 8).map(e => e.text), ['8', '5', '13']);       // 顶部原式
+  assert.deepEqual(at(2, 96).map(e => [e.text, e.cls, e.x]), [['2', 'sp1', 88], ['3', 'sp2', 208]]);
+  assert.deepEqual(at(4, 186).map(e => [e.text, e.cls, e.x]), [['10', 'sten', 88]]);
+  assert.deepEqual(at(6, 262).map(e => e.text), ['10', '3', '13']);    // 结果行
+  assert.ok(st.elements.some(e => e.type === 'path' && e.step === 3)); // 引导弧
+  assert.equal(st.elements.filter(e => e.type === 'caption').length, 0); // 口诀课无字幕
+  // 破十(15-9):fromA=true, xLeft=false → 拆分行 Y 在左 8、X=10 在右 128
+  const bt = stageLib.buildStage({ methodId: 'break-ten', left: 15, right: 9, operator: '-', answer: 6 });
+  assert.deepEqual(bt.elements.filter(e => e.type === 'block' && e.step === 2 && e.y === 96).map(e => [e.text, e.x]),
+    [['5', 8], ['10', 128]]);
+});
+
+test('place 舞台:竖式行/进1 note/借位弧/结果位逐步显形', () => {
+  const st = stageLib.buildStage({ methodId: 'three-two-add', left: 168, right: 47, operator: '+', answer: 215 });
+  assert.equal(st.kind, 'place');
+  const blocks = (cls, y) => st.elements.filter(e => e.type === 'block' && e.cls === cls && e.y === y);
+  assert.deepEqual(blocks('sc1', 62).map(e => e.text), ['1', '6', '8']);
+  assert.equal(blocks('sc1', 62)[0].x, 118 - 22);                 // 三位 start=118
+  assert.deepEqual(blocks('sc2', 118).map(e => e.text), ['4', '7']);
+  assert.deepEqual(st.elements.filter(e => e.type === 'block' && e.y === 198).map(e => [e.text, e.step]),
+    [['2', 3], ['1', 2], ['5', 1]]);                              // 结果位:个位先显
+  const notes = st.elements.filter(e => e.type === 'note');
+  assert.equal(notes.length, 2);                                  // 个位、十位两枚进1
+  assert.ok(notes.every(n => n.text === '进1'));
+  const quads = st.elements.filter(e => e.type === 'quad');
+  assert.equal(quads.length, 2);                                  // 两条进位弧
+  const bt = stageLib.buildStage({ methodId: 'three-two-sub', left: 302, right: 47, operator: '-', answer: 255 });
+  assert.equal(bt.elements.filter(e => e.type === 'note').length, 2); // 十位 0 连续借位
+});
+
+test('buildStage:所有元素坐标在 340×310 舞台内', () => {
+  ['line-add', 'line-sub', 'make-ten', 'break-ten', 'level-ten', 'two-digit-add', 'two-digit-sub', 'three-two-add', 'three-two-sub']
+    .forEach(id => {
+      const q = core.makeQuestion(id, rng(id.charCodeAt(3) * 131 + 7));
+      const st = stageLib.buildStage(q, '#22B8CF');
+      st.elements.forEach(e => {
+        if (e.type === 'caption') return;                       // 字幕由渲染器定宽定高,无坐标
+        const xs = e.x !== undefined ? [e.x] : e.p0 ? [e.p0[0], e.cp[0], e.p1[0]] : e.x1 !== undefined ? [e.x1, e.x2] : e.cx !== undefined ? [e.cx] : e.segs ? e.segs.flatMap(s => s.pts.filter((_, i) => i % 2 === 0)) : [e.x];
+        const ys = e.y !== undefined ? [e.y] : e.p0 ? [e.p0[1], e.cp[1], e.p1[1]] : e.y1 !== undefined ? [e.y1, e.y2] : e.cy !== undefined ? [e.cy] : e.segs ? e.segs.flatMap(s => s.pts.filter((_, i) => i % 2 === 1)) : [e.y];
+        xs.forEach(x => assert.ok(x >= -1 && x <= 341, id + ' x 越界: ' + x));
+        ys.forEach(y => assert.ok(y >= -1 && y <= 311, id + ' y 越界: ' + y));
+      });
+    });
+});
+
+test('titleSegments:各课彩色段文案', () => {
+  const segText = segs => segs.map(s => s.text).join('');
+  const la = stageLib.titleSegments({ methodId: 'line-add', left: 3, right: 4, operator: '+', answer: 7 });
+  assert.equal(segText(la), '💡 线段加法：小青蛙从 3 出发，往前跳 4 步，落在 7');
+  assert.equal(la[3].color, '#FF9500');                           // 跳步数橙色(c2)
+  assert.equal(la[5].color, '#34C759');                           // 落点绿色(ten)
+  const mt = stageLib.titleSegments({ methodId: 'make-ten', left: 8, right: 5, operator: '+', answer: 13 });
+  assert.equal(segText(mt), '💡 凑十法：把 5 分成 2 和 3，和 8 先凑成 10');
+  const bt = stageLib.titleSegments({ methodId: 'break-ten', left: 15, right: 9, operator: '-', answer: 6 });
+  assert.equal(segText(bt), '💡 破十法：把 15 分成 10 和 5，先算 10 − 9');
+  const lt = stageLib.titleSegments({ methodId: 'level-ten', left: 15, right: 9, operator: '-', answer: 6 });
+  assert.equal(segText(lt), '💡 平十法：把 9 分成 5 和 4，先减 5 得到 10');
+  const td = stageLib.titleSegments({ methodId: 'two-digit-add', left: 38, right: 27, operator: '+', answer: 65 });
+  assert.equal(segText(td), '💡 两位数 + 两位数：个位满十，向十位进 1');
+  assert.ok(td.every(s => !s.color));                             // 默认文案无彩色
+});
+
 console.log('\n' + passed + ' 用例全过\n');
