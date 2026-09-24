@@ -228,4 +228,57 @@ test('titleSegments:各课彩色段文案', () => {
   assert.ok(td.every(s => !s.color));                             // 默认文案无彩色
 });
 
+/* ── canvas 渲染器(math-canvas) ── */
+const canvasLib = require('../utils/math-canvas');
+
+/* 记录调用的假 ctx:方法调用与属性赋值都进 calls */
+function makeCtxRecorder() {
+  const calls = [];
+  return {
+    calls: calls,
+    ctx: new Proxy({}, {
+      get(t, p) { return function () { calls.push([String(p)].concat([].slice.call(arguments))); }; },
+      set(t, p, v) { calls.push(['set:' + String(p), v]); return true; },
+    }),
+  };
+}
+
+test('drawStage:step 过滤/captionStep 换字幕/markerX 覆盖', () => {
+  const st = stageLib.buildStage({ methodId: 'line-add', left: 3, right: 4, operator: '+', answer: 7 }, '#22B8CF');
+  const rec = makeCtxRecorder();
+  canvasLib.drawStage(rec.ctx, st, { step: 1, captionStep: 1, markerX: 100 });
+  const texts = rec.calls.filter(c => c[0] === 'fillText').map(c => c[1]);
+  assert.ok(texts.indexOf('3') >= 0, '顶部算式已画');
+  assert.ok(!rec.calls.some(c => c[0] === 'fillText' && c[1] === '7' && c[2] === 250), '答案块 step=6 未显形不画(数轴刻度 7 除外)');
+  assert.ok(texts.indexOf('🐸') >= 0, '青蛙已画');
+  const markerText = rec.calls.filter(c => c[0] === 'fillText' && c[1] === '🐸')[0];
+  assert.equal(markerText[2], 120);                               // markerX=100 + 块半宽 20
+  assert.equal(rec.calls.filter(c => c[0] === 'fillText' && typeof c[1] === 'string' && c[1].indexOf('小青蛙') >= 0).length, 1, '只画当前步字幕');
+
+  const rec2 = makeCtxRecorder();
+  canvasLib.drawStage(rec2.ctx, st, { step: 6, captionStep: 6 });
+  assert.ok(rec2.calls.some(c => c[0] === 'fillText' && c[1] === '7' && c[2] === 250), '终局答案块已画');
+});
+
+test('drawStage:drops 入场插值(translate+globalAlpha)', () => {
+  const st = stageLib.buildStage({ methodId: 'make-ten', left: 8, right: 5, operator: '+', answer: 13 });
+  const rec = makeCtxRecorder();
+  canvasLib.drawStage(rec.ctx, st, { step: 2, drops: { 5: { alpha: 0.5, dy: -8 } } });
+  assert.ok(rec.calls.some(c => c[0] === 'set:globalAlpha' && c[1] === 0.5), 'alpha 生效');
+  assert.deepEqual(rec.calls.filter(c => c[0] === 'translate')[0], ['translate', 0, -8]);
+  assert.equal(rec.calls.filter(c => c[0] === 'restore').length, rec.calls.filter(c => c[0] === 'save').length);
+});
+
+test('drawStage:marker/箭头/圆角块冒烟(不抛错且产生笔画)', () => {
+  ['line-add', 'make-ten', 'three-two-add', 'three-two-sub'].forEach(id => {
+    const q = core.makeQuestion(id, rng(id.length * 17 + 3));
+    const st = stageLib.buildStage(q, '#22B8CF');
+    for (let s = 0; s <= st.maxStep; s++) {
+      const rec = makeCtxRecorder();
+      canvasLib.drawStage(rec.ctx, st, { step: s, captionStep: st.kind === 'oral' ? null : s });
+      assert.ok(rec.calls.length > 10, id + ' step' + s + ' 有笔画');
+    }
+  });
+});
+
 console.log('\n' + passed + ' 用例全过\n');
