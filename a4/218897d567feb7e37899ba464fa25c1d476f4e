@@ -1,0 +1,20 @@
+docs/superpowers/plans/2026-09-24-math-methods.md
+  s_a43087ffd9b743::t_a6bb4a4ba35cc5 136-138
+  s_a43087ffd9b743::t_5f3d59dd32d5ce 131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "a4218897d567feb7e37899ba464fa25c1d476f4e",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
