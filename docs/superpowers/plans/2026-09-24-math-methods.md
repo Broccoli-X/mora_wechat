@@ -128,12 +128,14 @@ test('buildDemoSteps:进位/借位(含 168+47 十位再进百位、302-47 连续
   assert.equal(add3[1].expression, '8 + 7 = 15');
   assert.equal(add3[2].expression, '6 + 4 + 1 = 11');   // 十位再进位
   assert.equal(add3[2].carry, 1);
-  assert.equal(add3[3].expression, '1 + 0 + 1 = 2');
+  assert.equal(add3[3].expression, '1 + 1 = 2');
   const sub2 = core.buildDemoSteps({ methodId: 'two-digit-sub', left: 52, right: 38, operator: '-', answer: 14 });
   assert.deepEqual(sub2.map(s => s.expression), ['52 - 38', '12 - 8 = 4', '4 - 3 = 1', '14']);
   assert.equal(sub2[1].borrow, 1);
   const sub3 = core.buildDemoSteps({ methodId: 'three-two-sub', left: 302, right: 47, operator: '-', answer: 255 });
-  assert.equal(sub3[2].caption, '十位是 0，先向百位借 1；十位变 10，再借 1 给个位');
+  assert.equal(sub3[1].caption, '十位是 0，先向百位借 1；十位变 10，再借 1 给个位'); // 个位步骤提示连续借位
+  assert.equal(sub3[1].expression, '12 - 7 = 5');
+  assert.equal(sub3[2].expression, '9 - 4 = 5');       // 十位 0 借出后变 9
 });
 
 test('makeLineQuestion:边界(合法/非法/非线段课)', () => {
