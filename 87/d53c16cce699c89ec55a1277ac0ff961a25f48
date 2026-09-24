@@ -1,0 +1,21 @@
+README.md
+  s_a43087ffd9b743::t_721665c3610fbb 41
+  s_a43087ffd9b743::t_aa845430af917b 30
+  s_a43087ffd9b743::t_5d90df1d3b39cf 62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "87d53c16cce699c89ec55a1277ac0ff961a25f48",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
