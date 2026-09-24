@@ -4,15 +4,22 @@
   <view class="blocked-title">数学方法动画课未对本家庭开放</view>
 </view>
 <block wx:else>
-  <scroll-view class="toolbar" scroll-x enable-flex show-scrollbar="{{false}}">
+  <view class="page-head">
+    <view class="page-title">🧮 数学方法动画课 🎈</view>
+    <view class="page-sub">先动脑答题 · 再看动画方法 · 数线跳一跳，凑十进位一步步学会</view>
+  </view>
+
+  <view class="toolbar">
     <view class="tb-label">点击要学习的方法</view>
-    <view class="method-list">
-      <view wx:for="{{methods}}" wx:key="i"
-            class="method-btn {{item.active ? 'active' : ''}}"
-            style="{{item.active ? 'background:linear-gradient(135deg,' + item.c + ',' + item.cd + ')' : ''}}"
-            data-i="{{item.i}}" bindtap="onSelectMethod">{{item.title}}</view>
-    </view>
-  </scroll-view>
+    <scroll-view class="method-scroll" scroll-x show-scrollbar="{{false}}">
+      <view class="method-list">
+        <view wx:for="{{methods}}" wx:key="i"
+              class="method-btn {{item.active ? 'active' : ''}}"
+              style="{{item.active ? 'background:linear-gradient(135deg,' + item.c + ',' + item.cd + ')' : ''}}"
+              hover-class="btn-hover" data-i="{{item.i}}" bindtap="onSelectMethod">{{item.title}}</view>
+      </view>
+    </scroll-view>
+  </view>
 
   <view class="score-bar">
     <view class="score lesson">📘 {{lesson.title}}</view>

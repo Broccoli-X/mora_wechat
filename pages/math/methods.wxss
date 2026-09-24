@@ -9,16 +9,23 @@ page {
 .blocked-emoji { font-size: 88rpx; }
 .blocked-title { margin-top: 24rpx; font-size: 30rpx; font-weight: 800; color: #666; }
 
-/* 选课胶囊 */
-.toolbar { display: flex; padding: 20rpx 24rpx 8rpx; white-space: nowrap; }
-.tb-label { font-size: 26rpx; font-weight: 800; color: #aaa; margin-right: 6rpx; line-height: 66rpx; }
-.method-list { display: inline-flex; }
-.method-btn { font-weight: 800; border-radius: 48rpx; padding: 16rpx 30rpx; font-size: 28rpx; color: #888; background: #f5f5f5; margin-right: 16rpx; }
-.method-btn.active { color: #fff; box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .15); }
+/* 页面标题头 */
+.page-head { text-align: center; padding: 30rpx 24rpx 0; }
+.page-title { font-size: 44rpx; font-weight: 900; color: #333; letter-spacing: 2rpx; }
+.page-sub { margin-top: 10rpx; font-size: 24rpx; color: #999; }
+
+/* 选课工具条:白色圆角卡片锚定,胶囊行横向滚动 */
+.toolbar { margin: 24rpx 28rpx 0; background: #fff; border: 2rpx solid #ffe9f2; border-radius: 28rpx; padding: 20rpx 22rpx 22rpx; box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, .05); }
+.tb-label { font-size: 24rpx; font-weight: 800; color: #b9b9b9; margin-bottom: 14rpx; }
+.method-scroll { width: 100%; white-space: nowrap; }
+.method-list { display: inline-block; }
+.method-btn { display: inline-block; padding: 12rpx 26rpx; font-size: 26rpx; font-weight: 800; color: #8a8a8a; background: #f6f7f9; border: 2rpx solid #eef0f3; border-radius: 999rpx; margin-right: 14rpx; box-sizing: border-box; }
+.method-btn.active { color: #fff; border-color: transparent; box-shadow: 0 8rpx 18rpx rgba(0, 0, 0, .16); }
+.btn-hover { opacity: .82; }
 
 /* 分数条 */
-.score-bar { display: flex; justify-content: center; gap: 28rpx; margin: 24rpx 0 28rpx; }
-.score { background: #fff; border-radius: 40rpx; padding: 12rpx 32rpx; font-size: 28rpx; font-weight: 800; color: #666; box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, .07); }
+.score-bar { display: flex; justify-content: center; gap: 24rpx; margin: 24rpx 0 28rpx; }
+.score { background: #fff; border-radius: 999rpx; padding: 12rpx 30rpx; font-size: 26rpx; font-weight: 800; color: #666; box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, .07); }
 .score.lesson { color: #4dabf7; }
 .score.streak { color: #34c759; }
 
