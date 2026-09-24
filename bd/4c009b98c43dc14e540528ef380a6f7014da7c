@@ -1,0 +1,31 @@
+docs/superpowers/plans/2026-09-24-math-methods.md
+  s_a43087ffd9b743::t_2ce1e975cbdbe0 337-338
+  s_a43087ffd9b743::t_7f1e24c41cfa9c 830
+  s_a43087ffd9b743::t_1cb7a041a8a70e 1025,1027
+  s_a43087ffd9b743::t_af842c4ba66abb 1242-1247
+  s_a43087ffd9b743::t_07d7513d63a5c4 1-206,208-323,325-336,339-546,548-689,691-829,831-1024,1026,1028-1241,1248-1306,1308-1343,1345-1493,1500-1700,1702-1747
+  s_a43087ffd9b743::t_ade57424f7fc68 1494-1499
+  s_a43087ffd9b743::t_57bd7f2cbdf336 1701
+  s_a43087ffd9b743::t_124637bd72b26a 324
+  s_a43087ffd9b743::t_0153a9ddde0dc2 207
+  s_a43087ffd9b743::t_c817544c3b122f 690
+  s_a43087ffd9b743::t_e8598593a80e57 547
+  s_a43087ffd9b743::t_0160539b7e177c 1307
+  s_a43087ffd9b743::t_7309c050e4b35d 1344
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "bd4c009b98c43dc14e540528ef380a6f7014da7c",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
