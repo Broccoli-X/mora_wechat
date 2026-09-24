@@ -1,0 +1,35 @@
+pages/math/methods.wxss
+  s_a43087ffd9b743::t_f4e355dafcc415 1-111
+pages/math/methods.wxml
+  s_a43087ffd9b743::t_284ae44e81a489 1-112
+app.json
+  s_a43087ffd9b743::t_aa0812e1833465 23
+tests/math-pages.test.js
+  s_a43087ffd9b743::t_5b208179bffe66 156
+  s_a43087ffd9b743::t_220ce17f8392cb 1-93,95,99-135,137,139-155,157-260
+  s_a43087ffd9b743::t_5382a0c2eb055c 94,96-98
+  s_a43087ffd9b743::t_569bbf2c4bad0b 136,138
+  s_a43087ffd9b743::t_a19e3b457100b9 261
+pages/category/category.js
+  s_a43087ffd9b743::t_b95e244addd13c 25
+pages/math/methods.js
+  s_a43087ffd9b743::t_82fbde49a22a5f 1-313
+pages/math/methods.json
+  s_a43087ffd9b743::t_b578cb9acc86a2 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "fcaa0822bbda1f9fab330491320f5d8a6ef18d47",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
