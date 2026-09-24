@@ -1,0 +1,21 @@
+utils/math-stage.js
+  s_a43087ffd9b743::t_d845682b02b989 1-182
+tests/math-methods.test.js
+  s_a43087ffd9b743::t_05530d22c4c14c 129-230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "462050de76ada752d37a624013730d7bba5a7b4e",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
