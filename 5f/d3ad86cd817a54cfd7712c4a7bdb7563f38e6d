@@ -1,0 +1,22 @@
+docs/superpowers/specs/2026-09-24-math-methods-design.md
+  s_a43087ffd9b743::t_943416c43aba54 114-117
+  s_a43087ffd9b743::t_983e2f07393615 1-81,85-87,92-113,118-162
+  s_a43087ffd9b743::t_3901ad167c75a6 82-84
+  s_a43087ffd9b743::t_f977242814cafc 88-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "5fd3ad86cd817a54cfd7712c4a7bdb7563f38e6d",
+  "prompts": {},
+  "sessions": {
+    "s_a43087ffd9b743": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_a1ee77bb-4693-484d-a8f6-c67fe3d5436f",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
