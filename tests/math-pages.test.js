@@ -188,6 +188,7 @@ test('页面:打开演示弹窗锁输入+canvas 就绪,线段课有自定行', (
   assert.equal(canvasQueried, 1);
   assert.equal(canvasNode.width, 680);                      // 340 × dpr2
   assert.equal(p.data.canvasReady, true);
+  assert.ok(rafCbs.length > 0, 'rAF 绘制循环已启动(canvas 真正开始画)');
   p.onKeyDigit({ currentTarget: { dataset: { k: 5 } } });
   assert.equal(p.data.input, '');                           // 弹窗期锁输入
   p.closeDemo();

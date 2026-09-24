@@ -284,7 +284,7 @@ Page({
   },
 
   startLoop() {
-    if (!this.canvasReady || !this.canvasNode || this.rafId) return;
+    if (!this.data.canvasReady || !this.canvasNode || this.rafId) return;
     const loop = () => {
       if (!this.ctx || !this.stage) return;
       canvasLib.drawStage(this.ctx, this.stage, this.frame());
