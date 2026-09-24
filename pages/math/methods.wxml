@@ -1,0 +1,112 @@
+<!-- 数学方法动画课:对齐网页端 math-methods.html(选课→答题→▶动画演示) -->
+<view wx:if="{{blocked}}" class="blocked">
+  <view class="blocked-emoji">🧮</view>
+  <view class="blocked-title">数学方法动画课未对本家庭开放</view>
+</view>
+<block wx:else>
+  <scroll-view class="toolbar" scroll-x enable-flex show-scrollbar="{{false}}">
+    <view class="tb-label">点击要学习的方法</view>
+    <view class="method-list">
+      <view wx:for="{{methods}}" wx:key="i"
+            class="method-btn {{item.active ? 'active' : ''}}"
+            style="{{item.active ? 'background:linear-gradient(135deg,' + item.c + ',' + item.cd + ')' : ''}}"
+            data-i="{{item.i}}" bindtap="onSelectMethod">{{item.title}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="score-bar">
+    <view class="score lesson">📘 {{lesson.title}}</view>
+    <view class="score streak">✅ 连续答对 {{streak}} 题</view>
+  </view>
+
+  <view class="q-card" style="border-color:{{lesson.c}}">
+    <view class="demo-btn" bindtap="openDemo">▶ 动画演示</view>
+    <view class="kicker" style="color:{{lesson.c}}">{{lesson.kicker}}</view>
+    <view class="summary">{{lesson.summary}}</view>
+    <view class="q-prompt">请先自己算一算</view>
+
+    <view class="stage">
+      <view wx:if="{{!question.vertical}}" class="horizontal">
+        <view class="num a">{{question.left}}</view>
+        <view class="op">{{question.operator}}</view>
+        <view class="num b">{{question.right}}</view>
+        <view class="op">=</view>
+        <view class="answer {{inputState}}">{{input || '?'}}</view>
+      </view>
+      <view wx:else class="vertical" style="--digits:{{question.digits}}">
+        <view class="v-op">{{question.operator}}</view>
+        <block wx:for="{{question.topCells}}" wx:key="i">
+          <view wx:if="{{item.d}}" class="digit top" style="grid-column:{{item.i + 2}}">{{item.d}}</view>
+        </block>
+        <block wx:for="{{question.bottomCells}}" wx:key="i">
+          <view wx:if="{{item.d}}" class="digit bottom" style="grid-column:{{item.i + 2}}">{{item.d}}</view>
+        </block>
+        <view class="v-line"></view>
+        <view class="answer v-answer {{inputState}}">{{input || '?'}}</view>
+      </view>
+    </view>
+    <view wx:if="{{question.vertical}}" class="place-tags">
+      <view wx:for="{{question.placeTags}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <view class="feedback {{feedback.cls}}">{{feedback.text}}</view>
+
+    <view class="write-mode">
+      <view class="write-mode-label">✍️ 书写顺序</view>
+      <view class="write-mode-options">
+        <view class="write-mode-btn {{writeDirection === 'high-first' ? 'on' : ''}}" data-d="high-first" bindtap="onWriteDirection">高位 → 个位</view>
+        <view class="write-mode-btn {{writeDirection === 'ones-first' ? 'on' : ''}}" data-d="ones-first" bindtap="onWriteDirection">个位 → 高位</view>
+      </view>
+    </view>
+
+    <view class="keypad">
+      <view class="kp-row">
+        <view wx:for="{{[1, 2, 3, 4, 5]}}" wx:key="*this" class="key {{inputLocked ? 'off' : ''}}" data-k="{{item}}" bindtap="onKeyDigit">{{item}}</view>
+      </view>
+      <view class="kp-row">
+        <view wx:for="{{[6, 7, 8, 9, 0]}}" wx:key="*this" class="key {{inputLocked ? 'off' : ''}}" data-k="{{item}}" bindtap="onKeyDigit">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="action-row">
+      <view class="action-btn back {{inputLocked ? 'off' : ''}}" bindtap="onBackspace">⌫ 退格</view>
+      <view class="action-btn submit {{inputLocked ? 'off' : ''}}" bindtap="onSubmit">✔ 确认</view>
+      <view class="action-btn newq" bindtap="onNewQuestion">🔄 换题</view>
+    </view>
+  </view>
+
+  <view wx:if="{{demoVisible}}" class="demo-modal">
+    <view class="demo-backdrop" bindtap="onBackdrop"></view>
+    <view class="demo-card">
+      <view class="modal-close" bindtap="onCloseDemo">×</view>
+      <view class="anim-area">
+        <view class="anim-head">
+          <view class="anim-title">
+            <block wx:for="{{animTitle}}" wx:key="i">
+              <text wx:if="{{item.color}}" style="color:{{item.color}}" class="tt">{{item.text}}</text>
+              <text wx:else>{{item.text}}</text>
+            </block>
+          </view>
+          <view class="replay" bindtap="onReplay">🔁 再看一遍</view>
+        </view>
+        <view class="anim-wrap">
+          <canvas type="2d" id="demo-canvas" class="demo-canvas {{canvasReady ? '' : 'hide'}}"></canvas>
+          <view wx:if="{{!canvasReady}}" class="demo-fallback">
+            <view wx:for="{{demoSteps}}" wx:key="i" class="fallback-step {{step === item.i ? 'cur' : ''}}">
+              <text class="fe">{{item.expression}}</text>
+              <text class="fc">{{item.caption}}</text>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{lineCustom}}" class="line-custom {{lineCustom.bad ? 'bad' : ''}}">
+          <input class="line-input" type="number" maxlength="2" value="{{lineCustom.a}}" data-f="a" bindinput="onLineInput" />
+          <text class="line-op">{{lineCustom.op}}</text>
+          <input class="line-input" type="number" maxlength="2" value="{{lineCustom.b}}" data-f="b" bindinput="onLineInput" />
+          <view class="line-play" bindtap="onLinePlay">▶ 看动画</view>
+        </view>
+        <view wx:if="{{lineCustom}}" class="line-hint">{{lineCustom.hint}}</view>
+      </view>
+      <view class="demo-tip">{{demoTip}}</view>
+    </view>
+  </view>
+</block>

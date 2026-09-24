@@ -22,6 +22,7 @@ const GROUPS = [
       {
         name: '数学', color: '#1d5fbf', icon: '🔢',
         items: [
+          { name: '数学方法动画课', desc: '数线跳跳 · 凑十破十平十 · 进位借位动画', status: 'ok', url: '/pages/math/methods', perm: 'math_methods' },
           { name: '口算练习', desc: '10/20 以内加减法', status: 'dev' },
         ],
       },

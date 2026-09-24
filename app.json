@@ -20,6 +20,7 @@
     "pages/recognition/recognition",
     "pages/recognition/batch",
     "pages/recognition/zen",
+    "pages/math/methods",
     "pages/mine/mine",
     "pages/hw-edit/hw-edit",
     "pages/points-edit/points-edit",

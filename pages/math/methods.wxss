@@ -1,0 +1,111 @@
+/* 样式对齐网页端 math-methods.html:彩虹渐变底 + 每课主题色题卡。
+   弹窗 canvas 舞台逻辑坐标 340×310px,节点 css 尺寸 680×620rpx(2rpx≈1px)。 */
+page {
+  background: linear-gradient(135deg, #fff1f2 0%, #fff7e6 30%, #e6f7ff 65%, #f6ffed 100%);
+  min-height: 100vh;
+}
+
+.blocked { padding: 160rpx 40rpx; text-align: center; }
+.blocked-emoji { font-size: 88rpx; }
+.blocked-title { margin-top: 24rpx; font-size: 30rpx; font-weight: 800; color: #666; }
+
+/* 选课胶囊 */
+.toolbar { display: flex; padding: 20rpx 24rpx 8rpx; white-space: nowrap; }
+.tb-label { font-size: 26rpx; font-weight: 800; color: #aaa; margin-right: 6rpx; line-height: 66rpx; }
+.method-list { display: inline-flex; }
+.method-btn { font-weight: 800; border-radius: 48rpx; padding: 16rpx 30rpx; font-size: 28rpx; color: #888; background: #f5f5f5; margin-right: 16rpx; }
+.method-btn.active { color: #fff; box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .15); }
+
+/* 分数条 */
+.score-bar { display: flex; justify-content: center; gap: 28rpx; margin: 24rpx 0 28rpx; }
+.score { background: #fff; border-radius: 40rpx; padding: 12rpx 32rpx; font-size: 28rpx; font-weight: 800; color: #666; box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, .07); }
+.score.lesson { color: #4dabf7; }
+.score.streak { color: #34c759; }
+
+/* 题卡 */
+.q-card { position: relative; background: #fff; border-radius: 48rpx; padding: 116rpx 40rpx 48rpx; margin: 0 28rpx; box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, .12); border: 6rpx solid #4dabf7; text-align: center; box-sizing: border-box; }
+.demo-btn { position: absolute; top: 28rpx; right: 28rpx; border-radius: 36rpx; padding: 14rpx 26rpx; background: linear-gradient(135deg, #34c759, #1e9e48); color: #fff; font-size: 26rpx; font-weight: 900; box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .14); }
+.kicker { font-size: 40rpx; font-weight: 900; margin-bottom: 4rpx; }
+.summary { font-size: 26rpx; color: #999; margin-bottom: 20rpx; }
+.q-prompt { font-size: 30rpx; color: #777; font-weight: 800; margin-bottom: 16rpx; }
+
+/* 横式舞台 */
+.stage { min-height: 300rpx; display: flex; align-items: center; justify-content: center; padding: 16rpx 0; }
+.horizontal { display: flex; justify-content: center; align-items: center; }
+.horizontal .num { display: flex; align-items: center; justify-content: center; min-width: 132rpx; height: 132rpx; padding: 0 20rpx; border-radius: 32rpx; color: #fff; font-size: 76rpx; font-weight: 900; text-shadow: 2rpx 2rpx 0 rgba(0, 0, 0, .13); box-sizing: border-box; }
+.horizontal .num.a { background: #4dabf7; }
+.horizontal .num.b { background: #ff9500; }
+.horizontal .op { font-size: 64rpx; color: #bbb; font-weight: 900; padding: 0 12rpx; }
+
+/* 答案框(横式/竖式共用) */
+.answer { min-width: 164rpx; height: 112rpx; line-height: 100rpx; padding: 0 20rpx; border-radius: 28rpx; background: #fffae6; border: 6rpx dashed #ff9500; color: #ff9500; font-size: 64rpx; font-weight: 900; box-sizing: border-box; }
+.answer.correct { background: #f6ffed; border-style: solid; border-color: #34c759; color: #34c759; }
+.answer.wrong { background: #fff0f0; border-style: solid; border-color: #ff5c8d; color: #ff5c8d; animation: shake .28s linear; }
+
+/* 竖式舞台(grid 列数由 --digits 注入) */
+.vertical { display: inline-grid; grid-template-columns: 68rpx repeat(var(--digits), 96rpx); grid-auto-rows: 104rpx; align-items: center; text-align: center; font-size: 80rpx; font-weight: 900; }
+.vertical .v-op { grid-column: 1; grid-row: 2; font-size: 60rpx; color: #bbb; }
+.digit { width: 92rpx; height: 100rpx; display: flex; align-items: center; justify-content: center; border-radius: 24rpx; margin: 0 auto; font-size: 72rpx; font-weight: 900; }
+.digit.top { grid-row: 1; color: #2f80ed; }
+.digit.bottom { grid-row: 2; color: #f77f00; }
+.v-line { grid-column: 1 / -1; grid-row: 3; height: 8rpx; background: #999; border-radius: 4rpx; align-self: start; }
+.answer.v-answer { grid-column: 2 / -1; grid-row: 4; justify-self: end; margin-top: 8rpx; }
+.place-tags { display: flex; justify-content: flex-end; gap: 16rpx; max-width: 440rpx; margin: 8rpx auto 0; color: #aaa; font-size: 22rpx; }
+
+.feedback { min-height: 48rpx; font-size: 28rpx; font-weight: 800; color: #999; margin-top: 16rpx; }
+.feedback.ok { color: #1e9e48; }
+.feedback.bad { color: #e0306e; }
+
+/* 书写顺序 */
+.write-mode { display: flex; align-items: center; justify-content: center; margin: 24rpx auto 0; }
+.write-mode-label { color: #777; font-size: 26rpx; font-weight: 900; }
+.write-mode-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 540rpx; padding: 6rpx; border: 4rpx solid #dee2e6; border-radius: 24rpx; background: #f8f9fa; box-sizing: border-box; }
+.write-mode-btn { height: 72rpx; line-height: 72rpx; border-radius: 16rpx; color: #777; font-size: 26rpx; font-weight: 900; }
+.write-mode-btn.on { background: #fff; color: #4dabf7; box-shadow: 0 4rpx 14rpx rgba(0, 0, 0, .12); }
+
+/* 数字键盘 */
+.keypad { display: flex; flex-direction: column; align-items: center; margin-top: 24rpx; }
+.kp-row { display: flex; justify-content: center; }
+.key { font-size: 50rpx; font-weight: 900; width: 116rpx; height: 116rpx; line-height: 110rpx; border: 6rpx solid #eee; border-radius: 32rpx; background: #fafafa; color: #666; box-sizing: border-box; margin: 0 10rpx 20rpx; }
+.key.off { opacity: .45; }
+.action-row { display: flex; justify-content: center; margin-top: 4rpx; }
+.action-btn { height: 108rpx; line-height: 108rpx; border-radius: 32rpx; padding: 0 36rpx; font-size: 30rpx; font-weight: 900; color: #fff; box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .13); margin: 0 10rpx; }
+.action-btn.back { background: linear-gradient(135deg, #ffb347, #ff9500); }
+.action-btn.submit { background: linear-gradient(135deg, #34c759, #1e9e48); }
+.action-btn.newq { background: linear-gradient(135deg, #4dabf7, #1c7ed6); }
+.action-btn.off { opacity: .55; }
+
+/* 演示弹窗 */
+.demo-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 28rpx; }
+.demo-backdrop { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(37, 48, 66, .5); }
+.demo-card { position: relative; z-index: 1; width: 690rpx; max-height: 86vh; overflow-y: auto; background: #fff; border-radius: 48rpx; padding: 40rpx 28rpx 32rpx; box-shadow: 0 32rpx 92rpx rgba(0, 0, 0, .24); border: 6rpx solid #c8d9f2; box-sizing: border-box; }
+.modal-close { position: absolute; top: 14rpx; right: 14rpx; z-index: 6; width: 72rpx; height: 72rpx; border-radius: 50%; background: #f1f3f5; color: #666; font-size: 48rpx; font-weight: 900; line-height: 72rpx; text-align: center; }
+.anim-area { background: #fff; border: 4rpx solid #c8d9f2; border-radius: 32rpx; padding: 24rpx 16rpx 16rpx; }
+.anim-head { display: flex; justify-content: space-between; align-items: center; margin: 0 76rpx 4rpx 0; }
+.anim-title { font-size: 26rpx; font-weight: 800; color: #333; line-height: 1.5; text-align: left; flex: 1; }
+.anim-title .tt { font-weight: 900; }
+.replay { font-size: 24rpx; font-weight: 800; border-radius: 32rpx; padding: 10rpx 22rpx; color: #fff; background: linear-gradient(135deg, #4dabf7, #1c7ed6); box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, .12); flex-shrink: 0; }
+.anim-wrap { position: relative; width: 680rpx; max-width: 100%; height: 620rpx; margin: 0 auto; }
+.demo-canvas { width: 680rpx; height: 620rpx; }
+.demo-canvas.hide { display: none; }
+
+/* canvas 不可用时的文字兜底 */
+.demo-fallback { position: absolute; top: 0; left: 0; right: 0; padding: 16rpx; }
+.fallback-step { padding: 14rpx 16rpx; border-radius: 20rpx; background: #f8f9fa; margin-bottom: 12rpx; font-size: 26rpx; color: #777; }
+.fallback-step.cur { background: #f2f8ff; border: 3rpx solid #c8d9f2; color: #333; font-weight: 800; }
+.fallback-step .fe { font-weight: 900; margin-right: 12rpx; }
+
+/* 线段课自定算式 */
+.line-custom { display: flex; justify-content: center; align-items: center; margin-top: 20rpx; }
+.line-custom.bad .line-input { border-color: #ff5c8d; background: #fff0f0; animation: shake .28s linear; }
+.line-input { width: 104rpx; height: 88rpx; border: 6rpx solid #dee2e6; border-radius: 24rpx; text-align: center; font-size: 44rpx; font-weight: 900; color: #333; background: #fafafa; box-sizing: border-box; }
+.line-op { font-size: 48rpx; font-weight: 900; color: #666; padding: 0 8rpx; }
+.line-play { height: 88rpx; line-height: 88rpx; border-radius: 28rpx; padding: 0 32rpx; font-size: 28rpx; font-weight: 900; color: #fff; background: #1c7ed6; box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .13); margin-left: 8rpx; }
+.line-hint { text-align: center; font-size: 24rpx; color: #aaa; font-weight: 800; margin-top: 12rpx; }
+.demo-tip { margin-top: 24rpx; border: 4rpx dashed #ffd666; border-radius: 28rpx; padding: 20rpx 28rpx; font-size: 26rpx; color: #9a6b00; background: #fffef5; text-align: left; }
+
+@keyframes shake {
+  25% { transform: translateX(-10rpx); }
+  50% { transform: translateX(10rpx); }
+  75% { transform: translateX(-6rpx); }
+}
