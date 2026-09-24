@@ -92,8 +92,10 @@ page {
 .anim-title { font-size: 26rpx; font-weight: 800; color: #333; line-height: 1.5; text-align: left; flex: 1; }
 .anim-title .tt { font-weight: 900; }
 .replay { font-size: 24rpx; font-weight: 800; border-radius: 32rpx; padding: 10rpx 22rpx; color: #fff; background: linear-gradient(135deg, #4dabf7, #1c7ed6); box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, .12); flex-shrink: 0; }
-.anim-wrap { position: relative; width: 680rpx; max-width: 100%; height: 620rpx; margin: 0 auto; }
-.demo-canvas { width: 680rpx; height: 620rpx; }
+.anim-wrap { position: relative; width: 580rpx; height: 528rpx; margin: 0 auto; }
+/* 580rpx ≤ 弹窗卡内容区宽(690-56-32-8=594rpx):canvas 超宽会向两侧溢出,把舞台
+   右缘元素(网页端坐标 288..332 本就靠边)顶出可视区;等比缩到 580×528 居中留白 */
+.demo-canvas { width: 580rpx; height: 528rpx; }
 .demo-canvas.hide { display: none; }
 
 /* canvas 不可用时的文字兜底 */
