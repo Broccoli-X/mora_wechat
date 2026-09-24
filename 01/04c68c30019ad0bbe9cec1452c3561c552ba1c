@@ -1,0 +1,21 @@
+utils/kebiao.js
+  s_096d790a7bb99b::t_90ab8a1c81a027 22-24
+tests/kebiao.test.js
+  s_096d790a7bb99b::t_45de48541086cb 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "0104c68c30019ad0bbe9cec1452c3561c552ba1c",
+  "prompts": {},
+  "sessions": {
+    "s_096d790a7bb99b": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_52c12394-d53c-40d2-82d0-6c4e870fd7e2",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
