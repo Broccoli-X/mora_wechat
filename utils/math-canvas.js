@@ -163,6 +163,7 @@ function drawEl(ctx, el, frame) {
 }
 
 function drawStage(ctx, stage, frame) {
+  ctx.clearRect(0, 0, 340, 310);   // 每帧先清屏:rAF 循环逐帧重绘,不清屏会逐帧叠加出虚影
   ctx.save();
   stage.elements.forEach((el, i) => {
     if (el.step > frame.step) return;

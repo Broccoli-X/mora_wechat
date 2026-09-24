@@ -247,6 +247,7 @@ test('drawStage:step 过滤/captionStep 换字幕/markerX 覆盖', () => {
   const st = stageLib.buildStage({ methodId: 'line-add', left: 3, right: 4, operator: '+', answer: 7 }, '#22B8CF');
   const rec = makeCtxRecorder();
   canvasLib.drawStage(rec.ctx, st, { step: 1, captionStep: 1, markerX: 100 });
+  assert.deepEqual(rec.calls[0], ['clearRect', 0, 0, 340, 310], '每帧先清屏(不清屏会逐帧叠出虚影)');
   const texts = rec.calls.filter(c => c[0] === 'fillText').map(c => c[1]);
   assert.ok(texts.indexOf('3') >= 0, '顶部算式已画');
   assert.ok(!rec.calls.some(c => c[0] === 'fillText' && c[1] === '7' && c[2] === 250), '答案块 step=6 未显形不画(数轴刻度 7 除外)');
