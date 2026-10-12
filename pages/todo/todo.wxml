@@ -25,6 +25,21 @@
           <view class="td-body">
             <text class="td-text">{{item.text}}</text>
             <text class="td-tag">{{item.tag}}</text>
+            <view wx:if="{{item.imgs.length}}" class="pics">
+              <image
+                wx:for="{{item.imgs}}"
+                wx:for-item="pic"
+                wx:for-index="pi"
+                wx:key="*this"
+                class="pic"
+                src="{{pic}}"
+                mode="aspectFill"
+                lazy-load
+                data-urls="{{item.imgs}}"
+                data-pi="{{pi}}"
+                bindtap="previewImage"
+              />
+            </view>
           </view>
         </view>
       </view>

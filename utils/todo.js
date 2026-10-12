@@ -1,9 +1,16 @@
 /* 今日代办同步:数据源与网页端相同的服务(/api/progress,module=todo)。
    小程序端维护页可添加/修改/删除(单条上报与网页端 todo-edit.html 同协议),
    首页只看当天清单,无完成状态。
-   payload 为短键 JSON:{t:内容, m:时间, r:重复, d:日期(仅单次), w:每周几(0=周日)};
+   payload 为短键 JSON:{t:内容, m:时间, r:重复, d:日期(仅单次),
+   e:结束日期(仅单次选填,严格晚于 d 才保留,范围内每天算),
+   w:每周几(0=周日), g:[图片引用](可选)};
    空 payload 是删除墓碑。校验与「某天有哪些代办」的挑选口径
-   和网页端 lib/todo-core.js 一致:每天恒真/单次比日期/每周几看星期几勾选。
+   和网页端 lib/todo-core.js 一致:每天恒真/单次比日期区间/每周几看星期几勾选。
+   配图与网页端 todo-core 同协议(同作业模块):payload 只存服务端图片 id
+   (/api/image 存取,dataURL 不同步),图片本体走 GET /api/image?id=<id>
+   (不带 token,直连展示/预览),上传走 POST /api/image(dataURL ≤ 80 万字符)。
+   条目小,封顶 IMGS_MAX 张也远不触服务端 500 字符 payload 上限;
+   服务端对 todo 与 homework 一样做孤儿图片级联清理,上报必须带全 g。
    鉴权走 utils/auth.js 家长登录会话(与网页端 lib/auth.js 同协议)。 */
 const API_BASE = 'https://www.tcued.com';
 const auth = require('./auth');
@@ -19,9 +26,24 @@ const WEEKDAY_CN = ['日', '一', '二', '三', '四', '五', '六'];
 const TEXT_MAX = 60;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+/* 图片引用规则与 mora 网页端 lib/todo-core.js 同源:仅收服务端 id(dataURL 不同步;
+   网页端有本机 dataURL 离线兜底,小程序端无本地存储不上这类条目) */
+const IMG_ID_RE = /^img[0-9a-z]{4,30}$/;
+const IMGS_MAX = 3;
 
 function repeatOf(key) {
   return REPEATS.filter(r => r.key === key)[0] || null;
+}
+
+/* 图片引用 → 可加载地址:GET /api/image 不需要 token(<image>/wx.previewImage 直连) */
+function imgUrl(ref) {
+  return API_BASE + '/api/image?id=' + encodeURIComponent(ref);
+}
+
+/* payload 图片字段 p → 合法引用数组:非数组/坏 id 丢弃,最多 IMGS_MAX 张 */
+function imgsOf(p) {
+  if (!Array.isArray(p)) return [];
+  return p.filter(x => typeof x === 'string' && IMG_ID_RE.test(x)).slice(0, IMGS_MAX);
 }
 
 function pad2(n) { return (n < 10 ? '0' : '') + n; }
@@ -51,16 +73,19 @@ function cleanWeekdays(ws) {
   return Object.keys(seen).map(Number).sort((a, b) => a - b);
 }
 
-/* 校验清洗一条代办:内容/时间必填;单次必须合法日期,每周几至少勾一天。坏数据返回 null */
+/* 校验清洗一条代办:内容/时间必填;单次必须合法日期(结束日期仅当合法且严格
+   晚于开始才保留,等于/早于/非法一律退回单日,与网页端同口径的静默清洗),
+   每周几至少勾一天。坏数据返回 null */
 function normalize(e) {
   if (!e || REPEAT_KEYS.indexOf(e.repeat) < 0) return null;
   const text = typeof e.text === 'string' ? e.text.trim().slice(0, TEXT_MAX) : '';
   if (!text) return null;
   if (!TIME_RE.test(e.time || '')) return null;
-  let date = '', weekdays = [];
+  let date = '', dateEnd = '', weekdays = [];
   if (e.repeat === 'once') {
     if (!parseDate(e.date)) return null;
     date = e.date;
+    if (parseDate(e.dateEnd) && e.dateEnd > e.date) dateEnd = e.dateEnd;
   } else if (e.repeat === 'weekly') {
     weekdays = cleanWeekdays(e.weekdays);
     if (!weekdays.length) return null;
@@ -71,7 +96,9 @@ function normalize(e) {
     time: e.time,
     repeat: e.repeat,
     date: date,
+    dateEnd: dateEnd,
     weekdays: weekdays,
+    imgs: imgsOf(e.imgs),
     updatedAt: Number.isInteger(e.updatedAt) ? e.updatedAt : 0,
   };
 }
@@ -90,7 +117,9 @@ function decodeItems(items) {
         time: o.m,
         repeat: o.r,
         date: o.d,
+        dateEnd: o.e,
         weekdays: o.w,
+        imgs: o.g,
         updatedAt: it.updatedAt || 0,
       });
       if (e) entries.push(e);
@@ -99,11 +128,16 @@ function decodeItems(items) {
   return entries;
 }
 
-/* 某条代办是否落在某天:每天恒真;单次看日期;每周几看星期几勾选 */
+/* 某条代办是否落在某天:每天恒真;单次看日期区间(YYYY-MM-DD 字典序即时间序,
+   含首尾两天,与网页端同口径);每周几看星期几勾选 */
 function occursOn(e, dateStr) {
   if (!e) return false;
   if (e.repeat === 'daily') return true;
-  if (e.repeat === 'once') return e.date === dateStr;
+  if (e.repeat === 'once') {
+    if (!parseDate(dateStr)) return false;
+    if (e.dateEnd) return dateStr >= e.date && dateStr <= e.dateEnd;
+    return e.date === dateStr;
+  }
   if (e.repeat === 'weekly') {
     const d = parseDate(dateStr);
     return !!d && e.weekdays.indexOf(d.getDay()) >= 0;
@@ -128,11 +162,13 @@ function fmtCN(dateStr) {
   return d ? (d.getMonth() + 1) + '月' + d.getDate() + '日' : '';
 }
 
-/* 重复说明文案(与网页端 describe 同源):每天 / 单次·9月5日 / 每周一、三、五 */
+/* 重复说明文案(与网页端 describe 同源):每天 / 单次·9月5日 或 单次·10月1日~10月7日 / 每周一、三、五 */
 function describe(e) {
   const r = repeatOf(e.repeat);
   if (!r) return e.repeat || '';
-  if (e.repeat === 'once') return r.label + '·' + fmtCN(e.date);
+  if (e.repeat === 'once') {
+    return r.label + '·' + fmtCN(e.date) + (e.dateEnd ? '~' + fmtCN(e.dateEnd) : '');
+  }
   if (e.repeat === 'weekly') return '每周' + e.weekdays.map(w => WEEKDAY_CN[w]).join('、');
   return r.label;
 }
@@ -143,11 +179,16 @@ function sortByNew(entries) {
 }
 
 /* 条目 → 同步载荷短键 JSON(与网页端 lib/todo-core.js encodeEntry 同源):
-   单次才有 d,每周几才有 w */
+   单次才有 d,结束日期才有 e,每周几才有 w,有图才有 g(与老版本 payload 字节级一致) */
 function encodeEntry(e) {
   const o = { t: e.text, m: e.time, r: e.repeat };
-  if (e.repeat === 'once') o.d = e.date;
+  if (e.repeat === 'once') {
+    o.d = e.date;
+    if (e.dateEnd) o.e = e.dateEnd;
+  }
   if (e.repeat === 'weekly') o.w = e.weekdays;
+  const ids = imgsOf(e.imgs);
+  if (ids.length) o.g = ids;
   return JSON.stringify(o);
 }
 
@@ -187,6 +228,26 @@ function pushTombstone(id, onFail) {
   return pushItem(id, '', Date.now(), onFail);
 }
 
+/* 配图上传:POST /api/image 换服务端 id(id 即内容,可永久缓存,与作业模块同协议);
+   dataUrl 为 data:image/…;base64 格式(≤ 80 万字符)。401 交 auth.on401 */
+function uploadImage(dataUrl, onOk, onFail) {
+  const token = auth.getToken();
+  if (!token) { if (onFail) onFail(); return; }
+  const id = 'img' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  wx.request({
+    url: API_BASE + '/api/image',
+    method: 'POST',
+    header: { 'Content-Type': 'application/json' },
+    data: { token: token, id: id, data: dataUrl },
+    success(res) {
+      if (res.statusCode === 401) { auth.on401(); return; }
+      if (res.statusCode === 200 && res.data && res.data.ok) { onOk(id); return; }
+      if (onFail) onFail();
+    },
+    fail() { if (onFail) onFail(); },
+  });
+}
+
 /* 拉取全部进度,客户端过滤出代办(module=todo):成功 done(entries),失败 fail(err);
    401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchTodos(done, fail) {
@@ -204,9 +265,9 @@ function fetchTodos(done, fail) {
 }
 
 module.exports = {
-  REPEATS, WEEKDAY_CN,
+  REPEATS, WEEKDAY_CN, IMGS_MAX,
   repeatOf, todayStr, toDateStr, parseDate, fmtCN,
-  normalize, decodeItems, occursOn, todosOn,
+  normalize, decodeItems, occursOn, todosOn, imgUrl, imgsOf,
   describe, sortByNew, newId, encodeEntry, pushEntry, pushTombstone,
-  fetchTodos,
+  uploadImage, fetchTodos,
 };

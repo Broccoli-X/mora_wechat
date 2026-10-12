@@ -45,6 +45,7 @@
       <view wx:for="{{tdItems}}" wx:key="id" class="td">
         <view class="td-time" style="background:{{item.color}}">{{item.icon}}{{item.time}}</view>
         <text class="td-text">{{item.text}}</text>
+        <text wx:if="{{item.pics}}" class="td-flag">📎{{item.pics}}</text>
       </view>
     </view>
     <view class="note" wx:if="{{tdState === 'ok' && !tdItems.length}}">今日暂无代办，尽情玩吧 🎉</view>

@@ -47,6 +47,13 @@
         </picker>
       </view>
 
+      <view class="f-row" wx:if="{{repeat === 'once'}}">
+        <text class="f-label">到 <text class="f-small">选填,选了就是一段日子</text></text>
+        <picker mode="date" value="{{dateEnd || date}}" bindchange="onDateEnd">
+          <view class="f-picker {{dateEnd ? '' : 'date-end-blank'}}">{{dateEnd || '不限'}}</view>
+        </picker>
+      </view>
+
       <view class="f-row" wx:if="{{repeat === 'weekly'}}">
         <text class="f-label">每周几</text>
         <view class="chips">
@@ -68,14 +75,30 @@
         </picker>
       </view>
 
+      <view class="f-col">
+        <text class="f-label">配图 <text class="f-small">可选,最多 {{picsMax}} 张</text></text>
+        <view class="pics">
+          <!-- 编辑中保留的旧图(服务端已存),可点 ✕ 移除 -->
+          <view wx:for="{{existImgs}}" wx:key="id" class="pic">
+            <image class="pic-img" src="{{item.url}}" mode="aspectFill" />
+            <view class="pic-del" data-ei="{{index}}" bindtap="removeExistImg">✕</view>
+          </view>
+          <view wx:for="{{pics}}" wx:key="*this" class="pic">
+            <image class="pic-img" src="{{item}}" mode="aspectFill" />
+            <view class="pic-del" data-pi="{{index}}" bindtap="removePic">✕</view>
+          </view>
+          <view wx:if="{{pics.length + existImgs.length < picsMax}}" class="pic-add" bindtap="addPics" hover-class="btn-hover">📷 添加图片</view>
+        </view>
+      </view>
+
       <view class="f-row center">
-        <view class="main-btn" bindtap="submit" hover-class="btn-press">
-          {{editing ? '💾 保存修改' : '➕ 添加代办'}}
+        <view class="main-btn {{submitting ? 'disabled' : ''}}" bindtap="submit" hover-class="btn-press">
+          {{submitting ? '📤 处理图片中…' : (editing ? '💾 保存修改' : '➕ 添加代办')}}
         </view>
         <view wx:if="{{editing}}" class="ghost-btn" bindtap="cancelEdit" hover-class="btn-hover">取消编辑</view>
       </view>
 
-      <view class="hint">每天:每天都会提醒;单次:只在选中的那天;每周几:可多选,勾中的星期几都会提醒</view>
+      <view class="hint">每天:每天都会提醒;单次:只在选中的日子,填上「到」就是一段日子(如夏令营);每周几:可多选,勾中的星期几都会提醒</view>
     </view>
 
     <!-- 已登记的代办(最近编辑在前) -->
@@ -87,6 +110,7 @@
           <view class="rep-chip" style="background:{{item.chipBg}}">{{item.chipText}}</view>
           <view class="time-chip">{{item.time}}</view>
           <text class="txt">{{item.text}}</text>
+          <text wx:if="{{item.pics}}" class="pic-flag">📎{{item.pics}}</text>
           <view class="ops">
             <view class="op" data-id="{{item.id}}" bindtap="editRow" hover-class="btn-hover">✏️ 改</view>
             <view class="op del" data-id="{{item.id}}" bindtap="delRow" hover-class="btn-hover">🗑️ 删</view>

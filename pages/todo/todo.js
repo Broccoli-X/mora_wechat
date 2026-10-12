@@ -83,8 +83,16 @@ Page({
         time: e.time,
         text: e.text,
         tag: td.describe(e), // 每天 / 单次·9月5日 / 每周一、三、五(与网页端 describe 同源)
+        imgs: e.imgs.map(td.imgUrl), // GET /api/image 直连地址,可预览
       };
     });
     this.setData({ rows: rows });
+  },
+
+  /* 点缩略图:微信原生大图预览,可在同条目图片间左右滑动 */
+  previewImage(e) {
+    const urls = e.currentTarget.dataset.urls || [];
+    const current = urls[Number(e.currentTarget.dataset.pi)] || urls[0];
+    if (urls.length) wx.previewImage({ current, urls });
   },
 });

@@ -108,6 +108,7 @@ Page({
           color: m.main,
           time: e.time,
           text: e.text,
+          pics: e.imgs.length, // 有配图的角标提示(图片在代办详情页看大图)
         };
       });
       this.setData({ tdState: 'ok', tdItems: items });

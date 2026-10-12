@@ -149,3 +149,18 @@
   font-size: 22rpx;
   color: #8a90a3;
 }
+
+/* ── 配图缩略图:点按进微信原生大图预览 ── */
+.pics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 10rpx;
+}
+
+.pic {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 12rpx;
+  background: #eef1f6;
+}
