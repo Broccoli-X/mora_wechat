@@ -1,0 +1,40 @@
+README.md
+  h_b87a5939e91b97 32,44,68
+app.json
+  h_b87a5939e91b97 20-21
+pages/category/category.js
+  h_b87a5939e91b97 17
+pages/chengyu/chengyu.js
+  h_b87a5939e91b97 1-75
+pages/chengyu/chengyu.json
+  h_b87a5939e91b97 1-5
+pages/chengyu/chengyu.wxml
+  h_b87a5939e91b97 1-70
+pages/chengyu/chengyu.wxss
+  h_b87a5939e91b97 1-183
+pages/chengyu/detail.js
+  h_b87a5939e91b97 1-60
+pages/chengyu/detail.json
+  h_b87a5939e91b97 1-5
+pages/chengyu/detail.wxml
+  h_b87a5939e91b97 1-32
+pages/chengyu/detail.wxss
+  h_b87a5939e91b97 1-98
+tests/chengyu-pages.test.js
+  h_b87a5939e91b97 1-240
+tests/chengyu.test.js
+  h_b87a5939e91b97 1-219
+utils/chengyu.js
+  h_b87a5939e91b97 1-135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3b809a9408f29a3a2b9baf815a0692ef19aa8485",
+  "prompts": {},
+  "humans": {
+    "h_b87a5939e91b97": {
+      "author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
