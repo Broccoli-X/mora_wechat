@@ -1,4 +1,4 @@
-<!-- 成语详情:大字成语 + 拼音 + 意思卡 + 典故卡(d 为空不显示典故卡)。 -->
+<!-- 成语详情:大字成语逐字注音(拼音在字上方)+ 意思卡 + 典故卡(d 为空不显示典故卡)。 -->
 <view class="page">
   <view class="state" wx:if="{{loading}}">成语同步中…</view>
 
@@ -15,8 +15,12 @@
 
   <block wx:else>
     <view class="hero">
-      <view class="h-w">{{entry.w}}</view>
-      <view class="h-p" wx:if="{{entry.p}}">{{entry.p}}</view>
+      <view class="h-w">
+        <view class="ct" wx:for="{{entry.tokens}}" wx:for-item="tk" wx:key="i">
+          <text class="ct-py">{{tk.py}}</text>
+          <text class="ct-ch">{{tk.ch}}</text>
+        </view>
+      </view>
     </view>
 
     <view class="card">

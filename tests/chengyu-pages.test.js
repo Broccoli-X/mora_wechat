@@ -49,9 +49,10 @@ const CACHE = { updatedAt: 100, data: [
   { w: '守株待兔', p: '', m: '比喻不劳而获', d: '' },
 ] };
 const REMOTE = { updatedAt: 200, data: [
-  { w: '画蛇添足', p: 'huà shé tiān zú', m: '比喻做了多余的事', d: '《战国策》' },
-  { w: '守株待兔', p: '', m: '比喻不劳而获', d: '' },
+  // 故意乱序:列表应按拼音重排为 画(h) → 守(s) → 亡(w)
   { w: '亡羊补牢', p: 'wáng yáng bǔ láo', m: '出了问题及时补救', d: '' },
+  { w: '守株待兔', p: 'shǒu zhū dài tù', m: '比喻不劳而获', d: '' },
+  { w: '画蛇添足', p: 'huà shé tiān zú', m: '比喻做了多余的事', d: '《战国策》' },
 ] };
 const LIST_OK = { statusCode: 200, data: { ok: true, data: REMOTE.data, updatedAt: REMOTE.updatedAt } };
 const EMPTY_OK = { statusCode: 200, data: { ok: true, data: null, updatedAt: 0 } };
@@ -99,7 +100,12 @@ test('列表页:缓存先渲染,远端更新后整库重渲染', () => {
   p.onShow();
   assert.equal(p.data.blocked, false);
   assert.equal(p.data.total, 3, '远端较新应覆盖缓存');
-  assert.deepEqual(p.data.items.map(e => e.w), ['画蛇添足', '守株待兔', '亡羊补牢']);
+  assert.deepEqual(p.data.items.map(e => e.w), ['画蛇添足', '守株待兔', '亡羊补牢'],
+    '按拼音排序(不是接口顺序)');
+  assert.equal(p.data.items[0].tokens.map(t => t.ch).join(''), '画蛇添足');
+  assert.equal(p.data.items[0].tokens.map(t => t.py).join(' '), 'huà shé tiān zú', '逐字拼音');
+  assert.equal(p.data.items[0].m, undefined, '列表项不带意思');
+  assert.equal(p.data.items[0].p, undefined, '列表项不再单列拼音');
   assert.equal(p.data.loading, false);
   assert.equal(p.data.empty, false);
   assert.ok(reqs.some(u => u.indexOf('/api/chengyu?token=T') >= 0), '应带 token 拉整库');
@@ -156,7 +162,8 @@ test('详情页:缓存定位渲染(成语/拼音/意思/典故)', () => {
   p.onLoad({ w: encodeURIComponent('画蛇添足') });
   assert.equal(p.data.loading, false);
   assert.equal(p.data.entry.w, '画蛇添足');
-  assert.equal(p.data.entry.p, 'huà shé tiān zú');
+  assert.equal(p.data.entry.tokens.map(t => t.ch).join(''), '画蛇添足');
+  assert.equal(p.data.entry.tokens.map(t => t.py).join(' '), 'huà shé tiān zú', '拼音在字上方');
   assert.equal(p.data.entry.m, '比喻做了多余的事');
   assert.equal(p.data.entry.d, '《战国策》');
   assert.ok(!reqs.some(u => u.indexOf('/api/chengyu') >= 0), '缓存命中不再请求');
@@ -194,23 +201,40 @@ test('详情页:确实没有这条 → notFound;网络失败且无缓存 → loa
 });
 
 /* ── 静态契约:页面结构 / 分类入口 / app.json ── */
-test('列表页 wxml:搜索框、卡片四要素、空库与无结果文案', () => {
+test('列表页 wxml:搜索框、逐字注音、不显示意思、空库与无结果文案', () => {
   const wxml = fs.readFileSync(P('chengyu.wxml'), 'utf8');
   assert.ok(/bindinput="onSearchInput"/.test(wxml), '搜索输入接线');
   assert.ok(/wx:key="w"/.test(wxml), '以成语为 key');
-  assert.ok(/\{\{item\.w\}\}/.test(wxml) && /\{\{item\.p\}\}/.test(wxml) && /\{\{item\.m\}\}/.test(wxml),
-    '卡片 = 成语 + 拼音 + 意思');
+  assert.ok(/\{\{item\.w\}\}/.test(wxml), '卡片带成语');
+  assert.ok(/item\.tokens/.test(wxml) && /class="ct-py"/.test(wxml) && /class="ct-ch"/.test(wxml),
+    '拼音在字上方(逐字注音)');
+  assert.ok(!/item\.m/.test(wxml), '列表不呈现意思(进详情才看)');
+  assert.ok(!/item\.p\b/.test(wxml), '不再单独列整串拼音');
+  assert.ok(!/class="c-m"/.test(wxml), '没有意思区块');
   assert.ok(/还没有成语/.test(wxml) && /请家长在网页端「成语录入」/.test(wxml), '空库引导');
   assert.ok(/没有匹配的成语/.test(wxml), '搜索无结果文案');
   assert.ok(/bindtap="onTapItem"/.test(wxml), '点卡进详情');
 });
 
-test('详情页 wxml:典故卡条件渲染,d 为空不展示', () => {
+test('详情页 wxml:逐字注音 + 意思卡 + 典故卡条件渲染', () => {
   const wxml = fs.readFileSync(P('detail.wxml'), 'utf8');
+  assert.ok(/entry\.tokens/.test(wxml) && /class="ct-py"/.test(wxml), '拼音在字上方');
   assert.ok(/wx:if="\{\{entry\.d\}\}"/.test(wxml), '典故卡按 d 条件渲染');
   assert.ok(/📜 典故 \/ 出处/.test(wxml), '典故卡标题');
-  assert.ok(/💡 意思/.test(wxml), '意思卡');
+  assert.ok(/💡 意思/.test(wxml) && /\{\{entry\.m\}\}/.test(wxml), '意思卡');
   assert.ok(/没有找到这条成语/.test(wxml), '不存在文案');
+});
+
+test('配色:列表/详情都以低饱和绿色为主,不再有暖橙底', () => {
+  for (const f of ['chengyu.wxss', 'detail.wxss']) {
+    const css = fs.readFileSync(P(f), 'utf8');
+    assert.ok(/#e8f5e9/.test(css) && /#f1f8e9/.test(css), f + ' 用浅豆绿底');
+    assert.ok(/#1b5e20/.test(css) || /#2e7d32/.test(css), f + ' 用深绿字');
+    assert.ok(!/#ffe8d6|#fff3e0|#ffe3ec|#c2410c|#f97316/.test(css), f + ' 不再有旧暖橙配色');
+  }
+  const listCss = fs.readFileSync(P('chengyu.wxss'), 'utf8');
+  assert.ok(!/\.c-m\b/.test(listCss), '列表样式里没有意思区块');
+  assert.ok(/\.ct-py/.test(listCss) && /\.ct-ch/.test(listCss), '有逐字注音样式');
 });
 
 test('分类入口:语文组新增成语卡片,perm=chengyu;无权限时不呈现', () => {

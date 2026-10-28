@@ -216,4 +216,49 @@ test('search/find:按 w/p/m/d 子串过滤(不分大小写),按成语精确定�
   assert.equal(cg.find(list, ''), null);
 });
 
+test('tokensOf:拼音逐字对齐(拼音在字上方),缺音节留空,长成语逐字拆', () => {
+  reset();
+  const cg = freshUtil();
+  const t = cg.tokensOf({ w: '一模一样', p: 'yī mó yī yàng' });
+  assert.deepEqual(t.map(x => x.ch), ['一', '模', '一', '样']);
+  assert.deepEqual(t.map(x => x.py), ['yī', 'mó', 'yī', 'yàng']);
+  // 音节少于汉字:缺的留空,不串位
+  const t2 = cg.tokensOf({ w: '画蛇添足', p: 'huà shé' });
+  assert.deepEqual(t2.map(x => x.py), ['huà', 'shé', '', '']);
+  // 没拼音:每字都留空占位,仍能渲染
+  const t3 = cg.tokensOf({ w: '三个字' });
+  assert.deepEqual(t3.map(x => x.py), ['', '', '']);
+  // 多字成语逐字拆(不是整串)
+  const t4 = cg.tokensOf({ w: '百闻不如一见', p: 'bǎi wén bù rú yī jiàn' });
+  assert.equal(t4.length, 6);
+  assert.equal(t4[5].py, 'jiàn');
+});
+
+test('sortByPinyin:按去调拼音排序,无拼音排最后,不改原数组', () => {
+  reset();
+  const cg = freshUtil();
+  const list = [
+    { w: '七上八下', p: 'qī shàng bā xià' },
+    { w: '一模一样', p: 'yī mó yī yàng' },
+    { w: '独一无二', p: 'dú yī wú èr' },
+    { w: '十全十美', p: 'shí quán shí měi' },
+    { w: '三头六臂', p: 'sān tóu liù bì' },
+    { w: '五颜六色', p: 'wǔ yán liù sè' },
+    { w: '一心一意', p: 'yī xīn yī yì' },
+    { w: '九牛一毛', p: 'jiǔ niú yī máo' },
+    { w: '四面八方', p: 'sì miàn bā fāng' },
+    { w: '五湖四海', p: 'wǔ hú sì hǎi' },
+    { w: '一目十行', p: 'yī mù shí háng' },
+    { w: '一干二净', p: 'yī gān èr jìng' },
+    { w: '无拼音', p: '' },
+  ];
+  const sorted = cg.sortByPinyin(list);
+  assert.deepEqual(sorted.map(e => e.w), [
+    '独一无二', '九牛一毛', '七上八下', '三头六臂', '十全十美', '四面八方',
+    '五湖四海', '五颜六色', '一干二净', '一模一样', '一目十行', '一心一意', '无拼音',
+  ]);
+  assert.equal(list[0].w, '七上八下', '原数组顺序不变');
+  assert.equal(sorted[sorted.length - 1].w, '无拼音', '没拼音的排最后');
+});
+
 console.log(`\nchengyu utils: ${passed} passed`);

@@ -128,8 +128,43 @@ function find(list, w) {
   return (Array.isArray(list) ? list : []).filter(e => e.w === key)[0] || null;
 }
 
+/* ── 逐字注音:每个汉字上方放对应拼音(与古诗卡片同款)。
+   p 以空格分音节、与汉字一一对应;音节多/少时按位取,缺的留空,不串位。 ── */
+function tokensOf(entry) {
+  const chars = Array.from(String((entry && entry.w) || ''));
+  const pys = String((entry && entry.p) || '').trim().split(/\s+/).filter(Boolean);
+  return chars.map((ch, i) => ({ i: i, ch: ch, py: pys[i] || '' }));
+}
+
+/* 拼音排序:去声调、空格与隔音符号后按字母序;没拼音的排最后(按汉字兜底) */
+const TONE_MAP = {
+  'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a',
+  'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e',
+  'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i',
+  'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o',
+  'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u',
+  'ǖ': 'u', 'ǘ': 'u', 'ǚ': 'u', 'ǜ': 'u', 'ü': 'u',
+  'ń': 'n', 'ň': 'n', 'ǹ': 'n', 'ḿ': 'm',
+};
+function pinyinKey(entry) {
+  const p = String((entry && entry.p) || '').trim();
+  if (!p) return '\uffff' + String((entry && entry.w) || '');
+  return p.toLowerCase()
+    .replace(/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜüńňǹḿ]/g, ch => TONE_MAP[ch] || ch)
+    .replace(/[^a-z]/g, '');   // 去空格/撇号/连字符/数字
+}
+function sortByPinyin(list) {
+  return (Array.isArray(list) ? list : []).slice().sort((a, b) => {
+    const ka = pinyinKey(a), kb = pinyinKey(b);
+    if (ka !== kb) return ka < kb ? -1 : 1;
+    const wa = String((a && a.w) || ''), wb = String((b && b.w) || '');
+    return wa < wb ? -1 : wa > wb ? 1 : 0;
+  });
+}
+
 module.exports = {
   API_BASE, CACHE_KEY, W_MAX, P_MAX, M_MAX, D_MAX, LIB_MAX,
   normalizeEntry, normalizeList, loadCache,
   load, subscribe, current, refresh, matches, search, find,
+  tokensOf, pinyinKey, sortByPinyin,
 };

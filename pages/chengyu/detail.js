@@ -32,7 +32,10 @@ Page({
   show() {
     const entry = cg.find(cg.current(), this.w);
     if (!entry) return false;
-    this.setData({ entry: entry, loading: false, loadError: false, notFound: false });
+    this.setData({
+      entry: { w: entry.w, tokens: cg.tokensOf(entry), m: entry.m, d: entry.d },
+      loading: false, loadError: false, notFound: false,
+    });
     return true;
   },
 

@@ -1,5 +1,5 @@
 <!-- 成语卡片列表:内容来自网页端「成语录入」(仅管理员维护)。
-     卡片 = 成语 + 拼音灰字 + 意思两行截断;点卡片进详情看完整意思与典故。 -->
+     列表只给成语 + 逐字拼音(拼音在字上方),按拼音排序;意思/典故点进详情再看。 -->
 <view class="page">
   <view class="blocked" wx:if="{{blocked}}">
     <view class="blocked-icon">🔒</view>
@@ -10,7 +10,7 @@
   <block wx:else>
     <view class="head">
       <view class="head-title">🏮 成语卡片</view>
-      <view class="head-sub">看成语 · 懂意思 · 知典故</view>
+      <view class="head-sub">拼音逐字标注 · 按拼音排序 · 点开看意思典故</view>
       <view class="progress" wx:if="{{total}}">共 {{total}} 条成语</view>
     </view>
 
@@ -58,13 +58,17 @@
       >
         <view class="c-stripe"></view>
         <view class="c-body">
-          <view class="c-w">{{item.w}}</view>
-          <view class="c-p" wx:if="{{item.p}}">{{item.p}}</view>
-          <view class="c-m">{{item.m}}</view>
+          <!-- 逐字注音:拼音在上、汉字在下(与古诗卡片同款),列表不显示意思 -->
+          <view class="c-w">
+            <view class="ct" wx:for="{{item.tokens}}" wx:for-item="tk" wx:key="i">
+              <text class="ct-py">{{tk.py}}</text>
+              <text class="ct-ch">{{tk.ch}}</text>
+            </view>
+          </view>
         </view>
       </view>
     </view>
 
-    <view class="tip" wx:if="{{items.length}}">点成语看完整意思和典故</view>
+    <view class="tip" wx:if="{{items.length}}">点成语看意思和出处</view>
   </block>
 </view>

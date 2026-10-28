@@ -48,7 +48,11 @@ Page({
   },
 
   render(list) {
-    const items = cg.search(list, this.data.keyword);
+    /* 列表只呈现成语 + 逐字拼音(意思/出处进详情);按拼音排序,搜索后仍保持顺序 */
+    const items = cg.sortByPinyin(cg.search(list, this.data.keyword)).map(e => ({
+      w: e.w,
+      tokens: cg.tokensOf(e),
+    }));
     this.setData({
       total: list.length,
       items: items,
