@@ -1,0 +1,183 @@
+/* 成语卡片列表:暖色底 + 白卡(与古诗/知识点同属「网页端维护 → 小程序读」的内容页),
+   点缀色用语文主色 #c9392b 系。 */
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 32rpx 28rpx 60rpx;
+  background: linear-gradient(160deg, #ffe8d6 0%, #fff3e0 46%, #ffe3ec 100%);
+}
+
+.blocked {
+  text-align: center;
+  padding: 160rpx 40rpx;
+}
+.blocked-icon { font-size: 88rpx; }
+.blocked-txt {
+  margin-top: 24rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #a83a31;
+}
+.blocked-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8a6b5b;
+}
+
+.head {
+  text-align: center;
+  padding-bottom: 24rpx;
+}
+.head-title {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #a83a31;
+  text-shadow: 0 6rpx 0 rgba(255, 255, 255, 0.6);
+  letter-spacing: 2rpx;
+}
+.head-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #7d6260;
+}
+.progress {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 20rpx;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 34rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #a83a31;
+  box-shadow: 0 8rpx 28rpx rgba(140, 60, 50, 0.15);
+}
+
+/* ── 搜索框 ── */
+.search {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 0 26rpx;
+  height: 84rpx;
+  box-shadow: 0 10rpx 30rpx rgba(140, 60, 50, 0.12);
+}
+.s-icon { font-size: 30rpx; margin-right: 12rpx; }
+.s-input {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3f2b23;
+}
+.s-ph { color: #b9a99d; font-weight: 500; }
+.s-clear {
+  font-size: 30rpx;
+  color: #b08968;
+  padding: 8rpx 4rpx 8rpx 16rpx;
+}
+
+/* ── 状态/空态 ── */
+.state {
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #8a6b5b;
+  padding: 80rpx 20rpx;
+}
+.error-txt { display: block; font-weight: 800; color: #b91c1c; }
+.retry {
+  display: inline-block;
+  margin-top: 22rpx;
+  color: #c2410c;
+  font-weight: 800;
+  text-decoration: underline;
+}
+.link-hover { opacity: 0.6; }
+
+.empty {
+  text-align: center;
+  background: #ffffff;
+  border-radius: 40rpx;
+  box-shadow: 0 16rpx 44rpx rgba(140, 60, 50, 0.12);
+  padding: 70rpx 36rpx;
+  margin-top: 28rpx;
+}
+.empty-icon { font-size: 84rpx; }
+.empty-txt {
+  margin-top: 20rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #a83a31;
+}
+.empty-sub {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8a6b5b;
+  line-height: 1.7;
+}
+
+/* ── 卡片网格 ── */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 26rpx;
+}
+.card {
+  width: 48.6%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 28rpx;
+  overflow: hidden;
+  margin-bottom: 22rpx;
+  box-shadow: 0 12rpx 36rpx rgba(140, 60, 50, 0.14);
+}
+.card-hover { transform: translateY(-4rpx); }
+.c-stripe {
+  height: 10rpx;
+  background: linear-gradient(135deg, #f97316, #c2410c);
+}
+.c-body {
+  padding: 26rpx 22rpx 30rpx;
+  text-align: center;
+}
+.c-w {
+  font-family: "STKaiti", "KaiTi", serif;
+  font-size: 54rpx;
+  font-weight: 900;
+  letter-spacing: 4rpx;
+  color: #c2410c;
+  line-height: 1.3;
+}
+.c-p {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #8a94a6;
+  letter-spacing: 1rpx;
+  word-break: break-all;
+}
+.c-m {
+  margin-top: 14rpx;
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #4b5563;
+  line-height: 1.6;
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tip {
+  margin-top: 14rpx;
+  text-align: center;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #a08b7e;
+}

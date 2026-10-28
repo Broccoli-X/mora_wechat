@@ -17,6 +17,8 @@
     "pages/knowledge/knowledge",
     "pages/knowledge/book",
     "pages/knowledge/zen",
+    "pages/chengyu/chengyu",
+    "pages/chengyu/detail",
     "pages/recognition/recognition",
     "pages/recognition/batch",
     "pages/recognition/zen",

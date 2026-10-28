@@ -1,0 +1,70 @@
+<!-- 成语卡片列表:内容来自网页端「成语录入」(仅管理员维护)。
+     卡片 = 成语 + 拼音灰字 + 意思两行截断;点卡片进详情看完整意思与典故。 -->
+<view class="page">
+  <view class="blocked" wx:if="{{blocked}}">
+    <view class="blocked-icon">🔒</view>
+    <view class="blocked-txt">本家庭未开通成语卡片</view>
+    <view class="blocked-sub">请联系管理员开通后再来学习哦</view>
+  </view>
+
+  <block wx:else>
+    <view class="head">
+      <view class="head-title">🏮 成语卡片</view>
+      <view class="head-sub">看成语 · 懂意思 · 知典故</view>
+      <view class="progress" wx:if="{{total}}">共 {{total}} 条成语</view>
+    </view>
+
+    <!-- 搜索:成语 / 拼音 / 意思 / 典故 子串,不分大小写 -->
+    <view class="search">
+      <text class="s-icon">🔍</text>
+      <input
+        class="s-input"
+        value="{{keyword}}"
+        placeholder="搜成语 / 拼音 / 意思 / 典故…"
+        placeholder-class="s-ph"
+        confirm-type="search"
+        bindinput="onSearchInput"
+      />
+      <text class="s-clear" wx:if="{{keyword}}" bindtap="onClearSearch">✕</text>
+    </view>
+
+    <view class="state" wx:if="{{loading && !items.length}}">成语同步中…</view>
+
+    <view class="state error" wx:elif="{{loadError}}">
+      <text class="error-txt">成语同步失败</text>
+      <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+    </view>
+
+    <view class="empty" wx:elif="{{empty}}">
+      <view class="empty-icon">📭</view>
+      <view class="empty-txt">还没有成语</view>
+      <view class="empty-sub">请家长在网页端「成语录入」粘贴添加，这里就会自动出现啦</view>
+    </view>
+
+    <view class="empty" wx:elif="{{noMatch}}">
+      <view class="empty-icon">🔍</view>
+      <view class="empty-txt">没有匹配的成语</view>
+      <view class="empty-sub">换个词试试~</view>
+    </view>
+
+    <view class="grid" wx:else>
+      <view
+        class="card"
+        wx:for="{{items}}"
+        wx:key="w"
+        data-w="{{item.w}}"
+        bindtap="onTapItem"
+        hover-class="card-hover"
+      >
+        <view class="c-stripe"></view>
+        <view class="c-body">
+          <view class="c-w">{{item.w}}</view>
+          <view class="c-p" wx:if="{{item.p}}">{{item.p}}</view>
+          <view class="c-m">{{item.m}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="tip" wx:if="{{items.length}}">点成语看完整意思和典故</view>
+  </block>
+</view>

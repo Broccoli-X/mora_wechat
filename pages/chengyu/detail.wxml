@@ -1,0 +1,32 @@
+<!-- 成语详情:大字成语 + 拼音 + 意思卡 + 典故卡(d 为空不显示典故卡)。 -->
+<view class="page">
+  <view class="state" wx:if="{{loading}}">成语同步中…</view>
+
+  <view class="state error" wx:elif="{{loadError}}">
+    <text class="error-txt">成语同步失败</text>
+    <text class="retry" bindtap="retry" hover-class="link-hover">重试</text>
+  </view>
+
+  <view class="empty" wx:elif="{{notFound}}">
+    <view class="empty-icon">📭</view>
+    <view class="empty-txt">没有找到这条成语</view>
+    <view class="empty-sub">可能已被家长删除，回列表看看别的吧</view>
+  </view>
+
+  <block wx:else>
+    <view class="hero">
+      <view class="h-w">{{entry.w}}</view>
+      <view class="h-p" wx:if="{{entry.p}}">{{entry.p}}</view>
+    </view>
+
+    <view class="card">
+      <view class="c-title">💡 意思</view>
+      <view class="c-text">{{entry.m}}</view>
+    </view>
+
+    <view class="card d-card" wx:if="{{entry.d}}">
+      <view class="c-title">📜 典故 / 出处</view>
+      <view class="c-text">{{entry.d}}</view>
+    </view>
+  </block>
+</view>

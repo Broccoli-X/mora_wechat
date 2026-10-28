@@ -1,0 +1,98 @@
+/* 成语详情:白卡 + 暖色渐变底,与列表页同款;大字成语用楷体。 */
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 36rpx 30rpx 70rpx;
+  background: linear-gradient(160deg, #ffe8d6 0%, #fff3e0 46%, #ffe3ec 100%);
+}
+
+.state {
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #8a6b5b;
+  padding: 120rpx 20rpx;
+}
+.error-txt { display: block; font-weight: 800; color: #b91c1c; }
+.retry {
+  display: inline-block;
+  margin-top: 22rpx;
+  color: #c2410c;
+  font-weight: 800;
+  text-decoration: underline;
+}
+.link-hover { opacity: 0.6; }
+
+.empty {
+  margin-top: 90rpx;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 40rpx;
+  box-shadow: 0 16rpx 44rpx rgba(140, 60, 50, 0.12);
+  padding: 70rpx 36rpx;
+}
+.empty-icon { font-size: 84rpx; }
+.empty-txt {
+  margin-top: 20rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #a83a31;
+}
+.empty-sub {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #8a6b5b;
+  line-height: 1.7;
+}
+
+.hero {
+  background: linear-gradient(135deg, #f97316, #c2410c);
+  border-radius: 36rpx;
+  padding: 54rpx 36rpx 48rpx;
+  text-align: center;
+  box-shadow: 0 18rpx 48rpx rgba(194, 65, 12, 0.28);
+}
+.h-w {
+  font-family: "STKaiti", "KaiTi", serif;
+  font-size: 84rpx;
+  font-weight: 900;
+  letter-spacing: 10rpx;
+  color: #ffffff;
+  line-height: 1.35;
+  text-shadow: 0 6rpx 12rpx rgba(120, 40, 10, 0.3);
+}
+.h-p {
+  margin-top: 18rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: rgba(255, 255, 255, 0.9);
+  word-break: break-all;
+}
+
+.card {
+  margin-top: 26rpx;
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 30rpx 32rpx 34rpx;
+  box-shadow: 0 12rpx 36rpx rgba(140, 60, 50, 0.12);
+}
+.c-title {
+  font-size: 28rpx;
+  font-weight: 900;
+  color: #c2410c;
+  letter-spacing: 1rpx;
+  margin-bottom: 14rpx;
+}
+.c-text {
+  font-size: 31rpx;
+  font-weight: 600;
+  color: #3f2b23;
+  line-height: 1.9;
+  letter-spacing: 0.5rpx;
+}
+.d-card {
+  background: #fffaf3;
+  border: 2rpx dashed #f6c89f;
+}
