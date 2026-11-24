@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-11-24-kebiao-editable-design.md
+  s_c9b4198fc639b7::t_8e08c674ace23a 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "ed3648463b648e142f2196396aaabadfa863ec02",
+  "prompts": {},
+  "sessions": {
+    "s_c9b4198fc639b7": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_ca096e8a-99e4-4a21-b5b2-d04abd1e8a57",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
