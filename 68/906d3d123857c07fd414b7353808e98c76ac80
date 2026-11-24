@@ -1,0 +1,19 @@
+docs/superpowers/plans/2026-11-24-kebiao-read.md
+  s_c9b4198fc639b7::t_1c8ae54e5f03aa 1-962
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "68906d3d123857c07fd414b7353808e98c76ac80",
+  "prompts": {},
+  "sessions": {
+    "s_c9b4198fc639b7": {
+      "agent_id": {
+        "tool": "ZCode",
+        "id": "sess_ca096e8a-99e4-4a21-b5b2-d04abd1e8a57",
+        "model": "GLM-5.3-Flash"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
