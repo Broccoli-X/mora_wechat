@@ -1,0 +1,54 @@
+pages/reading/reading.json
+  s_4e3585c5808062::t_14cb46cd9c2ef3 1
+pages/reading/detail.wxss
+  s_4e3585c5808062::t_447a1dee96bf85 1-23
+README.md
+  s_4e3585c5808062::t_5596bb115afc7d 70-77
+tests/reading.test.js
+  s_4e3585c5808062::t_15ff668081dc7a 1-81
+pages/reading/reading.wxss
+  s_4e3585c5808062::t_14cb46cd9c2ef3 1-18
+pages/category/category.js
+  s_4e3585c5808062::t_447a1dee96bf85 18
+pages/reading/reading.js
+  s_4e3585c5808062::t_14cb46cd9c2ef3 1-69,71-72
+  s_4e3585c5808062::t_caaec372866304 70
+pages/reading/detail.json
+  s_4e3585c5808062::t_447a1dee96bf85 1-4
+pages/reading/reading.wxml
+  s_4e3585c5808062::t_14cb46cd9c2ef3 1-30
+pages/reading/stroke-sheet/stroke-sheet.wxss
+  s_4e3585c5808062::t_447a1dee96bf85 1-13
+pages/reading/stroke-sheet/stroke-sheet.json
+  s_4e3585c5808062::t_447a1dee96bf85 1
+pages/reading/detail.wxml
+  s_4e3585c5808062::t_447a1dee96bf85 1-46
+pages/reading/stroke-sheet/stroke-sheet.wxml
+  s_4e3585c5808062::t_447a1dee96bf85 1-15
+utils/reading.js
+  s_4e3585c5808062::t_caaec372866304 12-14
+  s_4e3585c5808062::t_14cb46cd9c2ef3 1-11,15-134
+pages/reading/detail.js
+  s_4e3585c5808062::t_caaec372866304 14,61-62
+  s_4e3585c5808062::t_447a1dee96bf85 1-13,15-60,63-109
+app.json
+  s_4e3585c5808062::t_447a1dee96bf85 15-16
+pages/reading/stroke-sheet/stroke-sheet.js
+  s_4e3585c5808062::t_447a1dee96bf85 1-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "089c79d88f945fb9f1caed2b8539bc8b4a3ff5ed",
+  "prompts": {},
+  "sessions": {
+    "s_4e3585c5808062": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21158-ec25-7073-9125-14d787f2a704",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
