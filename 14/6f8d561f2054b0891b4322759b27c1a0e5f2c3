@@ -1,0 +1,31 @@
+tests/reading.test.js
+  s_4e3585c5808062::t_f31a6d5519fc59 90-91,95-111
+  s_4e3585c5808062::t_4351870cf18ab7 112
+pages/reading/stroke-sheet/stroke-sheet.js
+  s_4e3585c5808062::t_022e62847c2a23 6,12-13,19-43
+utils/hanzi.js
+  s_4e3585c5808062::t_f31a6d5519fc59 167-168
+  s_4e3585c5808062::t_022e62847c2a23 144-156,174-196,420
+pages/reading/stroke-sheet/stroke-sheet.wxss
+  s_4e3585c5808062::t_022e62847c2a23 96-111
+README.md
+  s_4e3585c5808062::t_f31a6d5519fc59 75
+pages/reading/stroke-sheet/stroke-sheet.wxml
+  s_4e3585c5808062::t_022e62847c2a23 21-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "146f8d561f2054b0891b4322759b27c1a0e5f2c3",
+  "prompts": {},
+  "sessions": {
+    "s_4e3585c5808062": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21158-ec25-7073-9125-14d787f2a704",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
