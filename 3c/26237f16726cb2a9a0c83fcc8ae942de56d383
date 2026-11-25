@@ -1,0 +1,25 @@
+pages/category/category.js
+  s_4e3585c5808062::t_026335d986853a 18
+README.md
+  s_4e3585c5808062::t_026335d986853a 74
+pages/reading/detail.wxml
+  s_4e3585c5808062::t_026335d986853a 32,45
+tests/reading.test.js
+  s_4e3585c5808062::t_026335d986853a 30,33,43,74,84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3c26237f16726cb2a9a0c83fcc8ae942de56d383",
+  "prompts": {},
+  "sessions": {
+    "s_4e3585c5808062": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21158-ec25-7073-9125-14d787f2a704",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
