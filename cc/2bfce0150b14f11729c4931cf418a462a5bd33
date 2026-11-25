@@ -1,0 +1,14 @@
+docs/superpowers/plans/2026-11-24-kebiao-read.md
+  h_b87a5939e91b97 63,169,526,537,613-614,680
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "cc2bfce0150b14f11729c4931cf418a462a5bd33",
+  "prompts": {},
+  "humans": {
+    "h_b87a5939e91b97": {
+      "author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
