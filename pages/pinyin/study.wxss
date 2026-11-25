@@ -128,66 +128,6 @@
   padding: 0 8rpx;
 }
 
-.tone-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-
-.tone-row {
-  position: relative;
-  background: #ffffff;
-  border: 3rpx solid transparent;
-  border-radius: 20rpx;
-  box-shadow: 0 8rpx 20rpx rgba(60, 70, 120, 0.1);
-  padding: 22rpx 90rpx 22rpx 24rpx;
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
-}
-
-.tone-mastered {
-  border-color: #ffd900;
-  box-shadow: 0 8rpx 26rpx rgba(255, 217, 0, 0.45);
-}
-
-.tone-emoji {
-  font-size: 52rpx;
-  line-height: 1;
-}
-
-.tone-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-}
-
-.tone-py {
-  font-size: 36rpx;
-  font-weight: 900;
-  letter-spacing: 2rpx;
-}
-
-.tone-kou {
-  font-size: 24rpx;
-  font-weight: 700;
-  color: #5f6b7d;
-}
-
-.tone-example {
-  font-size: 26rpx;
-  font-weight: 800;
-  color: #333f4e;
-  white-space: nowrap;
-}
-
-.star-tone {
-  top: 50%;
-  margin-top: -24rpx;
-  color: #d3d7e0;
-}
-
 .tip {
   margin-top: 36rpx;
   text-align: center;

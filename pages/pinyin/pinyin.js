@@ -39,7 +39,7 @@ Page({
 
   onTapTable(e) {
     const type = e.currentTarget.dataset.type;
-    if (!type) return;
+    if (!py.TABLE_ORDER.includes(type)) return;
     wx.navigateTo({ url: '/pages/pinyin/study?type=' + type });
   },
 

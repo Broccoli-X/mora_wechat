@@ -4,7 +4,6 @@ const auth = require('../../utils/auth');
 Page({
   data: {
     type: '',
-    isSd: false,
     groups: [],
     total: 0,
     masteredCount: 0,
@@ -13,9 +12,11 @@ Page({
 
   onLoad(options) {
     const type = options && options.type ? options.type : '';
-    if (!py.TABLES[type]) {
+    if (!py.TABLE_ORDER.includes(type)) {
       wx.showToast({ title: '内容不存在', icon: 'none' });
-      setTimeout(() => wx.navigateBack(), 600);
+      setTimeout(() => wx.navigateBack({
+        fail: () => wx.redirectTo({ url: '/pages/pinyin/pinyin' }),
+      }), 600);
       return;
     }
     wx.setNavigationBarTitle({ title: py.TABLES[type].title });
@@ -41,7 +42,6 @@ Page({
     const masteredCount = py.countMasteredIn(type, masteredMap);
     this.setData({
       type,
-      isSd: type === 'sd',
       groups,
       total,
       masteredCount,

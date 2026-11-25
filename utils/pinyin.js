@@ -1,7 +1,7 @@
 /* 拼音学习卡数据与工具:mora 网页端 lib/pinyin-data.js 的同步副本(内容与键位格式一致)。
    掌握进度多端同步:协议与网页端 lib/progress-sync.js 一致(/api/progress module=pinyin),
    本地存储为第一写入点,进页面拉取合并、点标记异步上报,同键 updatedAt 新者胜。
-   每项 [拼音, emoji, 例字/口诀, 例字拼音, 分类];分类键 sm声母/dy单韵母/fy复韵母/qb前鼻/hb后鼻/zt整体认读/sd四声调 */
+   每项 [拼音, emoji, 例字/口诀, 例字拼音, 分类];分类键 sm声母/dy单韵母/fy复韵母/qb前鼻/hb后鼻/zt整体认读 */
 const PINYIN_DATA = [
   // 声母 23
   ["b","👨","爸爸","bà ba","sm"],["p","🎈","皮球","pí qiú","sm"],
@@ -42,9 +42,6 @@ const PINYIN_DATA = [
   ["ye","🍃","树叶","shù yè","zt"],["yue","🌙","月亮","yuè liang","zt"],
   ["yuan","🪙","一元钱","yī yuán","zt"],["yin","🎵","音乐","yīn yuè","zt"],
   ["yun","☁️","白云","bái yún","zt"],["ying","🦅","老鹰","lǎo yīng","zt"],
-  // 四声调 4
-  ["ā ē ī ō ū ǖ","🚂","一声","平平走","sd"],["á é í ó ú ǘ","📈","二声","往上扬","sd"],
-  ["ǎ ě ǐ ǒ ǔ ǚ","🎢","三声","拐个弯","sd"],["à è ì ò ù ǜ","🏀","四声","往下掉","sd"],
 ];
 
 /* 分组元信息:name 显示名,color 主色(与网页端一致) */
@@ -55,29 +52,22 @@ const GROUP_META = {
   qb: { name: '前鼻韵母', color: '#34C759' },
   hb: { name: '后鼻韵母', color: '#FF9500' },
   zt: { name: '整体认读', color: '#AF52DE' },
-  sd: { name: '四声调', color: '#00B894' },
 };
 
-/* 学习表:拼音基础四张入口大卡。ym 聚合韵母四组(dy+fy+qb+hb 共 24)。
-   cards 为双列卡,wide 为通栏卡,渲染顺序 = cards/wave 依 data 顺序拼接 */
+/* 三张学习表。ym 聚合韵母四组(dy+fy+qb+hb 共 24)。 */
 const TABLES = {
   sm: { key: 'sm', title: '声母表', color: '#4A90E2', color2: '#357ABD', sub: '发音短促轻快', layout: 'wide' },
   ym: { key: 'ym', title: '韵母表', color: '#EF476F', color2: '#D9365E', sub: '单韵母 · 复韵母 · 鼻韵母', layout: 'half' },
   zt: { key: 'zt', title: '整体认读', color: '#AF52DE', color2: '#8A2BE2', sub: '整个读 不用拼', layout: 'half' },
-  sd: { key: 'sd', title: '声调表', color: '#00B894', color2: '#00A89A', sub: '一声平 二声扬 三声拐弯 四声降', layout: 'wide' },
 };
-const TABLE_ORDER = ['sm', 'ym', 'zt', 'sd'];
+const TABLE_ORDER = ['sm', 'ym', 'zt'];
 
 /* 每张学习表内的分组次序(韵母表拆小组展示) */
 const TABLE_GROUPS = {
   sm: ['sm'],
   ym: ['dy', 'fy', 'qb', 'hb'],
   zt: ['zt'],
-  sd: ['sd'],
 };
-
-/* 四声调示例行(调值示范:妈麻马骂) */
-const TONE_EXAMPLES = { '一声': '妈 mā', '二声': '麻 má', '三声': '马 mǎ', '四声': '骂 mà' };
 
 /* 已掌握本地存储:键位 分类:拼音 与网页端一致;时间戳单独存(与网页端 TS_KEY 同名),
    供多端同步按「新者胜」合并 */
@@ -98,7 +88,7 @@ function itemKey(it) {
   return it[4] + ':' + it[0];
 }
 
-/* 全部合法键位(远端条目过滤用,防脏数据落盘) */
+/* 只在当前卡片目录内加载并同步掌握记录。 */
 const VALID_KEYS = new Set(PINYIN_DATA.map(itemKey));
 
 function loadMastered() {
@@ -106,7 +96,7 @@ function loadMastered() {
     const v = wx.getStorageSync(MASTER_KEY);
     if (!Array.isArray(v)) return {};
     const map = {};
-    v.forEach(k => { if (typeof k === 'string') map[k] = true; });
+    v.forEach(k => { if (VALID_KEYS.has(k)) map[k] = true; });
     return map;
   } catch (e) {
     return {};
@@ -116,7 +106,8 @@ function loadMastered() {
 function loadTs() {
   try {
     const v = wx.getStorageSync(TS_KEY);
-    return (v && typeof v === 'object' && !Array.isArray(v)) ? v : {};
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
+    return Object.fromEntries(Object.entries(v).filter(([key]) => VALID_KEYS.has(key)));
   } catch (e) {
     return {};
   }
@@ -176,6 +167,7 @@ function pushItems(items) {
 
 /* 标记/取消掌握:先写本地,再 fire-and-forget 上报 */
 function markMastered(key, done) {
+  if (!VALID_KEYS.has(key)) return;
   const map = loadMastered();
   if (done) map[key] = true; else delete map[key];
   const now = Date.now();
@@ -190,7 +182,7 @@ function localItems() {
   const map = loadMastered();
   const ts = loadTs();
   const now = Date.now();
-  return Object.keys(map).filter(k => VALID_KEYS.has(k))
+  return Object.keys(map)
     .map(k => ({ itemKey: k, mastered: 1, updatedAt: ts[k] || now }));
 }
 
@@ -253,7 +245,6 @@ function cardView(it, masteredMap) {
     sec: it[4],
     name: GROUP_META[it[4]].name,
     color: GROUP_META[it[4]].color,
-    example: it[4] === 'sd' ? TONE_EXAMPLES[it[2]] : '',
     mastered: !!(masteredMap && masteredMap[itemKey(it)]),
   };
 }
