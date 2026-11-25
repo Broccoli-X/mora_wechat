@@ -1,16 +1,22 @@
 page {
-  background: #f6f7fb;
+  background: #efe4cb;
+  background: linear-gradient(150deg, #eee0c4 0%, #f7ebd2 60%, #e5ebdd 100%);
+  color: #253c34;
 }
 
 .reading-detail {
+  min-height: 100vh;
+  box-sizing: border-box;
   padding: 24rpx 22rpx 56rpx;
 }
 
 .reading-paper {
   padding: 28rpx 24rpx;
-  border-radius: 28rpx;
-  background: #fff;
-  box-shadow: 0 8rpx 28rpx rgba(60, 70, 120, 0.07);
+  border: 2rpx solid #e4d1ab;
+  border-top: 6rpx solid #7da08b;
+  border-radius: 26rpx;
+  background: linear-gradient(180deg, #fff5df 0%, #fff9eb 150rpx, #fff4db 100%);
+  box-shadow: 0 8rpx 26rpx rgba(95, 72, 42, 0.1);
 }
 
 .reading-article-title {
@@ -28,26 +34,26 @@ page {
 
 .reading-byline {
   margin: 4rpx 0 7rpx;
-  color: #394765;
+  color: #465348;
   font-size: 27rpx;
   font-weight: 650;
 }
 
 .reading-meta {
-  color: #56627a;
+  color: #615746;
   font-size: 24rpx;
 }
 
 .reading-help {
   margin-top: 12rpx;
-  color: #3559bc;
+  color: #315e4d;
   font-size: 24rpx;
 }
 
 .reading-body {
   margin: 22rpx 0;
   padding-top: 22rpx;
-  border-top: 2rpx solid #eef0f5;
+  border-top: 2rpx solid #e7d8bc;
 }
 
 .reading-paragraph + .reading-paragraph {
@@ -55,7 +61,7 @@ page {
 }
 
 .reading-body-text {
-  color: #1f2333;
+  color: #2f382e;
   font-size: 42rpx;
 }
 
@@ -79,8 +85,8 @@ page {
 }
 
 .reading-glyph-active {
-  color: #3559bc;
-  background: #edf2ff;
+  color: #315e4d;
+  background: #e6efdf;
 }
 
 .reading-symbol {
@@ -94,7 +100,7 @@ page {
   box-sizing: border-box;
   height: 26rpx;
   padding: 0 2rpx;
-  color: #566b96;
+  color: #536858;
   font-size: 20rpx;
   font-weight: 500;
   line-height: 26rpx;
@@ -112,10 +118,10 @@ page {
 .reading-note {
   margin-top: 6rpx;
   padding: 10rpx 14rpx;
-  border-left: 4rpx solid #87a4fb;
+  border-left: 4rpx solid #829c7c;
   border-radius: 12rpx;
-  background: #f0f4ff;
-  color: #334b82;
+  background: #e8efdd;
+  color: #354e3d;
 }
 
 .reading-title-note {
@@ -137,7 +143,7 @@ page {
 
 .reading-status {
   padding: 30rpx;
-  color: #56627a;
+  color: #615746;
   text-align: center;
 }
 
@@ -151,7 +157,7 @@ page {
 
 .reading-turn {
   justify-content: space-between;
-  color: #56627a;
+  color: #615746;
   font-size: 24rpx;
   white-space: nowrap;
 }
@@ -163,8 +169,8 @@ page {
   margin: 0;
   padding: 0 12rpx;
   border-radius: 14rpx;
-  background: #edf2ff;
-  color: #3559bc;
+  background: #e6efdf;
+  color: #315e4d;
   font-size: 26rpx;
   font-weight: 700;
   line-height: 68rpx;
@@ -176,14 +182,14 @@ page {
 }
 
 .reading-action-active {
-  color: #1d6744;
-  background: #e9f6ee;
+  color: #2c543f;
+  background: #cfe2cd;
 }
 
 .reading-turn .reading-action {
   flex: 0 0 26%;
   padding: 0;
-  background: #f6f7fb;
+  background: #f4e9d3;
   line-height: 62rpx;
 }
 

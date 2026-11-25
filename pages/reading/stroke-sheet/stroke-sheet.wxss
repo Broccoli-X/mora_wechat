@@ -20,7 +20,7 @@
   box-sizing: border-box;
   padding: 20rpx 24rpx calc(25rpx + env(safe-area-inset-bottom));
   border-radius: 28rpx 28rpx 0 0;
-  background: #fff;
+  background: #fff8eb;
   text-align: center;
 }
 
@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #1f2333;
+  color: #2d392d;
   font-size: 34rpx;
   font-weight: 750;
 }
@@ -41,8 +41,8 @@
   margin: 0;
   padding: 0;
   border-radius: 50%;
-  background: #edf2ff;
-  color: #3559bc;
+  background: #e5eee1;
+  color: #315d4e;
   font-size: 40rpx;
   line-height: 64rpx;
 }
@@ -54,39 +54,45 @@
 .pinyin,
 .status {
   margin: 6rpx auto;
-  color: #526588;
+  color: #655641;
   font-size: 26rpx;
 }
 
-.steps {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14rpx 10rpx;
-  padding: 6rpx;
-}
-
-.step {
-  min-width: 0;
-  color: #56627a;
-  font-size: 22rpx;
-  line-height: 30rpx;
-}
-
-.step-grid {
-  position: relative;
+/* 滚动区域只显示静态图，画布留在屏幕外导出。 */
+.steps-scroll {
   width: 100%;
-  aspect-ratio: 1;
-  box-sizing: border-box;
-  border: 2rpx solid #c3cfed;
-  background: linear-gradient(90deg, transparent 49.6%, #dbe3f6 50%, transparent 50.4%),
-    linear-gradient(transparent 49.6%, #dbe3f6 50%, transparent 50.4%), #fbfcff;
+  overscroll-behavior: contain;
 }
 
-.stroke-step {
-  position: absolute;
-  inset: 0;
+.steps-image {
+  display: block;
   width: 100%;
-  height: 100%;
+}
+
+.stroke-renderer {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  width: 614px;
+  height: 180px;
+  pointer-events: none;
+}
+
+.step-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  margin: 6rpx 0 10rpx;
+  color: #655641;
+  font-size: 23rpx;
+}
+
+.step-legend-dot {
+  width: 13rpx;
+  height: 13rpx;
+  border-radius: 50%;
+  background: #c62e2e;
 }
 
 .fallback {
@@ -99,8 +105,8 @@
   margin: 4rpx auto 8rpx;
   padding: 0 24rpx;
   border-radius: 14rpx;
-  background: #edf2ff;
-  color: #3559bc;
+  background: #e5eee1;
+  color: #315d4e;
   font-size: 26rpx;
   font-weight: 700;
   line-height: 60rpx;

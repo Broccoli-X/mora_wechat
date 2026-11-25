@@ -1,3 +1,4 @@
+<page-meta page-style="{{strokeChar ? 'overflow: hidden;' : ''}}" />
 <template name="chars">
   <block wx:for="{{tokens}}" wx:for-item="token" wx:key="index">
     <view wx:if="{{token.lineBreak}}" class="reading-line-break"></view>

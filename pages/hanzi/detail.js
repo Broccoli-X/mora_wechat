@@ -117,7 +117,7 @@ Page({
       ctx.clearRect(0, 0, w, h);
       draw.drawChar(ctx, this.frames, draw.makeTransform(this.bbox, w, h), '#333333');
     }
-    /* 逐笔分解:第 k 格 = 前 k+1 笔深色,其余浅灰 */
+    /* 逐笔分解:第 k 格的当前一笔用红色 */
     this.cells.forEach((cv, k) => {
       cv.ctx.clearRect(0, 0, cv.w, cv.h);
       draw.drawStep(cv.ctx, this.frames, draw.makeTransform(this.bbox, cv.w, cv.h), k + 1);

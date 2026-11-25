@@ -1,8 +1,11 @@
 page {
-  background: #f6f7fb;
+  background: #f0e5cf;
+  background: linear-gradient(150deg, #f2e6cd 0%, #f8efd9 55%, #e6ece0 100%);
+  color: #253c34;
 }
 
 .reading-page {
+  min-height: 100vh;
   box-sizing: border-box;
   padding: 28rpx 28rpx 56rpx;
 }
@@ -11,8 +14,9 @@ page {
   padding: 20rpx;
   margin-bottom: 20rpx;
   border-radius: 24rpx;
-  background: #fff;
-  box-shadow: 0 6rpx 20rpx rgba(60, 70, 120, 0.06);
+  border: 2rpx solid #cbdcca;
+  background: #e6eee0;
+  box-shadow: 0 6rpx 20rpx rgba(59, 88, 67, 0.08);
 }
 
 .reading-search {
@@ -20,8 +24,8 @@ page {
   box-sizing: border-box;
   padding: 0 20rpx;
   border-radius: 16rpx;
-  background: #f6f7fb;
-  color: #1f2333;
+  background: #faf5e9;
+  color: #2c3e34;
   font-size: 27rpx;
 }
 
@@ -39,8 +43,8 @@ page {
   margin: 0;
   border: none;
   border-radius: 14rpx;
-  background: #f6f7fb;
-  color: #4e5871;
+  background: #f6f1e3;
+  color: #405448;
   text-align: center;
   font-size: 25rpx;
   font-weight: 650;
@@ -59,13 +63,13 @@ page {
 .reading-filter .selected,
 .reading-filter.selected {
   border-radius: inherit;
-  background: #edf2ff;
-  color: #3559bc;
+  background: #d1e3d2;
+  color: #244e3d;
 }
 
 .reading-status {
   padding: 20rpx 8rpx;
-  color: #5d687f;
+  color: #5d6252;
   font-size: 26rpx;
 }
 
@@ -81,12 +85,14 @@ page {
   gap: 18rpx;
   padding: 23rpx 26rpx;
   border-radius: 22rpx;
-  background: #fff;
-  box-shadow: 0 6rpx 20rpx rgba(60, 70, 120, 0.06);
+  border: 2rpx solid #e4d3ad;
+  border-left: 6rpx solid #6c9884;
+  background: linear-gradient(105deg, #fff7e4, #f9edd4);
+  box-shadow: 0 5rpx 18rpx rgba(96, 71, 39, 0.09);
 }
 
 .reading-card-active {
-  background: #eef3ff;
+  background: #eaf0dd;
 }
 
 .reading-card-main {
@@ -104,28 +110,28 @@ page {
   word-break: break-word;
   font-size: 34rpx;
   font-weight: 750;
-  color: #1f2333;
+  color: #2c3e34;
 }
 
 .reading-card-badge {
   flex: none;
   padding: 4rpx 11rpx;
   border-radius: 999rpx;
-  background: #e9f6ee;
-  color: #1d6744;
+  background: #dcebd9;
+  color: #315c47;
   font-size: 21rpx;
 }
 
 .reading-card-meta {
   margin-top: 5rpx;
-  color: #56627a;
+  color: #6b6049;
   font-size: 24rpx;
   overflow-wrap: anywhere;
 }
 
 .reading-card-preview {
   margin-top: 8rpx;
-  color: #454e64;
+  color: #524b3c;
   font-size: 28rpx;
   white-space: nowrap;
   overflow: hidden;
@@ -133,6 +139,6 @@ page {
 }
 
 .reading-card-arrow {
-  color: #4f7cff;
+  color: #426f5f;
   font-size: 43rpx;
 }

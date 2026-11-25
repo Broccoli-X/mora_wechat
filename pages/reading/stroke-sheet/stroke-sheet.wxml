@@ -7,19 +7,17 @@
     </view>
     <view wx:if="{{pinyin}}" class="pinyin">{{pinyin}}</view>
     <view class="status">{{status}}</view>
-    <scroll-view wx:if="{{steps.length}}" scroll-y style="height:min(52vh, {{stepsHeight}}rpx)">
-      <view class="steps">
-        <view wx:for="{{steps}}" wx:key="*this" class="step">
-          <view class="step-grid">
-            <canvas type="2d" class="stroke-step"></canvas>
-          </view>
-          <text>第 {{item}} 笔</text>
-        </view>
-      </view>
-    </scroll-view>
+    <block wx:if="{{imagePath}}">
+      <view class="step-legend"><text class="step-legend-dot"></text>红色为当前笔画</view>
+      <scroll-view scroll-y class="steps-scroll" style="height: {{scrollHeight}}px">
+        <image class="steps-image" src="{{imagePath}}" mode="scaleToFill"
+               style="height: {{imageHeight}}px" aria-label="{{char}}的 {{count}} 笔分解图" />
+      </scroll-view>
+    </block>
     <view wx:else class="fallback">{{char}}</view>
     <button wx:if="{{canSupplement}}" class="supplement" disabled="{{supplementing}}" bindtap="supplement">
       {{supplementing ? '正在补笔顺…' : '补笔顺'}}
     </button>
   </view>
 </view>
+<canvas wx:if="{{count && !imagePath}}" type="2d" id="stroke-renderer" class="stroke-renderer"></canvas>

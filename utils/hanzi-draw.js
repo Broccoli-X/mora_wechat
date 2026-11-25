@@ -1,6 +1,6 @@
 /* hanzi-writer 笔画轮廓数据 → Canvas 2D 绘制工具(纯函数,Node 可 require 测试)。
    数据坐标为 1024×1024 且 Y 轴朝上,绘制时翻成屏幕朝下并等比适配画布;
-   path 只含 M/L/Q/C/Z(绝对坐标)。用途:田字格整字与逐笔分解图(第 k 格前 k 笔深色)。 */
+   path 只含 M/L/Q/C/Z(绝对坐标)。用途:田字格整字与逐笔分解图。 */
 
 /* 解析 path d 属性 → 段数组。字母后可跟多组隐式重复坐标(SVG 规范:M 后续组按 L 处理) */
 function parsePath(d) {
@@ -80,11 +80,12 @@ function drawChar(ctx, frames, T, color) {
   for (const f of frames) fillStroke(ctx, f, T, color);
 }
 
-/* 逐笔分解第 k 格(0 基):前 k 笔深色,其余浅灰(与网页端一致) */
+/* 第 k 格：后续笔画先铺灰色，已写的笔画用深色，最后画红色的当前笔。 */
 function drawStep(ctx, frames, T, k) {
-  for (let i = 0; i < frames.length; i++) {
-    fillStroke(ctx, frames[i], T, i < k ? '#333333' : '#eef2f7');
-  }
+  const current = frames[k - 1];
+  for (let i = k; i < frames.length; i++) fillStroke(ctx, frames[i], T, '#e5ddd0');
+  for (let i = 0; i < k - 1; i++) fillStroke(ctx, frames[i], T, '#333333');
+  if (current) fillStroke(ctx, current, T, '#c62e2e');
 }
 
 module.exports = {

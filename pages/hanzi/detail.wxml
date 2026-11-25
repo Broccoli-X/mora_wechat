@@ -33,7 +33,7 @@
       </view>
     </view>
 
-    <!-- 笔顺分解:第 k 格前 k 笔深色,其余浅灰 -->
+    <!-- 笔顺分解:第 k 格用红色标出当前笔画 -->
     <view wx:if="{{steps.length}}" class="d-order">
       <view class="d-lab">笔顺分解(共 {{strokeCount}} 笔,按顺序逐笔)</view>
       <view class="strokes">

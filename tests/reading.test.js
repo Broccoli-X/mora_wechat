@@ -84,12 +84,16 @@ test('入口、正文、注解和独立笔顺组件完成接线', () => {
   assert.ok(detail.includes('<text>标题注解</text>') && detail.includes('<text>注解</text>'));
   assert.match(detail, /wx:if="{{article.author}}"/);
   assert.match(detail, /<stroke-sheet.+bind:close="closeStroke"/);
+  assert.match(detail, /<page-meta page-style="{{strokeChar \? 'overflow: hidden;/);
   const sheet = read('pages/reading/stroke-sheet/stroke-sheet.wxml');
   const sheetJs = read('pages/reading/stroke-sheet/stroke-sheet.js');
-  assert.match(sheet, /第 {{item}} 笔/);
+  const scrollArea = sheet.match(/<scroll-view[\s\S]*?<\/scroll-view>/)[0];
+  assert.match(scrollArea, /<image.+src="{{imagePath}}"/);
+  assert.doesNotMatch(scrollArea, /<canvas/);
   assert.match(sheet, /wx:if="{{canSupplement}}".+bindtap="supplement"/);
   assert.match(sheetJs, /hanzi\.supplementStrokes\(this\.data\.char/);
   assert.match(sheetJs, /draw\.drawStep\(ctx, frames, .+, i \+ 1\)/);
+  assert.match(sheetJs, /wx\.canvasToTempFilePath/);
   assert.doesNotMatch(sheet + sheetJs, /bindtap="play"|setTimeout|再看一遍/);
 });
 
@@ -109,4 +113,54 @@ test('小程序补到的笔顺写入识字卡片与文章共用缓存', () => {
   request.success({ statusCode: 200, data: { ok: true, data: { strokes, medians: [[[0, 0]]] } } });
   assert.deepEqual(value, { strokes });
   assert.deepEqual(hanzi.strokeDataSync(char), { strokes });
+});
+
+
+test('17 笔分解导出为一张可滚动的静态图，每格只标红当前笔画', () => {
+  const { storage } = setup();
+  const strokes = Array.from({ length: 17 }, (_, i) => 'M ' + (10 + i * 10) + ' 10 L 180 80 Z');
+  storage.set('mora-hanzi-stroke-data-v1', { 穗: { strokes } });
+  let component;
+  global.Component = def => { component = def; };
+  require('../pages/reading/stroke-sheet/stroke-sheet');
+
+  const cells = [];
+  const noop = () => {};
+  let paths, start;
+  const ctx = {
+    scale: noop, translate: noop, fillRect: noop, strokeRect: noop, stroke: noop, lineTo: noop,
+    quadraticCurveTo: noop, bezierCurveTo: noop, closePath: noop, beginPath() { start = null; },
+    moveTo(x) { if (start === null) start = x; },
+    save() { paths = []; }, restore() {},
+    fill() { paths.push({ color: this.fillStyle, start }); },
+    fillText(label) { cells.push({ label, paths }); },
+  };
+  const canvas = { getContext: () => ctx };
+  wx.getWindowInfo = () => ({ windowWidth: 390, windowHeight: 680, pixelRatio: 3 });
+  wx.canvasToTempFilePath = options => {
+    assert.equal(options.canvas, canvas);
+    assert.equal(options.fileType, 'png');
+    assert.ok(canvas.height <= 3000);
+    options.success({ tempFilePath: 'wxfile://steps.png' });
+  };
+  const state = {
+    ...component.methods, data: { ...component.data, char: '穗' },
+    setData(value, callback) { Object.assign(this.data, value); if (callback) callback(); },
+    createSelectorQuery() {
+      return { select: () => ({ fields: noop }), exec: fn => fn([{ node: canvas }]) };
+    },
+  };
+  component.lifetimes.ready.call(state);
+  assert.equal(state.data.imagePath, 'wxfile://steps.png');
+  assert.equal(state.data.count, 17);
+  assert.ok(state.data.imageHeight > state.data.scrollHeight);
+  assert.equal(cells.length, 17);
+  const redStarts = cells.map(({ label, paths }, i) => {
+    assert.equal(label, '第 ' + (i + 1) + ' 笔');
+    const red = paths.filter(path => path.color === '#c62e2e');
+    assert.equal(red.length, 1);
+    assert.equal(paths.at(-1), red[0]);
+    return red[0].start;
+  });
+  assert.ok(redStarts.every((x, i) => i === 0 || x > redStarts[i - 1]));
 });
