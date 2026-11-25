@@ -60,7 +60,7 @@
 console.log('\n全部通过:' + passed + ' 个用例');
 ```
 
-替换为下面整段(新增 5 个用例 + 收尾):
+替换为下面整段(新增 6 个用例 + 收尾):
 
 ```js
 /* ── 在线课表:mock wx(内存 storage + request 捕获,按 URL 关键字注入回包)── */
@@ -166,7 +166,7 @@ test('在线课表:坏数据 / 网络失败 / 非 200 不动当前课表;无 tok
   let got = null;
   kb.refresh((changed, err) => { got = [changed, err]; });
   assert.deepStrictEqual(got, [false, 'bad']);
-  assert.strictEqual(kb.current().updatedAt, 50, '坏数据不覆盖缓存');
+  assert.strictEqual(kb.current().cls, '二(1)班', '坏数据不覆盖缓存');
 
   reset({ '/api/kebiao?': { statusCode: 200, data: { ok: true, data: { days: [] }, updatedAt: 300 } } });
   kb = freshUtil();
@@ -523,7 +523,7 @@ Expected: 最后一条命令没有任何输出(模块能正常加载;`wx` 未定
 - [ ] **Step 4: 跑测试确认通过**
 
 Run: `node tests/kebiao.test.js`
-Expected: 12 个 ✓,末行 `全部通过:12 个用例`。
+Expected: 13 个 ✓,末行 `全部通过:13 个用例`。
 
 - [ ] **Step 5: 全量回归**
 
@@ -534,7 +534,7 @@ Expected: 没有任何 `FAIL:` 输出(20 个测试文件)。
 
 ```bash
 git add utils/kebiao.js tests/kebiao.test.js
-git commit -m "课表改为只读在线课表:utils/kebiao.js 拉网页端维护的 GET /api/kebiao,本机缓存 mora-kebiao-doc 优先、updatedAt 更新才替换,data:null/坏数据/网络失败不动当前课表,内置默认课表(静态副本)冻结为兜底;normalizeDoc 只做渲染保护不复刻服务端校验;工具函数改读当前课表,首页课程卡跳过空堂(当前节 → 今天下一节有课的 → 次日第一节有课的 → 周末隐藏);kebiao 测试 7 → 12 用例"
+git commit -m "课表改为只读在线课表:utils/kebiao.js 拉网页端维护的 GET /api/kebiao,本机缓存 mora-kebiao-doc 优先、updatedAt 更新才替换,data:null/坏数据/网络失败不动当前课表,内置默认课表(静态副本)冻结为兜底;normalizeDoc 只做渲染保护不复刻服务端校验;工具函数改读当前课表,首页课程卡跳过空堂(当前节 → 今天下一节有课的 → 次日第一节有课的 → 周末隐藏);kebiao 测试 7 → 13 用例"
 ```
 
 ### Task 2: 课表页与首页课程卡接线 + 文档
@@ -610,7 +610,8 @@ function onlineDoc(prefix) {
     periods: [{ label: '早读', half: '上午', time: '7:50~8:20' },
       { label: '第1节', half: '上午', time: '8:35~9:15' }],
     routine: [],
-    grid: names.map(() => [[prefix + '课A', '张老师', ''], [prefix + '课B', '李老师', '带课本']]),
+    grid: [names.map(() => [prefix + '课A', '张老师', '']),
+      names.map(() => [prefix + '课B', '李老师', '带课本'])],     // 行 = 节次,列 = 星期
     meta: {},
   };
 }
@@ -676,7 +677,7 @@ test('课表页:页签 / 学校班级 / 学期 / 节次都来自在线课表,选
 
 test('课表页:空堂一行显示「空」;选中星期后下拉刷新保持选中', () => {
   const doc = onlineDoc('新');
-  doc.grid[2][1] = ['', '', ''];                      // 周三第1节是空堂
+  doc.grid[1][2] = ['', '', ''];                      // 周三(第 3 列)第 1 节(第 2 行)是空堂
   reset({ '/api/kebiao?': { statusCode: 200, data: { ok: true, data: doc, updatedAt: 200 } } });
   const p = load('pages/kebiao/kebiao.js');
   p.onShow();
