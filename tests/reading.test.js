@@ -78,4 +78,9 @@ test('入口、正文、笔记和独立笔顺组件完成接线', () => {
   assert.match(detail, /catchtap="tapChar"/);
   assert.match(detail, /tokens: item\.noteTokens/);
   assert.match(detail, /<stroke-sheet.+bind:close="closeStroke"/);
+  const sheet = read('pages/reading/stroke-sheet/stroke-sheet.wxml');
+  const sheetJs = read('pages/reading/stroke-sheet/stroke-sheet.js');
+  assert.match(sheet, /第 {{item}} 笔/);
+  assert.match(sheetJs, /draw\.drawStep\(ctx, frames, .+, i \+ 1\)/);
+  assert.doesNotMatch(sheet + sheetJs, /bindtap="play"|setTimeout|再看一遍/);
 });

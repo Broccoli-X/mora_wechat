@@ -16,7 +16,7 @@
       <template is="chars" data="{{tokens: titleTokens, showPy: true, hide: hidePinyin}}" />
     </view>
     <view class="meta">{{article.caption}}</view>
-    <view class="reading-help">点一下汉字，看它怎么写</view>
+    <view class="reading-help">点一下汉字，看逐笔分解</view>
     <view class="body">
       <view wx:for="{{paragraphs}}" wx:key="index" class="paragraph">
         <view class="text">

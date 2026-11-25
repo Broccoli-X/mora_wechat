@@ -1,13 +1,13 @@
-.backdrop{position:fixed;inset:0;z-index:20;background:rgba(31,23,47,.46);display:flex;align-items:flex-end;justify-content:center}
-.sheet{width:100%;max-width:600rpx;border-radius:30rpx 30rpx 0 0;padding:20rpx 24rpx calc(25rpx + env(safe-area-inset-bottom));background:#fffaf1;text-align:center;box-sizing:border-box}
+.layer{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.backdrop{position:absolute;inset:0;background:rgba(31,23,47,.46)}
+.sheet{position:relative;width:100%;max-width:680rpx;border-radius:30rpx 30rpx 0 0;padding:20rpx 24rpx calc(25rpx + env(safe-area-inset-bottom));background:#fffaf1;text-align:center;box-sizing:border-box}
 .head{display:flex;justify-content:space-between;align-items:center;color:#3f2c63;font-size:33rpx;font-weight:750}
 .head button{width:62rpx;height:62rpx;padding:0;margin:0;border-radius:50%;background:#f2e7fb;color:#4f3595;font-size:43rpx;line-height:1.35}
-.head button::after,.play::after{border:0}
+.head button::after{border:0}
 .pinyin,.status{font-size:26rpx;color:#675587;margin:8rpx auto}
-.grid{width:min(360rpx,65vw);height:min(360rpx,65vw);position:relative;margin:12rpx auto;border:3rpx solid #c76e66;background:
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14rpx 10rpx;padding:6rpx}
+.step{min-width:0;color:#675587;font-size:22rpx}
+.stroke-step{display:block;width:100%;height:128rpx;box-sizing:border-box;border:2rpx solid #c76e66;background:
   linear-gradient(90deg,transparent 49.6%,#e7b4ad 50%,transparent 50.4%),
   linear-gradient(transparent 49.6%,#e7b4ad 50%,transparent 50.4%),#fff}
-.canvas{width:100%;height:100%;position:absolute;inset:0}
-.fallback{display:flex;align-items:center;justify-content:center;height:100%;font:180rpx KaiTi,serif}
-.play{margin:12rpx auto 0;padding:8rpx 30rpx;width:max-content;line-height:1.5;border-radius:22rpx;color:#fff;background:#5d42b7;font-size:30rpx}
-.play[disabled]{color:#827291;background:#eee7f3}
+.fallback{line-height:1.1;font:110rpx KaiTi,serif;padding:10rpx}
