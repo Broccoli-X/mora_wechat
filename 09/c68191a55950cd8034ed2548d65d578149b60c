@@ -1,0 +1,30 @@
+pages/reading/stroke-sheet/stroke-sheet.wxml
+  s_4e3585c5808062::t_2a296363748e3a 1-3,11-18
+  s_4e3585c5808062::t_cf91091a71d118 10
+pages/reading/stroke-sheet/stroke-sheet.wxss
+  s_4e3585c5808062::t_2a296363748e3a 1-3,6,8-10,13
+tests/reading.test.js
+  s_4e3585c5808062::t_f8451d61f6b6f9 81-85
+pages/reading/stroke-sheet/stroke-sheet.js
+  s_4e3585c5808062::t_2a296363748e3a 6,13-19,22,25-28,30-32,36-42
+README.md
+  s_4e3585c5808062::t_2a296363748e3a 75
+pages/reading/detail.wxml
+  s_4e3585c5808062::t_5df9091e78c025 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "09c68191a55950cd8034ed2548d65d578149b60c",
+  "prompts": {},
+  "sessions": {
+    "s_4e3585c5808062": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21158-ec25-7073-9125-14d787f2a704",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
