@@ -29,7 +29,7 @@
     <view class="reading-body">
       <view wx:if="{{titleNoteTokens.length}}" class="reading-note reading-title-note">
         <view class="reading-note-label" role="button" aria-expanded="{{titleNoteOpen}}" bindtap="toggleTitleNote">
-          <text>标题笔记</text>
+          <text>标题注解</text>
           <text>{{titleNoteOpen ? '▴' : '▾'}}</text>
         </view>
         <view wx:if="{{titleNoteOpen}}" class="reading-line reading-note-text">
@@ -42,7 +42,7 @@
         </view>
         <view wx:if="{{item.note}}" class="reading-note">
           <view class="reading-note-label" role="button" aria-expanded="{{item.noteOpen}}" data-index="{{index}}" bindtap="toggleNote">
-            <text>老师笔记</text>
+            <text>注解</text>
             <text>{{item.noteOpen ? '▴' : '▾'}}</text>
           </view>
           <view wx:if="{{item.noteOpen}}" class="reading-line reading-note-text">
