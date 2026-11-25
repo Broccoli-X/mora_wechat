@@ -93,3 +93,19 @@
   padding: 10rpx;
   font: 110rpx/1.1 KaiTi, serif;
 }
+
+.supplement {
+  width: auto;
+  margin: 4rpx auto 8rpx;
+  padding: 0 24rpx;
+  border-radius: 14rpx;
+  background: #edf2ff;
+  color: #3559bc;
+  font-size: 26rpx;
+  font-weight: 700;
+  line-height: 60rpx;
+}
+
+.supplement::after {
+  border: 0;
+}

@@ -87,6 +87,26 @@ test('入口、正文、注解和独立笔顺组件完成接线', () => {
   const sheet = read('pages/reading/stroke-sheet/stroke-sheet.wxml');
   const sheetJs = read('pages/reading/stroke-sheet/stroke-sheet.js');
   assert.match(sheet, /第 {{item}} 笔/);
+  assert.match(sheet, /wx:if="{{canSupplement}}".+bindtap="supplement"/);
+  assert.match(sheetJs, /hanzi\.supplementStrokes\(this\.data\.char/);
   assert.match(sheetJs, /draw\.drawStep\(ctx, frames, .+, i \+ 1\)/);
   assert.doesNotMatch(sheet + sheetJs, /bindtap="play"|setTimeout|再看一遍/);
+});
+
+
+test('小程序补到的笔顺写入识字卡片与文章共用缓存', () => {
+  const { requests } = setup();
+  const hanzi = require('../utils/hanzi');
+  const char = '穗';
+  assert.equal(hanzi.strokeDataSync(char), null);
+  let value;
+  hanzi.supplementStrokes(char, (data) => { value = data; });
+  const request = requests.shift();
+  assert.match(request.url, /\/api\/hanzi-stroke\/supplement$/);
+  assert.equal(request.method, 'POST');
+  assert.deepEqual(request.data, { token: 'test-token', c: char });
+  const strokes = ['M 0 0 Z'];
+  request.success({ statusCode: 200, data: { ok: true, data: { strokes, medians: [[[0, 0]]] } } });
+  assert.deepEqual(value, { strokes });
+  assert.deepEqual(hanzi.strokeDataSync(char), { strokes });
 });

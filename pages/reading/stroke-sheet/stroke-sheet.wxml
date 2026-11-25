@@ -18,5 +18,8 @@
       </view>
     </scroll-view>
     <view wx:else class="fallback">{{char}}</view>
+    <button wx:if="{{canSupplement}}" class="supplement" disabled="{{supplementing}}" bindtap="supplement">
+      {{supplementing ? '正在补笔顺…' : '补笔顺'}}
+    </button>
   </view>
 </view>

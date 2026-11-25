@@ -141,6 +141,19 @@ function strokeDataSync(c) {
   return null;
 }
 
+function cacheStrokeResponse(c, body) {
+  const data = body && body.ok && body.data;
+  if (!data || !Array.isArray(data.strokes) || !data.strokes.length) return null;
+  const d = { strokes: data.strokes };
+  try {
+    let m = wx.getStorageSync(STROKE_DATA_KEY) || {};
+    if (typeof m !== 'object' || Array.isArray(m)) m = {};
+    m[c] = d;
+    wx.setStorageSync(STROKE_DATA_KEY, m);
+  } catch (e) { /* 存储失败本次不缓存 */ }
+  return d;
+}
+
 function fetchStrokes(c, done) {
   const hit = strokeDataSync(c);
   if (hit) { if (done) done(hit); return; }
@@ -151,20 +164,33 @@ function fetchStrokes(c, done) {
     method: 'GET',
     success(res) {
       if (res.statusCode === 401) { auth.on401(); return; }
-      const j = res.data;
-      const d = (j && j.ok && j.data && Array.isArray(j.data.strokes) && j.data.strokes.length)
-        ? { strokes: j.data.strokes } : null;
-      if (d) {
-        try {
-          let m = wx.getStorageSync(STROKE_DATA_KEY) || {};
-          if (typeof m !== 'object' || Array.isArray(m)) m = {};
-          m[c] = d;
-          wx.setStorageSync(STROKE_DATA_KEY, m);
-        } catch (e) { /* 存储失败本次不缓存,下次再取 */ }
-      }
-      if (done) done(d);
+      const data = cacheStrokeResponse(c, res.data);
+      if (done) done(data);
     },
     fail() { if (done) done(null); },
+  });
+}
+
+function supplementStrokes(c, done) {
+  const token = auth.getToken();
+  if (!token) { done(null, 'unauthorized'); return; }
+  wx.request({
+    url: API_BASE + '/api/hanzi-stroke/supplement',
+    method: 'POST',
+    timeout: 12000,
+    header: { 'Content-Type': 'application/json' },
+    data: { token, c },
+    success(res) {
+      const j = res.data || {};
+      if (res.statusCode === 401 || j.error === 'password change required') auth.on401();
+      if (res.statusCode === 200) {
+        const data = cacheStrokeResponse(c, j);
+        if (data) { done(data); return; }
+      }
+      const reason = res.statusCode === 404 && j.error !== 'stroke not found' ? 'unsupported' : j.error;
+      done(null, reason || 'supplement failed');
+    },
+    fail() { done(null, 'network error'); },
   });
 }
 
@@ -391,7 +417,7 @@ function countMasteredIn(g, masteredMap) {
 module.exports = {
   HANZI_SEED, ALL_KEY,
   currentDataset, fetchDataset, viewIndex, hasChar, isValidScope, scopeChars,
-  strokeDataSync, fetchStrokes, strokesCountSync,
+  strokeDataSync, fetchStrokes, supplementStrokes, strokesCountSync,
   loadMastered, loadTs, saveStore, markMastered, syncMastered,
   mergeItems, itemsToPush, localItems, deviceName,
   charView, studyGroups, groupCardViews,
