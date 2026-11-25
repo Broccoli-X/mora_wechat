@@ -1,0 +1,32 @@
+README.md
+  h_b87a5939e91b97 27,69
+docs/superpowers/specs/2026-11-24-kebiao-editable-design.md
+  h_b87a5939e91b97 4
+pages/index/index.js
+  h_b87a5939e91b97 68,100-104
+pages/kebiao/kebiao.js
+  h_b87a5939e91b97 6-8,15-17,20-29,37-53,56,60-61,64-65,67,76
+pages/kebiao/kebiao.json
+  h_b87a5939e91b97 3
+pages/kebiao/kebiao.wxml
+  h_b87a5939e91b97 10-11,27,34-35
+pages/kebiao/kebiao.wxss
+  h_b87a5939e91b97 127-132
+tests/kebiao-pages.test.js
+  h_b87a5939e91b97 1-177
+tests/kebiao.test.js
+  h_b87a5939e91b97 1-2,81-267
+utils/kebiao.js
+  h_b87a5939e91b97 1-17,62-187,189-190,193,196,200,204,208,214-224,226-227,229-231,234-255,259,263,267-269,272-276
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "741aa084518653179a37fbb769750e84581c2e76",
+  "prompts": {},
+  "humans": {
+    "h_b87a5939e91b97": {
+      "author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
