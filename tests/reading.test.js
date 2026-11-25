@@ -30,7 +30,7 @@ test('逐字拆分保留语境拼音、标点与增补区汉字', () => {
 test('共用目录按年级和册别筛选，按版本缓存文章与老师笔记，并隔离家庭', async () => {
   const { reading, requests, storage } = setup();
   const a = { id: 'seed-1', revision: 0, grade: 1, volume: '上册' };
-  const b = { id: 'r-cafe', revision: 1, grade: 2, volume: '下册',
+  const b = { id: 'r-cafe', revision: 1, grade: 2, volume: '下册', author: '测试作者', titleNote: '标题笔记',
     paragraphs: [{ text: '水边', pinyin: 'shuǐ biān', note: '蝴蝶' }] };
   const list = reading.refreshList();
   requests.shift().success({ statusCode: 200, data: { ok: true, data: [a, b] } });
@@ -38,7 +38,10 @@ test('共用目录按年级和册别筛选，按版本缓存文章与老师笔�
   const pending = reading.article(b.id, b.revision);
   assert.match(requests[0].url, /\/api\/reading\/article\?id=r-cafe&token=/);
   requests.shift().success({ statusCode: 200, data: { ok: true, data: b } });
-  assert.equal((await pending).paragraphs[0].note, '蝴蝶');
+  const article = await pending;
+  assert.equal(article.author, '测试作者');
+  assert.equal(article.titleNote, '标题笔记');
+  assert.equal(article.paragraphs[0].note, '蝴蝶');
   assert.deepEqual(await reading.article(b.id, b.revision), b);
   assert.equal(requests.length, 0);
   storage.set('mora-auth-family', 'other');
@@ -77,6 +80,8 @@ test('入口、正文、笔记和独立笔顺组件完成接线', () => {
   const detail = read('pages/reading/detail.wxml');
   assert.match(detail, /catchtap="tapChar"/);
   assert.match(detail, /tokens: item\.noteTokens/);
+  assert.match(detail, /tokens: titleNoteTokens/);
+  assert.match(detail, /wx:if="{{article.author}}"/);
   assert.match(detail, /<stroke-sheet.+bind:close="closeStroke"/);
   const sheet = read('pages/reading/stroke-sheet/stroke-sheet.wxml');
   const sheetJs = read('pages/reading/stroke-sheet/stroke-sheet.js');

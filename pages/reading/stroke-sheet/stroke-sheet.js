@@ -14,7 +14,7 @@ Component({
         const bounds = draw.charBBox(data.strokes, 0.12);
         this.setData({
           steps: frames.map((_, i) => i + 1),
-          stepsHeight: Math.ceil(frames.length / 4) * 174 + 12,
+          stepsHeight: Math.ceil(frames.length / 4) * 192,
           status: '共 ' + frames.length + ' 笔',
         }, () => this.drawSteps(frames, bounds));
       });

@@ -10,7 +10,9 @@
     <scroll-view wx:if="{{steps.length}}" scroll-y style="height:min(52vh, {{stepsHeight}}rpx)">
       <view class="steps">
         <view wx:for="{{steps}}" wx:key="*this" class="step">
-          <canvas type="2d" class="stroke-step"></canvas>
+          <view class="step-grid">
+            <canvas type="2d" class="stroke-step"></canvas>
+          </view>
           <text>第 {{item}} 笔</text>
         </view>
       </view>

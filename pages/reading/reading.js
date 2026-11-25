@@ -56,7 +56,7 @@ Page({
     const scope = reading.group(this.items || [], grade, VOLUMES[volume]);
     const q = keyword.trim().toLowerCase();
     const articles = scope.map(a => ({ ...a, caption: reading.caption(a), read: reading.isRead(a.progressKey) }))
-      .filter(a => (!onlyRead || a.read) && (!q || [a.title, a.pinyin, a.caption].some(s => s.toLowerCase().includes(q))));
+      .filter(a => (!onlyRead || a.read) && (!q || [a.title, a.pinyin, a.author || '', a.caption].some(s => s.toLowerCase().includes(q))));
     this.setData({ articles, total: scope.length, readCount: scope.filter(a => reading.isRead(a.progressKey)).length });
   },
 

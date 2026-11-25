@@ -3,7 +3,8 @@ const reading = require('../../utils/reading');
 
 Page({
   data: {
-    article: null, paragraphs: [], titleTokens: [], hidePinyin: false,
+    article: null, paragraphs: [], titleTokens: [], titleAnnotated: false, hidePinyin: false,
+    titleNoteTokens: [], titleNoteOpen: false,
     pos: 0, total: 0, read: false, loading: true, message: '',
     strokeChar: '', strokePinyin: '',
   },
@@ -59,13 +60,15 @@ Page({
       if (seq !== this.loadSeq) return;
       const titleTokens = reading.splitText(article.title, article.pinyin);
       const paragraphs = article.paragraphs.map((p, index) => ({
-        index, tokens: reading.splitText(p.text, p.pinyin), note: Boolean(p.note),
+        index, tokens: reading.splitText(p.text, p.pinyin), annotated: Boolean(p.pinyin), note: Boolean(p.note),
         noteTokens: p.note ? reading.splitText(p.note) : [], noteOpen: false,
       }));
       const scope = this.scope();
       this.setData({
-        article: { id, revision: article.revision, progressKey: article.progressKey, caption: reading.caption(article) },
-        titleTokens, paragraphs, loading: false,
+        article: { id, revision: article.revision, progressKey: article.progressKey,
+          caption: reading.caption(article), author: article.author || '' },
+        titleTokens, titleAnnotated: Boolean(article.pinyin), paragraphs, loading: false,
+        titleNoteTokens: reading.splitText(article.titleNote || ''), titleNoteOpen: false,
         pos: scope.findIndex(item => item.id === id) + 1, total: scope.length,
         read: reading.isRead(article.progressKey),
       });
@@ -87,6 +90,7 @@ Page({
   },
   toggleRead() { this.setData({ read: reading.toggle(this.data.article.progressKey) }); },
   togglePinyin() { this.setData({ hidePinyin: !this.data.hidePinyin }); },
+  toggleTitleNote() { this.setData({ titleNoteOpen: !this.data.titleNoteOpen }); },
   toggleNote(e) {
     const i = e.currentTarget.dataset.index;
     this.setData({ ['paragraphs[' + i + '].noteOpen']: !this.data.paragraphs[i].noteOpen });

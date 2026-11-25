@@ -1,45 +1,65 @@
 <template name="chars">
   <block wx:for="{{tokens}}" wx:for-item="token" wx:key="index">
-    <view wx:if="{{token.isHan}}" class="han" role="button" aria-label="查看{{token.char}}的笔顺"
-          hover-class="han-active" catchtap="tapChar" data-char="{{token.char}}" data-pinyin="{{token.pinyin}}">
-      <text wx:if="{{showPy}}" class="py {{hide ? 'hide-py' : ''}}">{{token.pinyin}}</text>
-      <text>{{token.char}}</text>
+    <view wx:if="{{token.lineBreak}}" class="reading-line-break"></view>
+    <view wx:elif="{{token.isHan}}" class="reading-glyph" role="button" aria-label="查看{{token.char}}的笔顺"
+          hover-class="reading-glyph-active" catchtap="tapChar" data-char="{{token.char}}" data-pinyin="{{token.pinyin}}">
+      <text wx:if="{{showPy}}" class="reading-py {{hide ? 'reading-py-hidden' : ''}}">{{token.pinyin}}</text>
+      <text class="reading-symbol">{{token.char}}</text>
     </view>
-    <text wx:else class="punc" space="ensp">{{token.char}}</text>
+    <view wx:else class="reading-glyph reading-glyph-plain">
+      <text wx:if="{{showPy}}" class="reading-py"></text>
+      <text class="reading-symbol" space="ensp">{{token.char}}</text>
+    </view>
   </block>
 </template>
-<view class="detail-page">
-  <view wx:if="{{loading}}" class="status">正在加载文章…</view>
-  <view wx:elif="{{message}}" class="status">{{message}}<button bindtap="load">重试</button></view>
-  <view wx:elif="{{article}}" class="paper">
-    <view class="article-title">
-      <template is="chars" data="{{tokens: titleTokens, showPy: true, hide: hidePinyin}}" />
+<view class="reading-detail">
+  <view wx:if="{{loading}}" class="reading-status">正在加载文章…</view>
+  <view wx:elif="{{message}}" class="reading-status">
+    {{message}}
+    <button class="reading-action reading-retry" bindtap="load">重试</button>
+  </view>
+  <view wx:elif="{{article}}" class="reading-paper">
+    <view class="reading-line reading-article-title">
+      <template is="chars" data="{{tokens: titleTokens, showPy: titleAnnotated, hide: hidePinyin}}" />
     </view>
-    <view class="meta">{{article.caption}}</view>
-    <view class="reading-help">点一下汉字，看逐笔分解</view>
-    <view class="body">
-      <view wx:for="{{paragraphs}}" wx:key="index" class="paragraph">
-        <view class="text">
-          <template is="chars" data="{{tokens: item.tokens, showPy: true, hide: hidePinyin}}" />
+    <view wx:if="{{article.author}}" class="reading-byline">{{article.author}}</view>
+    <view class="reading-meta">{{article.caption}}</view>
+    <view class="reading-help">点汉字看笔顺</view>
+
+    <view class="reading-body">
+      <view wx:if="{{titleNoteTokens.length}}" class="reading-note reading-title-note">
+        <view class="reading-note-label" role="button" aria-expanded="{{titleNoteOpen}}" bindtap="toggleTitleNote">
+          <text>标题笔记</text>
+          <text>{{titleNoteOpen ? '▴' : '▾'}}</text>
         </view>
-        <view wx:if="{{item.note}}" class="note">
-          <view class="note-label" role="button" data-index="{{index}}" bindtap="toggleNote">
-            老师笔记 {{item.noteOpen ? '▴' : '▾'}}
+        <view wx:if="{{titleNoteOpen}}" class="reading-line reading-note-text">
+          <template is="chars" data="{{tokens: titleNoteTokens, showPy: false}}" />
+        </view>
+      </view>
+      <view wx:for="{{paragraphs}}" wx:key="index" class="reading-paragraph">
+        <view class="reading-line reading-body-text">
+          <template is="chars" data="{{tokens: item.tokens, showPy: item.annotated, hide: hidePinyin}}" />
+        </view>
+        <view wx:if="{{item.note}}" class="reading-note">
+          <view class="reading-note-label" role="button" aria-expanded="{{item.noteOpen}}" data-index="{{index}}" bindtap="toggleNote">
+            <text>老师笔记</text>
+            <text>{{item.noteOpen ? '▴' : '▾'}}</text>
           </view>
-          <view wx:if="{{item.noteOpen}}" class="note-text">
+          <view wx:if="{{item.noteOpen}}" class="reading-line reading-note-text">
             <template is="chars" data="{{tokens: item.noteTokens, showPy: false}}" />
           </view>
         </view>
       </view>
     </view>
-    <view class="controls">
-      <button bindtap="togglePinyin">{{hidePinyin ? '显示拼音' : '隐藏拼音'}}</button>
-      <button class="{{read ? 'on' : ''}}" bindtap="toggleRead">{{read ? '已读 · 点击取消' : '标记已读'}}</button>
+
+    <view class="reading-controls">
+      <button class="reading-action" bindtap="togglePinyin">{{hidePinyin ? '显示拼音' : '隐藏拼音'}}</button>
+      <button class="reading-action {{read ? 'reading-action-active' : ''}}" bindtap="toggleRead">{{read ? '已读 · 点击取消' : '标记已读'}}</button>
     </view>
-    <view wx:if="{{total > 1 && pos}}" class="controls turn">
-      <button data-step="-1" bindtap="turn">上一篇</button>
+    <view wx:if="{{total > 1 && pos}}" class="reading-turn">
+      <button class="reading-action" data-step="-1" bindtap="turn">‹ 上一篇</button>
       <text>{{pos}} / {{total}} 篇</text>
-      <button data-step="1" bindtap="turn">下一篇</button>
+      <button class="reading-action" data-step="1" bindtap="turn">下一篇 ›</button>
     </view>
   </view>
 </view>

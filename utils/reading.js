@@ -11,7 +11,7 @@ function splitText(text, pinyin) {
   let i = 0;
   return Array.from(text, (char, index) => HAN.test(char)
     ? { index, char, isHan: true, pinyin: syllables[i++] || '' }
-    : { index, char, isHan: false, pinyin: '' });
+    : { index, char, isHan: false, pinyin: '', lineBreak: char === '\n' });
 }
 
 function caption(item) {
