@@ -1,0 +1,27 @@
+pages/pinyin/pinyin.js
+  s_4e3585c5808062::t_266503e79b7792 42
+pages/pinyin/study.js
+  s_4e3585c5808062::t_266503e79b7792 15,17-19
+utils/pinyin.js
+  s_4e3585c5808062::t_266503e79b7792 4,57,63,91,99,109-110,170,185
+pages/pinyin/study.wxml
+  s_4e3585c5808062::t_266503e79b7792 15
+tests/pinyin.test.js
+  s_4e3585c5808062::t_c7cc1f7109dfff 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "8a77aaa484be90065faae56c76f4e6d3af9ac641",
+  "prompts": {},
+  "sessions": {
+    "s_4e3585c5808062": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21158-ec25-7073-9125-14d787f2a704",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
