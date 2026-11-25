@@ -1,0 +1,23 @@
+page{background:#f6f4fd;color:#242035}
+.detail-page{padding:24rpx 22rpx 60rpx}
+.paper{background:#fffaf0;border:2rpx solid #e9decb;border-radius:28rpx;padding:22rpx 20rpx 32rpx}
+.article-title{text-align:center;font-size:54rpx;font-weight:750;margin:8rpx auto;line-height:1.3}
+.meta,.reading-help{text-align:center;color:#675587;font-size:25rpx;margin:14rpx 0}
+.body{margin:22rpx 0}
+.paragraph + .paragraph{margin-top:18rpx}
+.text{font-size:42rpx;color:#28203b;line-height:1.55}
+.han{display:inline-flex;flex-direction:column;align-items:center;min-width:1.12em;vertical-align:baseline;border-radius:8rpx}
+.han-active{background:#e8ddfb;color:#4f3595}
+.py{height:22rpx;line-height:22rpx;color:#695d85;font-size:19rpx;font-weight:500}
+.py.hide-py{color:transparent}
+.punc{white-space:pre-wrap}
+.note{background:#fff1ce;border-left:6rpx solid #dfaa35;color:#674914;border-radius:14rpx;margin:10rpx 0;padding:10rpx 16rpx}
+.note-label{font-weight:700;font-size:26rpx;padding:6rpx 0}
+.note-text{font-size:34rpx;line-height:1.6;white-space:pre-wrap}
+.status{padding:30rpx;color:#615675;text-align:center}
+.status button{margin-top:18rpx}
+.controls{display:flex;align-items:center;justify-content:center;gap:14rpx;margin:18rpx auto 0;flex-wrap:wrap}
+.controls button{margin:0;padding:10rpx 20rpx;font-size:28rpx;line-height:1.4;background:#ece5fa;color:#503692;border-radius:16rpx}
+.controls button::after{border:0}
+.controls button.on{background:#ffecc2;color:#694a0b}
+.turn{color:#615675;font-size:24rpx}

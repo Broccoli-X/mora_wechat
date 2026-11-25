@@ -15,6 +15,7 @@ const GROUPS = [
         items: [
           { name: '古诗卡片', desc: '必背古诗 · 注音背诵 · 多端同步', status: 'ok', url: '/pages/poems/poems', perm: 'poems' },
           { name: '成语卡片', desc: '看成语 · 懂意思 · 知典故', status: 'ok', url: '/pages/chengyu/chengyu', perm: 'chengyu' },
+          { name: '文章阅读', desc: '按年级读课文 · 点字看笔顺 · 老师笔记', status: 'ok', url: '/pages/reading/reading', perm: 'reading' },
           { name: '识字卡片', desc: '主题识字 · 笔顺动画 · 多端同步', status: 'ok', url: '/pages/hanzi/hanzi', perm: 'chars' },
           { name: '拼音学习卡', desc: '声母韵母 · 整体认读 · 声调', status: 'ok', url: '/pages/pinyin/pinyin', perm: 'pinyin' },
           { name: '知识点总结', desc: '单元必背知识 · 禅模式逐项背', status: 'ok', url: '/pages/knowledge/knowledge' },

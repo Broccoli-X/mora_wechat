@@ -1,0 +1,30 @@
+<view class="reading-page">
+  <view class="intro">
+    <view class="title">文章阅读</view>
+    <view class="hint">按年级读文章，点汉字看笔顺</view>
+  </view>
+  <view class="filters">
+    <picker class="picker" aria-label="年级" range="{{gradeNames}}" value="{{grade}}" bindchange="onGrade">
+      <view>{{gradeNames[grade]}} ▾</view>
+    </picker>
+    <picker class="picker" aria-label="册别" range="{{volumeNames}}" value="{{volume}}" bindchange="onVolume">
+      <view>{{volumeNames[volume]}} ▾</view>
+    </picker>
+    <button class="read-filter {{onlyRead ? 'on' : ''}}" bindtap="onFilter">已读 {{readCount}} / {{total}}</button>
+  </view>
+  <input class="search" type="text" placeholder="搜索文章标题或拼音" value="{{keyword}}" bindinput="onSearch" />
+  <view class="status" wx:if="{{loading}}">正在加载文章…</view>
+  <view class="status" wx:if="{{message}}">{{message}}</view>
+  <view class="status" wx:if="{{!loading && !articles.length && !message}}">没有符合条件的文章</view>
+  <view class="cards">
+    <view wx:for="{{articles}}" wx:key="id" class="card" hover-class="card-active"
+          role="button" aria-label="阅读{{item.title}}" data-id="{{item.id}}" bindtap="onOpen">
+      <view class="card-heading">
+        <text>{{item.title}}</text>
+        <text class="badge" wx:if="{{item.read}}">已读</text>
+      </view>
+      <view class="card-meta">{{item.caption}}</view>
+      <view class="card-preview">{{item.preview}}</view>
+    </view>
+  </view>
+</view>

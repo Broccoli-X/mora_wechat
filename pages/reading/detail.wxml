@@ -1,0 +1,46 @@
+<template name="chars">
+  <block wx:for="{{tokens}}" wx:for-item="token" wx:key="index">
+    <view wx:if="{{token.isHan}}" class="han" role="button" aria-label="查看{{token.char}}的笔顺"
+          hover-class="han-active" catchtap="tapChar" data-char="{{token.char}}" data-pinyin="{{token.pinyin}}">
+      <text wx:if="{{showPy}}" class="py {{hide ? 'hide-py' : ''}}">{{token.pinyin}}</text>
+      <text>{{token.char}}</text>
+    </view>
+    <text wx:else class="punc" space="ensp">{{token.char}}</text>
+  </block>
+</template>
+<view class="detail-page">
+  <view wx:if="{{loading}}" class="status">正在加载文章…</view>
+  <view wx:elif="{{message}}" class="status">{{message}}<button bindtap="load">重试</button></view>
+  <view wx:elif="{{article}}" class="paper">
+    <view class="article-title">
+      <template is="chars" data="{{tokens: titleTokens, showPy: true, hide: hidePinyin}}" />
+    </view>
+    <view class="meta">{{article.caption}}</view>
+    <view class="reading-help">点一下汉字，看它怎么写</view>
+    <view class="body">
+      <view wx:for="{{paragraphs}}" wx:key="index" class="paragraph">
+        <view class="text">
+          <template is="chars" data="{{tokens: item.tokens, showPy: true, hide: hidePinyin}}" />
+        </view>
+        <view wx:if="{{item.note}}" class="note">
+          <view class="note-label" role="button" data-index="{{index}}" bindtap="toggleNote">
+            老师笔记 {{item.noteOpen ? '▴' : '▾'}}
+          </view>
+          <view wx:if="{{item.noteOpen}}" class="note-text">
+            <template is="chars" data="{{tokens: item.noteTokens, showPy: false}}" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="controls">
+      <button bindtap="togglePinyin">{{hidePinyin ? '显示拼音' : '隐藏拼音'}}</button>
+      <button class="{{read ? 'on' : ''}}" bindtap="toggleRead">{{read ? '已读 · 点击取消' : '标记已读'}}</button>
+    </view>
+    <view wx:if="{{total > 1 && pos}}" class="controls turn">
+      <button data-step="-1" bindtap="turn">上一篇</button>
+      <text>{{pos}} / {{total}} 篇</text>
+      <button data-step="1" bindtap="turn">下一篇</button>
+    </view>
+  </view>
+</view>
+<stroke-sheet wx:if="{{strokeChar}}" char="{{strokeChar}}" pinyin="{{strokePinyin}}" bind:close="closeStroke" />

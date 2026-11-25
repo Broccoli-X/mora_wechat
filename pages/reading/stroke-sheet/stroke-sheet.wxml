@@ -1,0 +1,15 @@
+<view class="backdrop" bindtap="close" catchtouchmove="stop">
+  <view class="sheet" catchtap="stop" role="dialog" aria-label="{{char}}的笔顺">
+    <view class="head">
+      <text>{{char}} · 笔顺</text>
+      <button aria-label="关闭笔顺" bindtap="close">×</button>
+    </view>
+    <view wx:if="{{pinyin}}" class="pinyin">{{pinyin}}</view>
+    <view class="grid">
+      <canvas wx:if="{{count}}" id="stroke-canvas" type="2d" class="canvas"></canvas>
+      <text wx:else class="fallback">{{char}}</text>
+    </view>
+    <view class="status">{{status}}</view>
+    <button class="play" disabled="{{!ready}}" bindtap="play">再看一遍</button>
+  </view>
+</view>
