@@ -124,6 +124,12 @@
   white-space: nowrap;
 }
 
+.chip-empty {
+  background: #f3f5f8;
+  color: #9aa1b0;
+  border: 2rpx dashed #d4d9e2;
+}
+
 .now-badge {
   font-size: 20rpx;
   font-weight: 800;

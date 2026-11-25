@@ -65,6 +65,7 @@ Page({
     this.setData(flags);
     this.renderCourse();
     const jobs = [];
+    if (flags.courseAllowed) jobs.push(d => this.loadCourse(d));
     if (flags.tdAllowed) jobs.push(d => this.loadTodos(d));
     if (flags.hwAllowed) jobs.push(d => this.loadHomework(d));
     if (flags.ptAllowed) jobs.push(d => this.loadPoints(d));
@@ -94,6 +95,11 @@ Page({
   /* 课程模块:单条展示,判定逻辑在 utils(当前节 → 下一节 → 次日 → 隐藏);没权限整个隐藏 */
   renderCourse() {
     this.setData({ course: this.data.courseAllowed ? kb.homeLesson(new Date()) : { show: false } });
+  },
+
+  /* 课程模块取数:拉一次在线课表,有更新就重画(缓存 / 默认课表已由 renderCourse 同步画出) */
+  loadCourse(done) {
+    kb.refresh(() => { this.renderCourse(); if (done) done(); });
   },
 
   /* 今日代办:只读展示当天清单(内容在网页端家长页维护),按时间先后 */

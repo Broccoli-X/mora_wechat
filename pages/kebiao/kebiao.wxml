@@ -7,8 +7,8 @@
 
   <view class="sheet" wx:else>
     <view class="title">📅 我的课表</view>
-    <view class="sub">{{school}} · {{cls}}</view>
-    <view class="term">{{term}}</view>
+    <view class="sub" wx:if="{{subLine}}">{{subLine}}</view>
+    <view class="term" wx:if="{{term}}">{{term}}</view>
 
     <view class="tabs">
       <view
@@ -24,14 +24,15 @@
     <view class="lessons">
       <view
         wx:for="{{rows}}"
-        wx:key="label"
+        wx:key="idx"
         class="lesson {{item.isNow ? 'lesson-now' : ''}}"
       >
         <view class="period">
           <text class="p-label">{{item.label}}</text>
           <text class="p-time">{{item.time}}</text>
         </view>
-        <view class="chip" style="background:{{item.color}}">
+        <view class="chip chip-empty" wx:if="{{item.empty}}">空</view>
+        <view class="chip" wx:else style="background:{{item.color}}">
           <text>{{item.icon}}{{item.subject}}</text>
           <text wx:if="{{item.isNow}}" class="now-badge">现在</text>
         </view>
