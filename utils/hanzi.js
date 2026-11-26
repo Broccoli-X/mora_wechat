@@ -52,10 +52,10 @@ const ALL_KEY = '__all';
 /* ===== 字库数据集:缓存优先(第一读取点)→ 打包种子兜底;远端 updatedAt 更新才替换 ===== */
 let dataset = null;
 
-function loadDatasetStore() {
+function loadDatasetStore(family) {
   try {
     const v = wx.getStorageSync(DATASET_KEY);
-    if (v && typeof v === 'object' && v.data && Array.isArray(v.data.chars)) return v;
+    if (family && v && v.family === family && v.data && Array.isArray(v.data.chars)) return v;
   } catch (e) { /* 存储不可用走种子 */ }
   return null;
 }
@@ -65,25 +65,30 @@ function saveDatasetStore(store) {
 }
 
 function currentDataset() {
-  if (!dataset) dataset = loadDatasetStore() || { updatedAt: 0, data: HANZI_SEED };
+  const family = auth.getFamily();
+  if (!dataset || dataset.family !== family) {
+    dataset = loadDatasetStore(family) || { family, updatedAt: 0, data: HANZI_SEED };
+  }
   return dataset;
 }
 
 /* 拉 /api/hanzi:updatedAt 比本地新才替换并落盘。done(有更新传新 data,无更新/失败传 null) */
 function fetchDataset(done) {
-  if (!auth.getToken()) { if (done) done(null); return; } /* 未登录:用本地/种子 */
+  const token = auth.getToken();
+  const family = auth.getFamily();
+  if (!token) { if (done) done(null); return; } /* 未登录:用种子 */
   wx.request({
-    url: API_BASE + '/api/hanzi?token=' + encodeURIComponent(auth.getToken()),
+    url: API_BASE + '/api/hanzi?token=' + encodeURIComponent(token),
     method: 'GET',
     success(res) {
+      if (token !== auth.getToken() || family !== auth.getFamily()) { if (done) done(null); return; }
       if (res.statusCode === 401) { auth.on401(); return; }
       const j = res.data;
       if (!(j && j.ok && j.data && Array.isArray(j.data.chars))) { if (done) done(null); return; }
       const ua = j.updatedAt || 0;
       const cur = currentDataset();
       if (ua > (cur.updatedAt || 0)) {
-        dataset = { updatedAt: ua, data: j.data };
-        index = null;
+        dataset = { family, updatedAt: ua, data: j.data };
         saveDatasetStore(dataset);
         if (done) done(j.data);
       } else if (done) done(null);
@@ -92,39 +97,51 @@ function fetchDataset(done) {
   });
 }
 
-/* ===== 当前字库视图索引:P/SPEAK_AS/charGroup/GROUPS/ALL(与网页端 buildView 同义) ===== */
+/* ===== 当前字库视图索引：卡片按分组和字定位，掌握进度按字共享 ===== */
 let index = null;
 
 function viewIndex() {
   const data = currentDataset().data;
   if (index && index.data === data) return index;
-  const P = {}, SPEAK_AS = {}, charGroup = {};
+  const rowsByGroup = new Map();
   for (const row of data.chars || []) {
-    P[row[0]] = row[1];
-    if (row[2]) SPEAK_AS[row[0]] = row[2];
-    charGroup[row[0]] = row[3];
+    const [char, pinyin, word, groupKey] = row;
+    if (!rowsByGroup.has(groupKey)) rowsByGroup.set(groupKey, new Map());
+    rowsByGroup.get(groupKey).set(char, { char, pinyin, word, groupKey });
   }
-  const GROUPS = (data.groups || []).map(g => ({ key: g[0], name: g[1], chars: g[2].slice() }));
+  const GROUPS = (data.groups || []).map(([key, name, chars]) => {
+    const rows = rowsByGroup.get(key);
+    const groupName = FIXED_COLORS[key] ? groupShortName(name) : name;
+    const cards = rows ? chars.map(c => rows.get(c)).filter(Boolean).map(card => ({ ...card, groupName })) : [];
+    return { key, name, cards };
+  });
+  const groupsByKey = new Map(GROUPS.map(group => [group.key, group]));
+  const firstByChar = new Map();
   const ALL = [];
-  GROUPS.forEach(g => ALL.push.apply(ALL, g.chars));
-  index = { data, P, SPEAK_AS, charGroup, GROUPS, ALL };
+  for (const group of GROUPS) {
+    for (const card of group.cards) {
+      ALL.push(card);
+      if (!firstByChar.has(card.char)) firstByChar.set(card.char, card);
+    }
+  }
+  index = { data, GROUPS, ALL, groupsByKey, firstByChar };
   return index;
 }
 
-function hasChar(c) {
-  return viewIndex().P[c] !== undefined;
+function findCard(c) {
+  return viewIndex().firstByChar.get(c);
 }
 
 function isValidScope(g) {
-  return g === ALL_KEY || viewIndex().GROUPS.some(x => x.key === g);
+  return g === ALL_KEY || viewIndex().groupsByKey.has(g);
 }
 
-/* 某范围的字列表(详情上一个/下一个的导航顺序) */
-function scopeChars(g) {
+/* 某范围的卡片列表(详情上一个/下一个的导航顺序) */
+function scopeCards(g) {
   const idx = viewIndex();
   if (g === ALL_KEY) return idx.ALL.slice();
-  const grp = idx.GROUPS.find(x => x.key === g);
-  return grp ? grp.chars.slice() : [];
+  const grp = idx.groupsByKey.get(g);
+  return grp ? grp.cards.slice() : [];
 }
 
 /* ===== 笔画数据:打包种子(mora 网页端 char-data.js 精简,仅逐笔轮廓,见 utils/hanzi-strokes.js)
@@ -171,23 +188,55 @@ function fetchStrokes(c, done) {
   });
 }
 
-function supplementStrokes(c, done) {
+/* 按网页端 HanziCore.splitPinyin 的声介韵规则处理课文注音。 */
+const INITIALS = /^(zh|ch|sh|[bpmfdtnlgkhjqxrzcsyw])/;
+const U_TO_UML = { u: 'ü', ū: 'ǖ', ú: 'ǘ', ǔ: 'ǚ', ù: 'ǜ' };
+const UI_TONE = { ī: 'ē', í: 'é', ǐ: 'ě', ì: 'è' };
+const IU_TONE = { ū: 'ō', ú: 'ó', ǔ: 'ǒ', ù: 'ò' };
+
+function splitPinyin(value) {
+  const full = value.trim().toLowerCase();
+  const match = full.match(INITIALS);
+  const initial = match ? match[0] : '';
+  let rest = full.slice(initial.length);
+  if (!rest) return [full, initial, '', ''];
+  if (initial === 'w' && /^[aāáǎà]/.test(rest)) return [full, initial, 'u', rest];
+  if (initial === 'y' && /^(?:[aāáǎà]|[oōóǒò]u)/.test(rest)) return [full, initial, 'i', rest];
+  if (/^[jqxy]$/.test(initial) && U_TO_UML[rest[0]]) rest = U_TO_UML[rest[0]] + rest.slice(1);
+  const medial = rest[0];
+  if (medial === 'i' && IU_TONE[rest[1]]) return [full, initial, 'i', IU_TONE[rest[1]] + 'u'];
+  if (medial === 'u' && UI_TONE[rest[1]]) return [full, initial, 'u', UI_TONE[rest[1]] + 'i'];
+  if (/^[iuü]$/.test(medial)) return [full, initial, medial, rest.slice(1)];
+  return [full, initial, '', rest];
+}
+
+function supplementStrokes(c, done, context) {
   const token = auth.getToken();
+  const family = auth.getFamily();
   if (!token) { done(null, 'unauthorized'); return; }
+  const payload = { token, c };
+  if (context && context.articleId) {
+    payload.articleId = context.articleId;
+    if (context.pinyin && context.pinyin.trim()) payload.pinyinParts = splitPinyin(context.pinyin);
+  }
   wx.request({
     url: API_BASE + '/api/hanzi-stroke/supplement',
     method: 'POST',
     timeout: 12000,
     header: { 'Content-Type': 'application/json' },
-    data: { token, c },
+    data: payload,
     success(res) {
+      if (token !== auth.getToken() || family !== auth.getFamily()) { done(null, 'unauthorized'); return; }
       const j = res.data || {};
       if (res.statusCode === 401 || j.error === 'password change required') auth.on401();
       if (res.statusCode === 200) {
         const data = cacheStrokeResponse(c, j);
-        if (data) { done(data); return; }
+        const cardSaved = j.ok && j.cardSaved === true;
+        if (cardSaved) fetchDataset();
+        if (data || cardSaved) { done(data, j.strokeError, cardSaved); return; }
       }
-      const reason = res.statusCode === 404 && j.error !== 'stroke not found' ? 'unsupported' : j.error;
+      const known404 = j.error === 'stroke not found' || j.error === 'article not found';
+      const reason = res.statusCode === 404 && !known404 ? 'unsupported' : j.error;
       done(null, reason || 'supplement failed');
     },
     fail() { done(null, 'network error'); },
@@ -201,7 +250,7 @@ function strokesCountSync(c) {
 
 /* ===== 掌握进度:本地存储为第一写入点,键位按当前字库过滤(防脏数据落盘) ===== */
 function validKeys() {
-  return new Set(viewIndex().ALL);
+  return new Set(viewIndex().firstByChar.keys());
 }
 
 function loadMastered() {
@@ -315,23 +364,26 @@ function itemsToPush(localItems_, remoteItems) {
 /* 拉取远端合并到本地(只认本模块与当前字库内的键位),成功 done(合并后掌握map),失败 fail(本地原样)。
    合并后把「本地更新过的条目」补传,保证本机改动不丢。 */
 function syncMastered(done, fail) {
-  const valid = validKeys();
+  const token = auth.getToken();
+  const family = auth.getFamily();
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(token),
     method: 'GET',
     success(res) {
+      if (token !== auth.getToken() || family !== auth.getFamily()) return;
       if (res.statusCode === 401) { auth.on401(); return; }
+      const valid = validKeys();
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       const remote = items.filter(it => it && it.module === MODULE && valid.has(it.itemKey));
       const local = localItems();
       const merged = mergeItems(local, remote);
-      const map = {};
+      const map = loadMastered();
       const ts = loadTs();
       merged.forEach(m => {
-        if (!valid.has(m.itemKey)) return;
         ts[m.itemKey] = m.updatedAt;
         if (m.mastered === 1) map[m.itemKey] = true;
+        else delete map[m.itemKey];
       });
       saveStore(map, ts);
       const newer = itemsToPush(local, remote);
@@ -345,25 +397,21 @@ function syncMastered(done, fail) {
 /* ===== 页面视图 ===== */
 
 /* 单字 → 卡片/详情视图模型 */
-function charView(c, masteredMap) {
-  const idx = viewIndex();
-  const p = idx.P[c] || ['', '', '', ''];
-  const gk = idx.charGroup[c] || '';
-  const gc = groupColors(gk);
-  const grp = idx.GROUPS.find(x => x.key === gk);
+function charView(card, masteredMap) {
+  const { char, pinyin, word, groupKey, groupName } = card;
+  const gc = groupColors(groupKey);
   return {
-    key: c,
-    char: c,
-    py: p[0],
-    sm: p[1],
-    md: p[2],
-    fn: p[3],
-    word: idx.SPEAK_AS[c] || '',
-    groupKey: gk,
-    groupName: grp ? groupShortName(grp.name) : '',
+    char,
+    py: pinyin[0],
+    sm: pinyin[1],
+    md: pinyin[2],
+    fn: pinyin[3],
+    word,
+    groupKey,
+    groupName,
     color: gc[0],
     color2: gc[1],
-    mastered: !!(masteredMap && masteredMap[c]),
+    mastered: !!masteredMap[char],
   };
 }
 
@@ -378,7 +426,7 @@ function studyGroups(g, masteredMap) {
       name: x.name,
       color: gc[0],
       color2: gc[1],
-      items: x.chars.map(c => charView(c, masteredMap)),
+      items: x.cards.map(card => charView(card, masteredMap)),
     };
   });
 }
@@ -392,31 +440,31 @@ function groupCardViews(masteredMap) {
       name: x.name,
       color: gc[0],
       color2: gc[1],
-      count: x.chars.length,
-      mastered: x.chars.filter(c => masteredMap[c]).length,
+      count: x.cards.length,
+      mastered: x.cards.filter(card => masteredMap[card.char]).length,
     };
   });
 }
 
 function countAll() {
-  return viewIndex().ALL.length;
+  return viewIndex().firstByChar.size;
 }
 
 function countMastered(masteredMap) {
-  return viewIndex().ALL.filter(c => masteredMap[c]).length;
+  return Array.from(viewIndex().firstByChar.keys()).filter(c => masteredMap[c]).length;
 }
 
 function countOf(g) {
-  return scopeChars(g).length;
+  return g === ALL_KEY ? countAll() : scopeCards(g).length;
 }
 
 function countMasteredIn(g, masteredMap) {
-  return scopeChars(g).filter(c => masteredMap[c]).length;
+  return g === ALL_KEY ? countMastered(masteredMap) : scopeCards(g).filter(card => masteredMap[card.char]).length;
 }
 
 module.exports = {
   HANZI_SEED, ALL_KEY,
-  currentDataset, fetchDataset, viewIndex, hasChar, isValidScope, scopeChars,
+  currentDataset, fetchDataset, viewIndex, findCard, isValidScope, scopeCards,
   strokeDataSync, fetchStrokes, supplementStrokes, strokesCountSync,
   loadMastered, loadTs, saveStore, markMastered, syncMastered,
   mergeItems, itemsToPush, localItems, deviceName,

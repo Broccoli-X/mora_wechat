@@ -16,6 +16,7 @@ function setup() {
   };
   delete require.cache[readingPath];
   delete require.cache[authPath];
+  delete require.cache[require.resolve('../utils/hanzi')];
   return { reading: require(readingPath), requests, storage };
 }
 
@@ -83,7 +84,7 @@ test('入口、正文、注解和独立笔顺组件完成接线', () => {
   assert.match(detail, /tokens: titleNoteTokens/);
   assert.ok(detail.includes('<text>标题注解</text>') && detail.includes('<text>注解</text>'));
   assert.match(detail, /wx:if="{{article.author}}"/);
-  assert.match(detail, /<stroke-sheet.+bind:close="closeStroke"/);
+  assert.match(detail, /<stroke-sheet[^>]+article-id="{{article.id}}"[^>]+bind:close="closeStroke"/);
   assert.match(detail, /<page-meta page-style="{{strokeChar \? 'overflow: hidden;/);
   const sheet = read('pages/reading/stroke-sheet/stroke-sheet.wxml');
   const sheetJs = read('pages/reading/stroke-sheet/stroke-sheet.js');
@@ -115,6 +116,100 @@ test('小程序补到的笔顺写入识字卡片与文章共用缓存', () => {
   assert.deepEqual(hanzi.strokeDataSync(char), { strokes });
 });
 
+test('从文章补笔顺使用课文 ID 和语境拼音，无笔顺时也刷新已写入的卡片', () => {
+  const { requests, storage } = setup();
+  const componentPath = require.resolve('../pages/reading/stroke-sheet/stroke-sheet');
+  let component;
+  global.Component = def => { component = def; };
+  delete require.cache[componentPath];
+  require(componentPath);
+  const state = {
+    ...component.methods,
+    active: true,
+    data: { ...component.data, char: '着', pinyin: 'zháo', hidePinyin: true, articleId: 'seed-1', canSupplement: true },
+    setData(value) { Object.assign(this.data, value); },
+  };
+
+  state.supplement();
+  const request = requests.shift();
+  assert.match(request.url, /\/api\/hanzi-stroke\/supplement$/);
+  assert.deepEqual(request.data, {
+    token: 'test-token', c: '着', articleId: 'seed-1', pinyinParts: ['zháo', 'zh', '', 'áo'],
+  });
+  request.success({ statusCode: 200, data: { ok: true, data: null, cardSaved: true, strokeError: 'stroke not found' } });
+  assert.match(state.data.status, /未收录/);
+  assert.match(state.data.cardStatus, /已写入识字卡片/);
+  assert.equal(state.data.supplementing, false);
+
+  const refresh = requests.shift();
+  assert.match(refresh.url, /\/api\/hanzi\?token=/);
+  const data = {
+    groups: [['reading-lesson', '课文 标题', ['着']]],
+    chars: [['着', ['zháo', 'zh', '', 'áo'], '', 'reading-lesson']],
+  };
+  refresh.success({ statusCode: 200, data: { ok: true, data, updatedAt: 8 } });
+  const hanzi = require('../utils/hanzi');
+  assert.equal(hanzi.findCard('着').groupName, '课文 标题');
+  assert.equal(storage.get('mora-hanzi-dataset-v1').family, 'reader');
+  hanzi.fetchDataset();
+  const staleRefresh = requests.shift();
+  storage.set('mora-auth-family', 'other');
+  staleRefresh.success({ statusCode: 200, data: { ok: true, data, updatedAt: 9 } });
+  assert.equal(hanzi.findCard('着'), undefined);
+  assert.equal(storage.get('mora-hanzi-dataset-v1').updatedAt, 8);
+});
+
+test('重复字卡保留分组注音，搜索命中首组，全库浏览定位所点分组', () => {
+  const { requests, storage } = setup();
+  storage.set('mora-hanzi-dataset-v1', {
+    family: 'reader', updatedAt: 8,
+    data: {
+      groups: [['feeling', '😊 感受形容', ['乐']], ['reading-lesson', '音乐 课文', ['乐', '知']]],
+      chars: [
+        ['乐', ['yuè', 'y', 'ü', 'è'], '音乐', 'reading-lesson'],
+        ['乐', ['lè', 'l', '', 'è'], '快乐', 'feeling'],
+        ['知', ['zhī', 'zh', '', 'ī'], '', 'reading-lesson'],
+      ],
+    },
+  });
+  const hanzi = require('../utils/hanzi');
+  storage.set('mora-hanzi-mastered-v1', ['乐']);
+  assert.equal(hanzi.countAll(), 2);
+  assert.equal(hanzi.countMastered(hanzi.loadMastered()), 1);
+  const groups = hanzi.studyGroups(hanzi.ALL_KEY, hanzi.loadMastered());
+  assert.deepEqual(groups.map(g => g.items[0].py), ['lè', 'yuè']);
+  assert.ok(groups.every(g => g.items[0].mastered));
+
+  const loadPage = name => {
+    let def;
+    global.Page = value => { def = value; };
+    require('../pages/hanzi/' + name);
+    return { ...def, data: { ...def.data }, setData(value) { Object.assign(this.data, value); } };
+  };
+  let navigation;
+  wx.navigateTo = ({ url }) => { navigation = url; };
+  const home = loadPage('hanzi');
+  home.onSearchInput({ detail: { value: ' 乐 ' } });
+  home.onTapSearchResult();
+  assert.equal(navigation, '/pages/hanzi/detail?g=feeling&c=%E4%B9%90');
+
+  const study = loadPage('study');
+  study.render(hanzi.ALL_KEY);
+  study.onTapCard({ currentTarget: { dataset: { gi: 1, ii: 0 } } });
+  const options = Object.fromEntries(new URLSearchParams(navigation.split('?')[1]));
+  const detail = loadPage('detail');
+  detail.applyStrokes = () => {};
+  wx.setNavigationBarTitle = () => {};
+  detail.onLoad(options);
+  requests.shift().success({ statusCode: 200, data: { ok: true, perms: ['chars'] } });
+  assert.equal(detail.data.item.py, 'yuè');
+  assert.equal(detail.data.item.groupName, '音乐 课文');
+  assert.equal(detail.data.pos, 2);
+  detail.onPrev();
+  assert.equal(detail.data.item.py, 'lè');
+  assert.equal(detail.data.pos, 1);
+});
+
 
 test('17 笔分解导出为一张可滚动的静态图，每格只标红当前笔画', () => {
   const { storage } = setup();
@@ -122,7 +217,9 @@ test('17 笔分解导出为一张可滚动的静态图，每格只标红当前�
   storage.set('mora-hanzi-stroke-data-v1', { 穗: { strokes } });
   let component;
   global.Component = def => { component = def; };
-  require('../pages/reading/stroke-sheet/stroke-sheet');
+  const componentPath = require.resolve('../pages/reading/stroke-sheet/stroke-sheet');
+  delete require.cache[componentPath];
+  require(componentPath);
 
   const cells = [];
   const noop = () => {};

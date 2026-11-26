@@ -64,4 +64,5 @@
     </view>
   </view>
 </view>
-<stroke-sheet wx:if="{{strokeChar}}" char="{{strokeChar}}" pinyin="{{strokePinyin}}" bind:close="closeStroke" />
+<stroke-sheet wx:if="{{strokeChar}}" char="{{strokeChar}}" pinyin="{{strokePinyin}}"
+              article-id="{{article.id}}" hide-pinyin="{{hidePinyin}}" bind:close="closeStroke" />

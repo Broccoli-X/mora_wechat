@@ -11,21 +11,24 @@ Page({
   },
 
   onLoad(options) {
-    const g = options && options.g ? options.g : hz.ALL_KEY;
-    if (!hz.isValidScope(g)) {
-      wx.showToast({ title: '内容不存在', icon: 'none' });
-      setTimeout(() => wx.navigateBack(), 600);
-      return;
-    }
-    const name = g === hz.ALL_KEY ? '全部汉字' : this.groupName(g);
-    wx.setNavigationBarTitle({ title: name || '识字卡片' });
+    const g = options && options.g ? decodeURIComponent(options.g) : hz.ALL_KEY;
     /* 家长登录门 + 功能权限:未开通提示后退出(深链误入也挡住) */
     auth.ensurePerm('chars', allowed => {
       if (!allowed) { this.blockedBack(); return; }
-      this.render(g);
-      /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
-      hz.syncMastered(() => this.render(g));
+      if (hz.isValidScope(g)) { this.openGroup(g); return; }
+      hz.fetchDataset(() => {
+        if (hz.isValidScope(g)) { this.openGroup(g); return; }
+        wx.showToast({ title: '内容不存在', icon: 'none' });
+        setTimeout(() => wx.navigateBack(), 600);
+      });
     });
+  },
+
+  openGroup(g) {
+    const group = hz.viewIndex().groupsByKey.get(g);
+    wx.setNavigationBarTitle({ title: group ? group.name : '全部汉字' });
+    this.render(g);
+    hz.syncMastered(() => this.render(g));
   },
 
   /* 未开通本功能:提示后退回 */
@@ -37,11 +40,6 @@ Page({
   /* 从详情页标记返回时刷新星标 */
   onShow() {
     if (this.data.g) this.render(this.data.g);
-  },
-
-  groupName(g) {
-    const grp = hz.viewIndex().GROUPS.find(x => x.key === g);
-    return grp ? grp.name : '';
   },
 
   render(g) {
@@ -74,7 +72,8 @@ Page({
     const item = group && group.items[ii];
     if (!item) return;
     wx.navigateTo({
-      url: '/pages/hanzi/detail?g=' + this.data.g + '&c=' + encodeURIComponent(item.char),
+      url: '/pages/hanzi/detail?g=' + encodeURIComponent(this.data.g) + '&c=' + encodeURIComponent(item.char)
+        + '&group=' + encodeURIComponent(item.groupKey),
     });
   },
 });

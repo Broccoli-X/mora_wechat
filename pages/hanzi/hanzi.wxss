@@ -24,6 +24,57 @@
   color: #7a8291;
 }
 
+.hanzi-search,
+.hanzi-search-result {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 16rpx 24rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  color: #1f2333;
+}
+
+.hanzi-search-input {
+  flex: 1;
+  height: 56rpx;
+  font-size: 30rpx;
+}
+
+.hanzi-search-clear {
+  flex-shrink: 0;
+  padding: 0 16rpx;
+  border-radius: 16rpx;
+  background: #f1e9fb;
+  color: #57348c;
+  font-size: 24rpx;
+}
+
+.hanzi-search-clear::after {
+  border: none;
+}
+
+.hanzi-search-result,
+.hanzi-search-empty {
+  margin-top: 20rpx;
+}
+
+.hanzi-search-char {
+  font-size: 52rpx;
+  font-weight: 800;
+}
+
+.hanzi-search-group {
+  margin-left: auto;
+  text-align: right;
+  color: #57348c;
+}
+
+.hanzi-search-empty {
+  text-align: center;
+  color: #596173;
+}
+
 .section-title {
   font-size: 34rpx;
   font-weight: 800;

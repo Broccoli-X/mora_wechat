@@ -97,7 +97,7 @@ Page({
   },
   tapChar(e) {
     const { char, pinyin } = e.currentTarget.dataset;
-    this.setData({ strokeChar: char, strokePinyin: this.data.hidePinyin ? '' : pinyin });
+    this.setData({ strokeChar: char, strokePinyin: pinyin });
   },
   closeStroke() {
     if (this.data.strokeChar) this.setData({ strokeChar: '', strokePinyin: '' });

@@ -14,21 +14,25 @@ Page({
   },
 
   onLoad(options) {
-    const g = options && options.g ? options.g : hz.ALL_KEY;
+    const g = options && options.g ? decodeURIComponent(options.g) : hz.ALL_KEY;
     const c = options && options.c ? decodeURIComponent(options.c) : '';
-    if (!hz.isValidScope(g) || !hz.hasChar(c)) {
-      wx.showToast({ title: '内容不存在', icon: 'none' });
-      setTimeout(() => wx.navigateBack(), 600);
-      return;
-    }
-    this.g = g;
-    this.chars = hz.scopeChars(g);
+    const group = options && options.group ? decodeURIComponent(options.group) : '';
     /* 家长登录门 + 功能权限:未开通提示后退出(深链误入也挡住) */
     auth.ensurePerm('chars', allowed => {
       if (!allowed) { this.blockedBack(); return; }
-      this.render(c);
-      /* 拉取远端掌握进度合并(与网页端共享,离线时用本地原样) */
-      hz.syncMastered(map => this.mergeMastered(map));
+      const open = () => {
+        this.cards = hz.scopeCards(g);
+        const index = this.cards.findIndex(card => card.char === c && (!group || card.groupKey === group));
+        if (index < 0) return false;
+        this.render(index);
+        hz.syncMastered(map => this.mergeMastered(map));
+        return true;
+      };
+      if (!open()) hz.fetchDataset(() => {
+        if (open()) return;
+        wx.showToast({ title: '内容不存在', icon: 'none' });
+        setTimeout(() => wx.navigateBack(), 600);
+      });
     });
   },
 
@@ -46,8 +50,10 @@ Page({
     }
   },
 
-  render(c) {
-    const item = hz.charView(c, hz.loadMastered());
+  render(index) {
+    this.index = index;
+    const item = hz.charView(this.cards[index], hz.loadMastered());
+    const c = item.char;
     /* 拼音含 ü 用紫色,否则橙色(与网页端详情一致) */
     const pyColor = item.py.indexOf('ü') >= 0 ? '#7048E8' : '#FF9500';
     wx.setNavigationBarTitle({ title: c + ' ' + (item.groupName || '') });
@@ -55,8 +61,8 @@ Page({
     this.bbox = null;
     this.setData({
       item,
-      pos: this.chars.indexOf(c) + 1,
-      total: this.chars.length,
+      pos: index + 1,
+      total: this.cards.length,
       pyColor,
       hasStrokes: false,
       strokeCount: 0,
@@ -129,16 +135,14 @@ Page({
     if (!item) return;
     /* 本地先落盘,再异步上报服务端(多端共享) */
     hz.markMastered(item.char, !item.mastered);
-    this.setData({ item: hz.charView(item.char, hz.loadMastered()) });
+    this.setData({ item: hz.charView(this.cards[this.index], hz.loadMastered()) });
   },
 
   onPrev() {
-    const i = this.chars.indexOf(this.data.item.char);
-    this.render(this.chars[(i - 1 + this.chars.length) % this.chars.length]);
+    this.render((this.index - 1 + this.cards.length) % this.cards.length);
   },
 
   onNext() {
-    const i = this.chars.indexOf(this.data.item.char);
-    this.render(this.chars[(i + 1) % this.chars.length]);
+    this.render((this.index + 1) % this.cards.length);
   },
 });

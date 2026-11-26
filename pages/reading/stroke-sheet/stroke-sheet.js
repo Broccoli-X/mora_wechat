@@ -11,10 +11,10 @@ const WIDTH = COLUMNS * CELL + (COLUMNS - 1) * GAP + 2 * PADDING;
 const CONTENT_WIDTH_RPX = 632;
 
 Component({
-  properties: { char: String, pinyin: String },
+  properties: { char: String, pinyin: String, articleId: String, hidePinyin: Boolean },
   data: {
     imagePath: '', count: 0, imageHeight: 0, scrollHeight: 0,
-    status: '正在加载笔顺…', canSupplement: false, supplementing: false,
+    status: '正在加载笔顺…', cardStatus: '', canSupplement: false, supplementing: false,
   },
   lifetimes: {
     ready() {
@@ -31,16 +31,21 @@ Component({
     supplement() {
       if (!this.active || !this.data.canSupplement || this.data.supplementing) return;
       this.setData({ supplementing: true, status: '正在查询笔顺字库…' });
-      hanzi.supplementStrokes(this.data.char, (data, reason) => {
+      const { articleId, pinyin } = this.data;
+      hanzi.supplementStrokes(this.data.char, (data, reason, cardSaved) => {
         if (!this.active) return;
+        if (cardSaved) this.setData({ cardStatus: '已写入识字卡片。' });
+        else if (data && articleId) this.setData({ cardStatus: '当前服务端暂不支持写入识字卡片。' });
         if (data) { this.showStrokes(data); return; }
         const messages = {
           'stroke not found': '字库暂未收录这个字的笔顺。',
+          'article not found': '这篇文章已移除，请返回文章列表。',
+          'char not in article': '文章内容已更新，请重新打开文章。',
           unsupported: '当前服务端版本暂不支持补笔顺。',
           'permission denied': '当前账号没有补笔顺权限。',
         };
         this.setData({ supplementing: false, status: messages[reason] || '暂时补不到笔顺，请检查网络后重试。' });
-      });
+      }, { articleId, pinyin });
     },
     showStrokes(data) {
       const frames = data.strokes.map(path => ({ segs: draw.parsePath(path) }));

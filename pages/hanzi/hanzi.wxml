@@ -11,6 +11,22 @@
     <view class="head-sub">共 {{total}} 字 · 已掌握 {{masteredCount}} 字</view>
   </view>
 
+  <view class="hanzi-search">
+    <input class="hanzi-search-input" value="{{query}}" placeholder="输入单个汉字搜索"
+           confirm-type="search" bindinput="onSearchInput" />
+    <button wx:if="{{query}}" class="hanzi-search-clear" bindtap="onClearSearch">清空</button>
+  </view>
+  <block wx:if="{{query}}">
+    <view wx:if="{{searchResult}}" class="hanzi-search-result" role="button"
+          bindtap="onTapSearchResult" hover-class="table-hover">
+      <view class="hanzi-search-char">{{searchResult.char}}</view>
+      <view>{{searchResult.pinyin[0]}}</view>
+      <view class="hanzi-search-group">{{searchResult.groupName}}</view>
+    </view>
+    <view wx:else class="hanzi-search-empty">没有找到这个字</view>
+  </block>
+
+  <block wx:else>
   <view class="section-title">主题识字</view>
   <view class="board">
     <view
@@ -38,5 +54,6 @@
       <view class="table-progress">⭐ {{item.mastered}}/{{item.count}}</view>
     </view>
   </view>
+  </block>
   </block>
 </view>

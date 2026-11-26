@@ -5,8 +5,9 @@
       <text>{{char}} · 笔顺</text>
       <button aria-label="关闭笔顺" bindtap="close">×</button>
     </view>
-    <view wx:if="{{pinyin}}" class="pinyin">{{pinyin}}</view>
+    <view wx:if="{{pinyin && !hidePinyin}}" class="pinyin">{{pinyin}}</view>
     <view class="status">{{status}}</view>
+    <view wx:if="{{cardStatus}}" class="status">{{cardStatus}}</view>
     <block wx:if="{{imagePath}}">
       <view class="step-legend"><text class="step-legend-dot"></text>红色为当前笔画</view>
       <scroll-view scroll-y class="steps-scroll" style="height: {{scrollHeight}}px">
