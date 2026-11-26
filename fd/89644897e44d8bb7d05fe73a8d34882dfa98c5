@@ -1,0 +1,45 @@
+pages/reading/stroke-sheet/stroke-sheet.js
+  s_1b2676e8f2b5f8::t_826fbfdb8b1a4e 14,17,34-35,37-38,42-43,48
+pages/reading/stroke-sheet/stroke-sheet.wxml
+  s_1b2676e8f2b5f8::t_826fbfdb8b1a4e 8,10
+pages/hanzi/hanzi.wxml
+  s_1b2676e8f2b5f8::t_e2b49fb75d6a10 14-29,58
+pages/hanzi/study.js
+  s_1b2676e8f2b5f8::t_c9c701c4839196 14,18-23,27-33,75-76
+utils/hanzi.js
+  s_1b2676e8f2b5f8::t_1040f220b382d3 367-368,370,373,375,381,386
+  s_1b2676e8f2b5f8::t_b70207b3830c28 191-213,215,217-221,227,229,234-236,238-239,253,400,402,404-410,414,429,443-444,450,454,458,462,467
+  s_1b2676e8f2b5f8::t_e2b49fb75d6a10 114-116,401,411
+  s_1b2676e8f2b5f8::t_a6b7723e404984 55,58,68-71,77-79,81,84,91,100,106,108-110,112-113,117-119,121-127,131-132,136,139-140,143-144
+pages/reading/detail.js
+  s_1b2676e8f2b5f8::t_826fbfdb8b1a4e 100
+pages/hanzi/detail.js
+  s_1b2676e8f2b5f8::t_c9c701c4839196 17,19,23-35,53-56,64-65,138,142,146
+pages/hanzi/hanzi.wxss
+  s_1b2676e8f2b5f8::t_e2b49fb75d6a10 27-77
+pages/hanzi/detail.wxml
+  s_1b2676e8f2b5f8::t_c9c701c4839196 3,18
+tests/reading.test.js
+  s_1b2676e8f2b5f8::t_3f7cc0e15ed7ad 19,87,119-153,156,158,160-212,220-222
+  s_1b2676e8f2b5f8::t_8fa130a540fd1f 154-155,157,159
+pages/reading/detail.wxml
+  s_1b2676e8f2b5f8::t_826fbfdb8b1a4e 67-68
+pages/hanzi/hanzi.js
+  s_1b2676e8f2b5f8::t_e2b49fb75d6a10 9-10,20-24,34,38-52,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "fd89644897e44d8bb7d05fe73a8d34882dfa98c5",
+  "prompts": {},
+  "sessions": {
+    "s_1b2676e8f2b5f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a2166d-bf11-7a71-90fc-e16556cb05c8",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "夏礼华 <xlh4909@ly.com>"
+    }
+  }
+}
