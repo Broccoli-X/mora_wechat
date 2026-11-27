@@ -145,16 +145,18 @@ function decodeItems(items) {
 /* 拉取全部作业(服务端按 module 过滤需自行做),成功 done(entries),失败 fail(err);
    401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchHomework(done, fail) {
+  const token = auth.getToken();
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(token),
     method: 'GET',
     success(res) {
+      if (auth.getToken() !== token) return;
       if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       done(decodeItems(items));
     },
-    fail(err) { fail(err); },
+    fail(err) { if (auth.getToken() === token) fail(err); },
   });
 }
 

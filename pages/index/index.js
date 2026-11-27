@@ -1,14 +1,20 @@
-const kb = require('../../utils/kebiao');
 const hw = require('../../utils/homework');
 const pt = require('../../utils/points');
 const td = require('../../utils/todo');
 const auth = require('../../utils/auth');
+const letters = require('../../utils/letters');
+
+// 首页认读只用内置卡面。访客翻卡不读取或写入家庭掌握记录。
+const letterCards = letters.views();
 
 Page({
   data: {
     title: 'Mora 学习卡片',
     subtitle: '碎片时间 · 高效记忆',
     dateLine: '',
+    guest: false,
+    letterCard: letterCards[0],
+    letterCount: letterCards.length,
     course: { show: false },
     tdState: 'loading', // loading | ok | error
     tdItems: [],
@@ -28,18 +34,43 @@ Page({
 
   onShow() {
     this.renderDate();
-    /* 家长登录门:未登录跳登录页,登录后回来再取数(课表/日期本地照常渲染) */
-    if (!auth.ensure()) return;
+    if (!auth.getToken()) { this.showGuest(); return; }
+    this.setData({ guest: false });
     /* 功能权限:先按本地缓存摆区块,再拉最新纠正(没变化不重取数据) */
     this.applyPerms();
     auth.refreshPerms(ok => { if (ok) this.applyPermsIfChanged(); });
   },
 
   onPullDownRefresh() {
-    if (!auth.ensure()) { wx.stopPullDownRefresh(); return; }
     this.renderDate();
-    auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
+    if (!auth.getToken()) {
+      this.showGuest();
+      wx.stopPullDownRefresh();
+      return;
+    }
+    const token = auth.getToken();
+    auth.refreshPerms(() => {
+      if (auth.getToken() === token) this.applyPerms(() => wx.stopPullDownRefresh());
+      else wx.stopPullDownRefresh();
+    });
   },
+
+  showGuest() {
+    this.setData({
+      guest: true,
+      ptAllowed: false, tdAllowed: false, courseAllowed: false, hwAllowed: false,
+      course: { show: false }, hwItems: [], tdItems: [],
+      ptEmoji: '', ptEmpty: true, ptEarned: 0, ptRemaining: 0, ptYuan: '0',
+    });
+  },
+
+  turnLetter(e) {
+    const step = Number(e.currentTarget.dataset.step);
+    const index = (this.data.letterCard.i + step + letterCards.length) % letterCards.length;
+    this.setData({ letterCard: letterCards[index] });
+  },
+
+  openLogin() { auth.openLogin(); },
 
   /* 页面定义了 onShareAppMessage 右上角胶囊菜单的「转发」才会亮起,否则提示"当前页面不可转发";
      onShareTimeline 点亮「分享到朋友圈」。页内不放分享按钮,分享只走胶囊菜单 */
@@ -94,11 +125,16 @@ Page({
 
   /* 课程模块:单条展示,判定逻辑在 utils(当前节 → 下一节 → 次日 → 隐藏);没权限整个隐藏 */
   renderCourse() {
-    this.setData({ course: this.data.courseAllowed ? kb.homeLesson(new Date()) : { show: false } });
+    // 课表模块在首次载入时读取家庭缓存，只在已开通课表时载入。
+    const course = this.data.courseAllowed
+      ? require('../../utils/kebiao').homeLesson(new Date())
+      : { show: false };
+    this.setData({ course });
   },
 
   /* 课程模块取数:拉一次在线课表,有更新就重画(缓存 / 默认课表已由 renderCourse 同步画出) */
   loadCourse(done) {
+    const kb = require('../../utils/kebiao');
     kb.refresh(() => { this.renderCourse(); if (done) done(); });
   },
 

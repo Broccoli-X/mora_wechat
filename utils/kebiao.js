@@ -161,6 +161,7 @@ function refresh(done) {
     url: API_BASE + '/api/kebiao?token=' + encodeURIComponent(token),
     method: 'GET',
     success(res) {
+      if (auth.getToken() !== token) return;
       if (res.statusCode === 401 || res.statusCode === 403) {
         auth.on401();
         if (done) done(false, 'auth');
@@ -181,7 +182,7 @@ function refresh(done) {
       }
       if (done) done(false, null);
     },
-    fail() { if (done) done(false, 'net'); },
+    fail() { if (done && auth.getToken() === token) done(false, 'net'); },
   });
 }
 

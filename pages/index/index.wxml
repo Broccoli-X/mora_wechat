@@ -10,6 +10,28 @@
     <text class="date-line">{{dateLine}}</text>
   </view>
 
+  <block wx:if="{{guest}}">
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">英语字母卡</text>
+        <text class="card-count">{{letterCard.i + 1}} / {{letterCount}}</text>
+      </view>
+      <view class="letter-face">
+        <text class="letter-pair">{{letterCard.pair}}</text>
+        <text class="letter-name">字母名 {{letterCard.nameIPA}}</text>
+        <text class="letter-word">{{letterCard.emoji}} {{letterCard.word}}</text>
+      </view>
+      <view class="letter-actions">
+        <button size="mini" bindtap="turnLetter" data-step="-1">上一张</button>
+        <button size="mini" bindtap="turnLetter" data-step="1">下一张</button>
+      </view>
+    </view>
+    <view class="section family-entry">
+      <text>登录后可查看家庭学习记录</text>
+      <button size="mini" bindtap="openLogin">家长登录</button>
+    </view>
+  </block>
+  <block wx:else>
   <!-- 积分总览:emoji 只看累计,剩余折算零钱;点按去「我的」看明细与规则;未开通不呈现 -->
   <view class="section points" wx:if="{{ptAllowed}}" bindtap="goMine" hover-class="link-hover">
     <view class="section-head">
@@ -92,4 +114,5 @@
       <text class="retry" bindtap="retryHw" hover-class="link-hover">重试</text>
     </view>
   </view>
+  </block>
 </view>

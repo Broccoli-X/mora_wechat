@@ -86,6 +86,43 @@
   opacity: 0.7;
 }
 
+.card-count, .letter-name, .family-entry {
+  font-size: 26rpx;
+  color: #5b6472;
+}
+
+.letter-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36rpx 16rpx;
+  border-radius: 20rpx;
+  background: #f2f5ff;
+}
+
+.letter-pair {
+  color: #333f8f;
+  font-size: 100rpx;
+  font-weight: 700;
+}
+
+.letter-word {
+  margin-top: 20rpx;
+  font-size: 34rpx;
+  color: #1f2333;
+}
+
+.letter-actions, .family-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.letter-actions { margin-top: 20rpx; }
+.letter-actions button { flex: 1; }
+.family-entry button { margin: 0; flex-shrink: 0; }
+
 .course {
   display: flex;
   align-items: center;

@@ -85,7 +85,7 @@ Page({
 
   onShow() {
     this.applyFilters();
-    /* 已登录才拉最新权限纠正入口;未登录点条目时由各功能页的登录门接管 */
+    /* 访客可以浏览分类；登录后按家庭权限更新入口。 */
     if (auth.getToken()) auth.refreshPerms(() => this.applyFilters());
   },
 
@@ -96,7 +96,8 @@ Page({
   onTapItem(e) {
     const { url, status, name } = e.currentTarget.dataset;
     if (status === 'ok' && url) {
-      wx.navigateTo({ url });
+      if (auth.getToken()) wx.navigateTo({ url });
+      else auth.openLogin(url);
     } else {
       wx.showToast({ title: name + ' 开发中，敬请期待', icon: 'none' });
     }

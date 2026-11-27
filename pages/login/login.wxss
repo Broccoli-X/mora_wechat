@@ -56,6 +56,17 @@
   border-radius: 18rpx;
 }
 
+.cancel {
+  width: 100% !important;
+  margin-top: 18rpx;
+  padding: 22rpx;
+  border-radius: 18rpx;
+  font-size: 30rpx;
+  line-height: 1.4;
+  color: #39445e;
+  background: #f1f3f8;
+}
+
 .btn-busy {
   background: #8aa9d8;
 }
@@ -73,7 +84,7 @@
 }
 
 .note {
-  margin-top: 10rpx;
+  margin-top: 24rpx;
   font-size: 24rpx;
   color: #666666;
 }

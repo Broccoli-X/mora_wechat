@@ -102,10 +102,16 @@
     <view class="section-head">
       <text class="section-title">🔐 家庭账号</text>
     </view>
-    <view class="acc-row">
-      <text class="acc-label">当前家庭</text>
-      <text class="acc-val">{{family || '默认家庭'}}</text>
-    </view>
-    <view class="logout" bindtap="logout" hover-class="link-hover">退出登录</view>
+    <block wx:if="{{loggedIn}}">
+      <view class="acc-row">
+        <text class="acc-label">当前家庭</text>
+        <text class="acc-val">{{family || '默认家庭'}}</text>
+      </view>
+      <view class="logout" bindtap="logout" hover-class="link-hover">退出登录</view>
+    </block>
+    <block wx:else>
+      <view class="account-hint">登录后可以查看家庭积分和已开通的管理功能。</view>
+      <button class="login" bindtap="openLogin" hover-class="link-hover">家长登录</button>
+    </block>
   </view>
 </view>

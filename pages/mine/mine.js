@@ -4,38 +4,52 @@ const auth = require('../../utils/auth');
 /* 明细默认条数,更早的折叠(与网页端 points-edit 一致) */
 const SHOW_N = 10;
 
+const guestData = {
+  loggedIn: false,
+  ptState: 'loading', // loading | ok | error
+  ptOpen: false,      // 点积分卡片展开明细与规则
+  emoji: '',
+  empty: true,
+  earned: 0,
+  remaining: 0,
+  yuan: '0',
+  entries: [],
+  shown: [],
+  folded: 0,
+  allOpen: false,
+  rules: pt.RULES,
+  family: '',         // 已登录的家庭ID(登录时服务端下发)
+  ptAllowed: false,   // 功能权限:未开通「积分」整块不呈现
+  hwAllowed: false,   // 家长维护入口按各自权限呈现
+  tdAllowed: false,
+  mtAllowed: false,   // 三个维护入口一个都没有时整块隐藏
+};
+
 Page({
-  data: {
-    ptState: 'loading', // loading | ok | error
-    ptOpen: false,      // 点积分卡片展开明细与规则
-    emoji: '',
-    empty: true,
-    earned: 0,
-    remaining: 0,
-    yuan: '0',
-    entries: [],
-    shown: [],
-    folded: 0,
-    allOpen: false,
-    rules: pt.RULES,
-    family: '',         // 已登录的家庭ID(登录时服务端下发)
-    ptAllowed: false,   // 功能权限:未开通「积分」整块不呈现
-    hwAllowed: false,   // 家长维护入口按各自权限呈现
-    tdAllowed: false,
-    mtAllowed: false,   // 三个维护入口一个都没有时整块隐藏
-  },
+  data: { ...guestData },
 
   onShow() {
-    /* 家长登录门:未登录跳登录页,登录后回来再取数 */
-    if (!auth.ensure()) return;
-    this.setData({ family: auth.getFamily() });
+    if (!auth.getToken()) {
+      this.setData({ ...guestData });
+      return;
+    }
+    this.setData({ loggedIn: true, family: auth.getFamily() });
     this.applyPerms();
     auth.refreshPerms(ok => { if (ok) this.applyPermsIfChanged(); });
   },
 
   onPullDownRefresh() {
-    if (!auth.ensure()) { wx.stopPullDownRefresh(); return; }
-    auth.refreshPerms(() => this.applyPerms(() => wx.stopPullDownRefresh()));
+    const stop = () => wx.stopPullDownRefresh();
+    const token = auth.getToken();
+    if (!token) { stop(); return; }
+    auth.refreshPerms(() => {
+      if (auth.getToken() === token) this.applyPerms(stop);
+      else stop();
+    });
+  },
+
+  openLogin() {
+    auth.openLogin();
   },
 
   /* 功能权限:积分卡片看「积分」,维护入口各自看「作业/积分/代办」 */
@@ -75,6 +89,7 @@ Page({
   },
 
   loadPoints(done) {
+    if (!auth.getToken()) { if (done) done(); return; }
     if (!this.data.entries.length) this.setData({ ptState: 'loading' });
     pt.fetchPoints(entries => {
       const t = pt.totalsOf(entries);
@@ -127,7 +142,7 @@ Page({
     this.loadPoints();
   },
 
-  /* 退出登录:清本机会话(服务端会话尽力而为删掉),跳登录页重新进 */
+  /* 清除会话和旧页面栈，退出后停在访客的「我的」。 */
   logout() {
     wx.showModal({
       title: '退出登录',
@@ -137,7 +152,8 @@ Page({
       success: res => {
         if (!res.confirm) return;
         auth.logout();
-        auth.gate();
+        this.setData({ ...guestData });
+        wx.reLaunch({ url: '/pages/mine/mine' });
       },
     });
   },

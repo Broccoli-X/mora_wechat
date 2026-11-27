@@ -251,16 +251,18 @@ function uploadImage(dataUrl, onOk, onFail) {
 /* 拉取全部进度,客户端过滤出代办(module=todo):成功 done(entries),失败 fail(err);
    401(会话过期/被注销)交 auth.on401 弹回登录门 */
 function fetchTodos(done, fail) {
+  const token = auth.getToken();
   wx.request({
-    url: API_BASE + '/api/progress?token=' + encodeURIComponent(auth.getToken()),
+    url: API_BASE + '/api/progress?token=' + encodeURIComponent(token),
     method: 'GET',
     success(res) {
+      if (auth.getToken() !== token) return;
       if (res.statusCode === 401) { auth.on401(); return; }
       const data = res.data;
       const items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       done(decodeItems(items));
     },
-    fail(err) { fail(err); },
+    fail(err) { if (auth.getToken() === token) fail(err); },
   });
 }
 

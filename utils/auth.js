@@ -63,12 +63,14 @@ function purgeLocalFamilyData() {
    family 留空 = 本站原住家庭;家庭变化时清本地上一家缓存(共用设备防串) */
 function login(password, family, done, fail) {
   const prevFamily = getFamily();
-  wx.request({
+  let cancelled = false;
+  const task = wx.request({
     url: API_BASE + '/api/login',
     method: 'POST',
     header: { 'Content-Type': 'application/json' },
     data: { password: password, family: family || '', device: deviceTag() },
     success(res) {
+      if (cancelled) return;
       const j = res.data;
       if (res.statusCode === 401) { if (fail) fail('家庭ID或密码不对,请再试一次'); return; }
       if (res.statusCode === 429) { if (fail) fail('尝试次数太多,请过几分钟再试'); return; }
@@ -84,8 +86,12 @@ function login(password, family, done, fail) {
       } catch (e) { /* 存储不可用:本次能用,重开需重登 */ }
       if (done) done(j.token);
     },
-    fail() { if (fail) fail('连不上服务器,请检查网络'); },
+    fail() { if (!cancelled && fail) fail('连不上服务器,请检查网络'); },
   });
+  return () => {
+    cancelled = true;
+    if (task && task.abort) task.abort();
+  };
 }
 
 /* 注销:通知服务端删会话(尽力而为)+ 清本地 */
@@ -121,7 +127,8 @@ function currentRoute() {
   }
 }
 
-function gate() {
+/* 公开页主动登录保留上一页，受限页拦截时清栈，避免取消后再进入受限页。 */
+function showLogin(from, keepPreviousPage) {
   try {
     const pages = getCurrentPages();
     const top = pages && pages.length ? pages[pages.length - 1] : null;
@@ -129,7 +136,20 @@ function gate() {
   } catch (e) { /* 取不到页面栈照常跳 */ }
   if (gating) return;
   gating = true;
-  wx.reLaunch({ url: '/pages/login/login?from=' + encodeURIComponent(currentRoute()) });
+  const options = {
+    url: '/pages/login/login?from=' + encodeURIComponent(from || currentRoute()),
+    fail: gateShown,
+  };
+  if (keepPreviousPage) wx.navigateTo(options);
+  else wx.reLaunch(options);
+}
+
+function openLogin(from) {
+  showLogin(from, true);
+}
+
+function gate() {
+  showLogin('', false);
 }
 
 /* 登录页 onLoad 回调:门已展示,放行下一次 gate(处理再次过期/注销) */
@@ -144,6 +164,7 @@ function ensure() {
 
 /* 同步层 401 钩子:会话失效 → 清 token 弹回登录门 */
 function on401() {
+  if (!getToken()) return; // 退出或会话失效后迟到的响应不再弹门
   clearAll();
   gate();
 }
@@ -178,6 +199,7 @@ function refreshPerms(done) {
     url: API_BASE + '/api/perms?token=' + encodeURIComponent(tok),
     method: 'GET',
     success(res) {
+      if (tok !== getToken()) { if (done) done(false); return; }
       if (res.statusCode === 401) { on401(); if (done) done(false); return; }
       const j = res.data;
       if (res.statusCode === 200 && j && j.ok && Array.isArray(j.perms)) {
@@ -195,14 +217,15 @@ function refreshPerms(done) {
    (未登录/会话失效弹登录门时不回调);allowed=false = 本功能未对该家庭开放 */
 function ensurePerm(feature, done) {
   if (!ensure()) return;
+  const token = getToken();
   refreshPerms(() => {
-    if (!getToken()) return; // 刷新途中会话失效,已弹登录门
+    if (getToken() !== token) return; // 刷新途中会话已经结束或更换
     done(hasPerm(feature));
   });
 }
 
 module.exports = {
   getToken, getFamily, deviceTag,
-  login, logout, ensure, gate, gateShown, on401,
+  login, logout, ensure, openLogin, gate, gateShown, on401,
   hasPerm, refreshPerms, ensurePerm,
 };
